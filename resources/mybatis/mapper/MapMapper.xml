@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.team.map.dao.IMapDAO">
+
+  <select id="selectComplexSummaryByCd" parameterType="string" resultType="com.house.team.map.vo.MapVo">
+    SELECT
+      CMPX_CD,
+      CMPX_NM,
+      CMPX_TP,
+      TO_CHAR(APPR_DT, 'YYYY.MM') AS APPR_DT,
+      LGL_ADDR,
+      BLDG_CNT,
+      UNIT_TOT,
+      CCTV_CNT,
+      FLR_MAX,
+      BSMNT_FLR
+    FROM apt_info
+    WHERE CMPX_CD = #{cmpxCd}
+  </select>
+  
+  <select id="selectComplexList" resultType="com.house.team.map.vo.MapVo">
+    SELECT
+      CMPX_CD,
+      CMPX_NM,
+      LGL_ADDR
+    FROM apt_info
+    ORDER BY CMPX_NM
+  </select>
+  
+  
+<select id="getPolygonsByRegion" resultType="com.house.team.map.vo.MapVo">
+  SELECT
+    GUDONG AS gudong,
+    BUNJI AS bunji,
+    ADDRESS AS address,
+    TO_CHAR(BUILT_DATE, 'YYYY-MM-DD') AS builtDate,
+    CORDS AS cords
+  FROM MAP_INFO
+  WHERE GUDONG LIKE '%' || #{region} || '%'
+</select>
+
+<select id="getPolygonsByDong" resultType="com.house.team.map.vo.MapVo">
+  SELECT
+    GUDONG AS gudong,
+    BUNJI AS bunji,
+    ADDRESS AS address,
+    TO_CHAR(BUILT_DATE, 'YYYY-MM-DD') AS builtDate,
+    CORDS AS cords
+  FROM MAP_INFO
+  WHERE DONG = #{dong}
+</select>
+
+
+  <select id="searchBuildingsByKeyword" resultType="com.house.team.map.vo.MapVo">
+    SELECT * 
+    FROM MAP_INFO
+    WHERE address LIKE '%' || #{keyword} || '%'
+  </select>
+  
+  	<select id="getAllPolygons" resultType="com.house.team.map.vo.MapVo">
+	  SELECT * FROM map_info
+	</select>
+	
+	
+  <select id="searchKeyword" resultType="com.house.team.stats.vo.APTInfoVO" parameterType="String">
+    SELECT * 
+    FROM apt_info
+    WHERE lgl_addr LIKE '%' || #{keyword} || '%'
+  </select>
+  
+  
+<resultMap id="MapVoResultMap" type="com.house.team.map.vo.MapVo">
+	<result property="age" column="age" />
+    <result property="cmpxCd" column="cmpxCd" />
+    <result property="cmpxNm" column="cmpxNm" />
+    <result property="lglAddr" column="lglAddr" />
+    <result property="apprDt" column="apprDt" />
+    <result property="areaUnit" column="areaUnit" />
+    <result property="unitTot" column="unitTot" />
+</resultMap>
+
+ <select id="selectComparea" parameterType="string" resultType="com.house.team.map.vo.MapVo">
+  SELECT 
+    ai.CMPX_CD AS cmpxCd,
+    ai.CMPX_NM AS cmpxNm,
+    ai.APPR_DT AS apprDt,
+    ai.UNIT_TOT AS unitTot,           -- ✅ 전체 세대수 사용
+    aa.area_unit AS areaUnit
+  FROM apt_info ai
+  LEFT JOIN (
+    SELECT CMPX_CD, area_unit,
+           ROW_NUMBER() OVER (
+             PARTITION BY CMPX_CD
+             ORDER BY 
+               CASE WHEN unit_cnt IS NULL THEN 1 ELSE 0 END,
+               unit_cnt DESC
+           ) rn
+    FROM area_info
+  ) aa ON ai.CMPX_CD = aa.CMPX_CD AND aa.rn = 1
+  WHERE ai.CMPX_CD = #{cmpxCd}
+</select>
+  <select id="selectSimilarComplexes" resultMap="MapVoResultMap" parameterType="map">
+  SELECT 
+    ai.CMPX_CD   AS cmpxCd,
+    ai.CMPX_NM   AS cmpxNm,
+    ai.LGL_ADDR  AS lglAddr,
+    ai.APPR_DT   AS apprDt,
+    ai.UNIT_TOT  AS unitTot,         -- ✅ 전체 세대수 사용
+    aa.area_unit AS areaUnit
+  FROM apt_info ai
+  LEFT JOIN (
+    SELECT CMPX_CD, area_unit,
+           ROW_NUMBER() OVER (
+             PARTITION BY CMPX_CD
+             ORDER BY 
+               CASE WHEN unit_cnt IS NULL THEN 1 ELSE 0 END,
+               unit_cnt DESC
+           ) rn
+    FROM area_info
+  ) aa ON ai.CMPX_CD = aa.CMPX_CD AND aa.rn = 1
+  WHERE ai.CMPX_CD != #{cmpxCd}
+    <if test="minUnitTot != null and maxUnitTot != null">
+      AND ai.UNIT_TOT BETWEEN #{minUnitTot} AND #{maxUnitTot}   <!-- ✅ 여기서도 ai에서 비교 -->
+    </if>
+    <if test="minArea != null and maxArea != null">
+      AND aa.area_unit BETWEEN #{minArea} AND #{maxArea}
+    </if>
+    <if test="minAge != null and maxAge != null">
+  AND FLOOR(MONTHS_BETWEEN(SYSDATE, ai.appr_dt)/12) BETWEEN #{minAge} AND #{maxAge}
+</if>
+  ORDER BY 
+    ABS(NVL(ai.UNIT_TOT, 0) - #{baseUnitTot}) +     <!-- ✅ 정렬 조건도 수정 -->
+    ABS(NVL(aa.area_unit, 0) - #{baseArea})
+</select>
+ 
+<select id="getEnergyGradeBySimilarity" resultType="MapVo">
+  SELECT
+      A.CMPX_CD AS aId,
+      A.CMPX_NM AS aName,
+      B.CERT_NO AS bId,
+      B.BLD_NAME AS bName,
+      B.GRADE AS energyGrade,
+      ROUND(1 / (1 + SQRT(
+          POWER((A.TOTAL_AREA - B.EXCLUSIVE_AREA) / NULLIF((stats_B.AREA_MAX - stats_B.AREA_MIN), 0), 2) +
+          POWER((A.FLR_MAX - B.TOTAL_FLR) / NULLIF((stats_B.FLR_MAX - stats_B.FLR_MIN), 0), 2) +
+          POWER((A.UNIT_TOT - B.HOUSEHOLD) / NULLIF((stats_B.HH_MAX - stats_B.HH_MIN), 0), 2)
+      )), 4) AS similarityScore
+  FROM APT_INFO A
+  CROSS JOIN (
+      SELECT 
+          CERT_NO,
+          BLD_NAME,
+          GRADE,
+          EXCLUSIVE_AREA,
+          HOUSEHOLD,
+          NVL(TO_NUMBER(REGEXP_SUBSTR(BLD_SCALE, '지하 *([0-9]+)', 1, 1, NULL, 1)), 0) +
+          NVL(TO_NUMBER(REGEXP_SUBSTR(BLD_SCALE, '지상 *([0-9]+)', 1, 1, NULL, 1)), 0) AS TOTAL_FLR
+      FROM BLD_EN_CRT
+      WHERE EXCLUSIVE_AREA IS NOT NULL
+        AND HOUSEHOLD > 0
+        AND BLD_SCALE IS NOT NULL
+  ) B
+  CROSS JOIN (
+      SELECT
+          MAX(EXCLUSIVE_AREA) AS AREA_MAX,
+          MIN(EXCLUSIVE_AREA) AS AREA_MIN,
+          MAX(HOUSEHOLD) AS HH_MAX,
+          MIN(HOUSEHOLD) AS HH_MIN,
+          MAX(
+              NVL(TO_NUMBER(REGEXP_SUBSTR(BLD_SCALE, '지하 *([0-9]+)', 1, 1, NULL, 1)), 0) +
+              NVL(TO_NUMBER(REGEXP_SUBSTR(BLD_SCALE, '지상 *([0-9]+)', 1, 1, NULL, 1)), 0)
+          ) AS FLR_MAX,
+          MIN(
+              NVL(TO_NUMBER(REGEXP_SUBSTR(BLD_SCALE, '지하 *([0-9]+)', 1, 1, NULL, 1)), 0) +
+              NVL(TO_NUMBER(REGEXP_SUBSTR(BLD_SCALE, '지상 *([0-9]+)', 1, 1, NULL, 1)), 0)
+          ) AS FLR_MIN
+      FROM BLD_EN_CRT
+      WHERE EXCLUSIVE_AREA IS NOT NULL
+        AND HOUSEHOLD > 0
+        AND BLD_SCALE IS NOT NULL
+  ) stats_B
+  WHERE A.CMPX_CD = #{cmpxCd}
+    AND A.TOTAL_AREA IS NOT NULL
+    AND A.UNIT_TOT > 0
+    AND A.FLR_MAX > 0
+  ORDER BY similarityScore DESC
+  FETCH FIRST 1 ROWS ONLY
+</select>
+
+<select id="getEnergyGradeByName" resultType="MapVo">
+
+	  
+	  
+	SELECT
+	    A.CMPX_CD AS aId,
+	    A.CMPX_NM AS aName,               
+	    B.CERT_NO AS  bId,
+	    B.BLD_NAME AS bldName,            
+	    B.GRADE AS energyGrade,
+	    ROUND(1 / (1 + SQRT(
+	        POWER((A.TOTAL_AREA - B.EXCLUSIVE_AREA) / NULLIF((stats_B.AREA_MAX - stats_B.AREA_MIN), 0), 2) +
+	        POWER(((A.FLR_MAX + A.BSMNT_FLR) - B.TOTAL_FLR) / NULLIF((stats_B.FLR_MAX - stats_B.FLR_MIN), 0), 2) +
+	        POWER((A.UNIT_TOT - B.HOUSEHOLD) / NULLIF((stats_B.HH_MAX - stats_B.HH_MIN), 0), 2)
+	    )), 4) AS similarityScore
+	FROM apt_info A
+	CROSS JOIN (
+	    SELECT 
+	        CERT_NO,
+	        BLD_NAME,
+	        GRADE,
+	        EXCLUSIVE_AREA,
+	        HOUSEHOLD,
+	        NVL(TO_NUMBER(REGEXP_SUBSTR(BLD_SCALE, '지하 *([0-9]+)', 1, 1, NULL, 1)), 0) +
+	        NVL(TO_NUMBER(REGEXP_SUBSTR(BLD_SCALE, '지상 *([0-9]+)', 1, 1, NULL, 1)), 0) AS TOTAL_FLR
+	    FROM BLD_EN_CRT
+	    WHERE EXCLUSIVE_AREA IS NOT NULL
+	      AND HOUSEHOLD > 0
+	      AND BLD_SCALE IS NOT NULL
+	) B
+	CROSS JOIN (
+	    SELECT
+	        MAX(EXCLUSIVE_AREA) AS AREA_MAX,
+	        MIN(EXCLUSIVE_AREA) AS AREA_MIN,
+	        MAX(HOUSEHOLD) AS HH_MAX,
+	        MIN(HOUSEHOLD) AS HH_MIN,
+	        MAX(
+	            NVL(TO_NUMBER(REGEXP_SUBSTR(BLD_SCALE, '지하 *([0-9]+)', 1, 1, NULL, 1)), 0) +
+	            NVL(TO_NUMBER(REGEXP_SUBSTR(BLD_SCALE, '지상 *([0-9]+)', 1, 1, NULL, 1)), 0)
+	        ) AS FLR_MAX,
+	        MIN(
+	            NVL(TO_NUMBER(REGEXP_SUBSTR(BLD_SCALE, '지하 *([0-9]+)', 1, 1, NULL, 1)), 0) +
+	            NVL(TO_NUMBER(REGEXP_SUBSTR(BLD_SCALE, '지상 *([0-9]+)', 1, 1, NULL, 1)), 0)
+	        ) AS FLR_MIN
+	    FROM BLD_EN_CRT
+	    WHERE EXCLUSIVE_AREA IS NOT NULL
+	      AND HOUSEHOLD > 0
+	      AND BLD_SCALE IS NOT NULL
+	) stats_B
+	WHERE A.CMPX_CD = #{cmpxCd}  
+	  AND A.TOTAL_AREA IS NOT NULL
+	  AND A.UNIT_TOT > 0
+	  AND (A.FLR_MAX + A.BSMNT_FLR) > 0
+	ORDER BY similarityScore DESC
+	FETCH FIRST 1 ROWS ONLY
+
+</select>
+
+
+
+
+</mapper>

@@ -1,0 +1,931 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.team.stats.dao.IMgmtInfoDAO">
+
+    <!-- 특정 아파트의 최신 관리비 정보 조회 -->
+    <select id="getLatestMgmtInfo" parameterType="String" resultType="com.house.team.stats.vo.MgmtInfoVO">
+        SELECT 
+            CMPX_CD as cmpxCd,
+            OCC_YM as occYm,
+            PUB_MGMT_TOT as pubMgmtTot,
+            LABOR_COST as laborCost,
+            OFFICE_COST as officeCost,
+            TAX_COST as taxCost,
+            UNIFORM_COST as uniformCost,
+            TRAINING_COST as trainingCost,
+            CAR_MAINT_COST as carMaintCost,
+            ETC_COST as etcCost,
+            CLEAN_COST as cleanCost,
+            SECURITY_COST as securityCost,
+            DISINFECT_COST as disinfectCost,
+            ELEVATOR_COST as elevatorCost,
+            NETWORK_COST as networkCost,
+            REPAIR_COST as repairCost,
+            FACILITY_COST as facilityCost,
+            SAFETY_CHK_COST as safetyChkCost,
+            DISASTER_PREV_COST as disasterPrevCost,
+            MGMT_FEE_COST as mgmtFeeCost,
+            INDIV_USE_TOT as indivUseTot,
+            HEAT_PUB as heatPub,
+            HEAT_PRIV as heatPriv,
+            HOT_WATER_PUB as hotWaterPub,
+            HOT_WATER_PRIV as hotWaterPriv,
+            GAS_PUB as gasPub,
+            GAS_PRIV as gasPriv,
+            ELECTRIC_PUB as electricPub,
+            ELECTRIC_PRIV as electricPriv,
+            WATER_PUB as waterPub,
+            WATER_PRIV as waterPriv,
+            TV_FEE as tvFee,
+            SEPTIC_FEE as septicFee,
+            WASTE_FEE as wasteFee,
+            RESIDENT_OP_FEE as residentOpFee,
+            BUILDING_INS as buildingIns,
+            CNC_OP as cncOp,
+            ETC_FEE as etcFee,
+            RSV_CHG as rsvChg,
+            RSV_USE as rsvUse,
+            RSV_TOT as rsvTot,
+            RSV_RT as rsvRt,
+            MSC_INC as mscInc,
+            MTH_INC as mthInc,
+            RS_CNTRB as rsCntrb,
+            CM_CNTRB as cmCntrb,
+            CRT_DT as crtDt,
+            UPD_DT as updDt
+        FROM (
+            SELECT *,
+                   ROW_NUMBER() OVER (PARTITION BY CMPX_CD ORDER BY OCC_YM DESC) as rn
+            FROM MGMT_INFO
+            WHERE CMPX_CD = #{cmpxCd}
+        )
+        WHERE rn = 1
+    </select>
+
+    <!-- 여러 아파트의 관리비 비교 정보 조회 -->
+    <select id="getCompareMgmtInfo" parameterType="list" resultType="com.house.team.stats.vo.MgmtInfoVO">
+        <![CDATA[
+        SELECT 
+            mi.CMPX_CD as cmpxCd,
+            mi.OCC_YM as occYm,
+            mi.PUB_MGMT_TOT as pubMgmtTot,
+            mi.INDIV_USE_TOT as indivUseTot,
+            a.CMPX_NM as cmpxNm,
+            a.UNIT_TOT as unitTot,
+            ROUND(mi.PUB_MGMT_TOT / a.UNIT_TOT, 0) as mgmtPerUnit,
+            ar.AREA_UNIT as mainAreaUnit,
+            ROUND((mi.PUB_MGMT_TOT / a.UNIT_TOT) / ar.AREA_UNIT, 2) as mgmtPerArea,
+            FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) as buildingAge,
+            CASE 
+                WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) >= 20 THEN '노후'
+                WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) >= 10 THEN '중간'
+                ELSE '신축'
+            END as ageCategory
+        FROM APT_INFO a
+        JOIN (
+            SELECT 
+                CMPX_CD,
+                AREA_UNIT,
+                UNIT_CNT,
+                ROW_NUMBER() OVER (PARTITION BY CMPX_CD ORDER BY UNIT_CNT DESC) as rn
+            FROM AREA_INFO
+        ) ar ON a.CMPX_CD = ar.CMPX_CD AND ar.rn = 1
+        JOIN (
+            SELECT 
+                CMPX_CD,
+                OCC_YM,
+                PUB_MGMT_TOT,
+                INDIV_USE_TOT,
+                ROW_NUMBER() OVER (PARTITION BY CMPX_CD ORDER BY OCC_YM DESC) as rn
+            FROM MGMT_INFO
+        ) mi ON a.CMPX_CD = mi.CMPX_CD AND mi.rn = 1
+        WHERE a.CMPX_CD IN
+        ]]>
+        <foreach collection="list" item="cmpxCd" open="(" separator="," close=")">
+            #{cmpxCd}
+        </foreach>
+        <![CDATA[
+        ORDER BY 
+            CASE WHEN a.CMPX_CD = (SELECT MIN(value) FROM (
+        ]]>
+                <foreach collection="list" item="cmpxCd" separator=" UNION ALL ">
+                    SELECT #{cmpxCd} as value FROM DUAL
+                </foreach>
+        <![CDATA[
+            )) THEN 1 ELSE 2 END,
+            ageCategory
+        ]]>
+    </select>
+
+    <!-- 특정 아파트의 관리비 히스토리 조회 -->
+    <select id="getMgmtHistory" parameterType="String" resultType="com.house.team.stats.vo.MgmtInfoVO">
+        <![CDATA[
+        SELECT 
+            CMPX_CD as cmpxCd,
+            OCC_YM as occYm,
+            PUB_MGMT_TOT as pubMgmtTot,
+            INDIV_USE_TOT as indivUseTot,
+            LABOR_COST as laborCost,
+            CLEAN_COST as cleanCost,
+            SECURITY_COST as securityCost,
+            ELEVATOR_COST as elevatorCost,
+            REPAIR_COST as repairCost,
+            ELECTRIC_PUB as electricPub,
+            ELECTRIC_PRIV as electricPriv,
+            CRT_DT as crtDt,
+            UPD_DT as updDt
+        FROM MGMT_INFO 
+        WHERE CMPX_CD = #{cmpxCd}
+        ORDER BY OCC_YM DESC
+        FETCH FIRST 12 ROWS ONLY
+        ]]>
+    </select>
+
+    <!-- 노후도 그룹별 개별사용료계 월별 추이 조회 -->
+    <select id="getIndividualFeeTrendByAgeGroup" resultType="com.house.team.stats.vo.IndividualFeeTrendVO">
+        <![CDATA[
+        WITH CategorizedApartments AS (
+            -- 1단계: 노후도 그룹 분류 및 개별사용료 6개 항목이 모두 0이 아닌 아파트만 필터링
+            SELECT
+                M.CMPX_CD,
+                M.OCC_YM,
+                A.UNIT_TOT, -- 세대수
+                M.INDIV_USE_TOT, -- 개별사용료계
+                CASE
+                    WHEN TO_CHAR(A.APPR_DT, 'YYYY') <= '2004' THEN '노후' -- 2004년 이전
+                    WHEN TO_CHAR(A.APPR_DT, 'YYYY') >= '2015' THEN '신축' -- 2015년 이후
+                    ELSE '중견' -- 2005년 ~ 2014년
+                END AS age_group
+            FROM
+                MGMT_ALL_INFO M
+            JOIN
+                APT_INFO A ON M.CMPX_CD = A.CMPX_CD
+            WHERE
+                -- 2024년 데이터만
+                M.OCC_YM LIKE '2025%'
+                -- 개별사용료 6개 항목이 모두 0이 아닌 경우만
+                AND M.ELECTRIC_PUB != 0 
+                AND M.ELECTRIC_PRIV != 0 
+                AND M.WATER_PUB != 0 
+                AND M.WATER_PRIV != 0 
+                AND M.SEPTIC_FEE != 0 
+                AND M.WASTE_FEE != 0
+                -- 세대수가 0이 아닌 경우만 (나누기 위해)
+                AND A.UNIT_TOT > 0
+                -- 개별사용료계가 0이 아닌 경우만
+                AND M.INDIV_USE_TOT > 0
+        ),
+        MonthlyAverage AS (
+            -- 2단계: 월별, 그룹별 세대당 평균 개별사용료 계산
+            SELECT
+                age_group,
+                OCC_YM,
+                -- 각 아파트의 세대당 개별사용료를 계산한 후 평균
+                AVG(INDIV_USE_TOT / UNIT_TOT) AS avg_individual_fee_per_unit
+            FROM
+                CategorizedApartments
+            GROUP BY
+                age_group, OCC_YM
+        )
+        -- 3단계: 최종 결과 출력 (월별 정렬)
+        SELECT
+            age_group as ageGroup,
+            OCC_YM as occYm,
+            SUBSTR(OCC_YM, 5, 2) as monthOnly, -- 월만 추출 (01, 02, ... 12)
+            ROUND(avg_individual_fee_per_unit, 0) as avgIndividualFeePerUnit -- 원 단위로 반올림
+        FROM
+            MonthlyAverage
+        ORDER BY
+            OCC_YM, -- 월별 정렬
+            CASE
+                WHEN age_group = '신축' THEN 1
+                WHEN age_group = '중견' THEN 2
+                WHEN age_group = '노후' THEN 3
+            END -- 그룹별 정렬
+        ]]>
+    </select>
+
+    <!-- 노후도 그룹별 공용관리비계 월별 추이 조회 -->
+    <select id="getPublicMgmtFeeTrendByAgeGroup" resultType="com.house.team.stats.vo.PublicMgmtFeeTrendVO">
+        <![CDATA[
+        WITH FilteredAndJoinedData AS (
+            SELECT 
+                M.CMPX_CD,
+                CAST(SUBSTR(M.OCC_YM, 5, 2) AS NUMBER) AS month_num,
+                A.APPR_DT,
+                A.UNIT_TOT,
+                M.PUB_MGMT_TOT AS PublicManagementFeeRaw,
+                M.LABOR_COST,
+                M.OFFICE_COST,
+                M.TAX_COST,
+                M.ETC_COST,
+                M.CLEAN_COST,
+                M.SECURITY_COST,
+                M.DISINFECT_COST,
+                M.ELEVATOR_COST,
+                M.REPAIR_COST,
+                M.FACILITY_COST,
+                M.RESIDENT_OP_FEE,
+                M.BUILDING_INS
+            FROM 
+                MGMT_ALL_INFO M
+            JOIN 
+                APT_INFO A ON M.CMPX_CD = A.CMPX_CD
+            WHERE 
+                -- 2025년 데이터만 필터링
+                SUBSTR(M.OCC_YM, 1, 4) = '2025'
+                -- 공용관리비 12가지 항목 중 하나라도 0인 아파트 제외
+                AND M.LABOR_COST != 0
+                AND M.OFFICE_COST != 0
+                AND M.TAX_COST != 0
+                AND M.ETC_COST != 0
+                AND M.CLEAN_COST != 0
+                AND M.SECURITY_COST != 0
+                AND M.DISINFECT_COST != 0
+                AND M.ELEVATOR_COST != 0
+                AND M.REPAIR_COST != 0
+                AND M.FACILITY_COST != 0
+                AND M.RESIDENT_OP_FEE != 0
+                AND M.BUILDING_INS != 0
+        ),
+        CategorizedAndNormalizedData AS (
+            SELECT 
+                CMPX_CD,
+                month_num,
+                CASE 
+                    WHEN UNIT_TOT IS NULL OR UNIT_TOT = 0 THEN NULL
+                    ELSE (PublicManagementFeeRaw / UNIT_TOT)
+                END AS NormalizedPublicManagementFee,
+                CASE
+                    WHEN TO_CHAR(APPR_DT, 'YYYY') <= '2004' THEN '노후'
+                    WHEN TO_CHAR(APPR_DT, 'YYYY') >= '2015' THEN '신축'
+                    ELSE '중견'
+                END AS age_group
+            FROM 
+                FilteredAndJoinedData
+            WHERE 
+                (UNIT_TOT IS NOT NULL AND UNIT_TOT != 0)
+        )
+        SELECT 
+            age_group as ageGroup,
+            month_num as monthNum,
+            ROUND(AVG(NormalizedPublicManagementFee), 0) as avgPublicMgmtFeePerUnit
+        FROM 
+            CategorizedAndNormalizedData
+        WHERE 
+            NormalizedPublicManagementFee IS NOT NULL
+        GROUP BY 
+            age_group, month_num
+        ORDER BY 
+            month_num,
+            CASE
+                WHEN age_group = '신축' THEN 1
+                WHEN age_group = '중견' THEN 2
+                WHEN age_group = '노후' THEN 3
+            END
+        ]]>
+    </select>
+
+    <!-- 노후도 그룹별 관리비 항목 비중 조회 -->
+    <select id="getMgmtCompositionByAgeGroup" resultType="com.house.team.stats.vo.MgmtCompositionVO">
+        <![CDATA[
+        WITH AnnualGroupedManagementFees AS (
+            SELECT
+                -- 노후도 그룹 정의
+                CASE
+                    WHEN TO_CHAR(A.APPR_DT, 'YYYY') <= '2004' THEN '노후' -- 2004년 이전
+                    WHEN TO_CHAR(A.APPR_DT, 'YYYY') >= '2015' THEN '신축' -- 2015년 이후
+                    ELSE '중견' -- 2005년 ~ 2014년
+                END AS age_group,
+                -- 각 공용관리비 항목의 연간 합계 계산 (0이 아닌 데이터만 합산)
+                SUM(M.LABOR_COST) AS total_labor_cost,
+                SUM(M.OFFICE_COST) AS total_office_cost,
+                SUM(M.TAX_COST) AS total_tax_cost,
+                SUM(M.ETC_COST) AS total_etc_cost,
+                SUM(M.CLEAN_COST) AS total_clean_cost,
+                SUM(M.SECURITY_COST) AS total_security_cost,
+                SUM(M.DISINFECT_COST) AS total_disinfect_cost,
+                SUM(M.ELEVATOR_COST) AS total_elevator_cost,
+                SUM(M.REPAIR_COST) AS total_repair_cost,
+                SUM(M.FACILITY_COST) AS total_facility_cost,
+                SUM(M.RESIDENT_OP_FEE) AS total_resident_op_fee,
+                SUM(M.BUILDING_INS) AS total_building_ins,
+                -- 총 공용관리비계의 연간 합계 계산
+                SUM(M.PUB_MGMT_TOT) AS total_public_mgmt_fee_overall
+            FROM
+                MGMT_INFO M
+            JOIN
+                APT_INFO A ON M.CMPX_CD = A.CMPX_CD
+            WHERE
+                -- 2024년 데이터만 필터링
+                SUBSTR(M.OCC_YM, 1, 4) = '2024'
+                -- 12가지 항목이 모두 0이 아닌 경우에만 해당 아파트의 데이터 포함
+                AND M.LABOR_COST != 0
+                AND M.OFFICE_COST != 0
+                AND M.TAX_COST != 0
+                AND M.ETC_COST != 0
+                AND M.CLEAN_COST != 0
+                AND M.SECURITY_COST != 0
+                AND M.DISINFECT_COST != 0
+                AND M.ELEVATOR_COST != 0
+                AND M.REPAIR_COST != 0
+                AND M.FACILITY_COST != 0
+                AND M.RESIDENT_OP_FEE != 0
+                AND M.BUILDING_INS != 0
+            GROUP BY
+                CASE
+                    WHEN TO_CHAR(A.APPR_DT, 'YYYY') <= '2004' THEN '노후'
+                    WHEN TO_CHAR(A.APPR_DT, 'YYYY') >= '2015' THEN '신축'
+                    ELSE '중견'
+                END
+        )
+        SELECT
+            age_group as ageGroup,
+            -- 각 항목의 총 공용관리비 대비 비중 계산 (소수점 1자리 반올림)
+            ROUND((total_labor_cost / total_public_mgmt_fee_overall) * 100, 1) AS laborCostPct,
+            ROUND((total_office_cost / total_public_mgmt_fee_overall) * 100, 1) AS officeCostPct,
+            ROUND((total_tax_cost / total_public_mgmt_fee_overall) * 100, 1) AS taxCostPct,
+            ROUND((total_etc_cost / total_public_mgmt_fee_overall) * 100, 1) AS etcCostPct,
+            ROUND((total_clean_cost / total_public_mgmt_fee_overall) * 100, 1) AS cleanCostPct,
+            ROUND((total_security_cost / total_public_mgmt_fee_overall) * 100, 1) AS securityCostPct,
+            ROUND((total_disinfect_cost / total_public_mgmt_fee_overall) * 100, 1) AS disinfectCostPct,
+            ROUND((total_elevator_cost / total_public_mgmt_fee_overall) * 100, 1) AS elevatorCostPct,
+            ROUND((total_repair_cost / total_public_mgmt_fee_overall) * 100, 1) AS repairCostPct,
+            ROUND((total_facility_cost / total_public_mgmt_fee_overall) * 100, 1) AS facilityCostPct,
+            ROUND((total_resident_op_fee / total_public_mgmt_fee_overall) * 100, 1) AS residentOpFeePct,
+            ROUND((total_building_ins / total_public_mgmt_fee_overall) * 100, 1) AS buildingInsPct
+        FROM
+            AnnualGroupedManagementFees
+        WHERE
+            total_public_mgmt_fee_overall IS NOT NULL AND total_public_mgmt_fee_overall != 0 -- 0으로 나누는 오류 방지
+        ORDER BY
+            CASE age_group
+                WHEN '노후' THEN 1
+                WHEN '중견' THEN 2
+                WHEN '신축' THEN 3
+            END
+        ]]>
+    </select>
+    
+    <!-- 연식별 주요 관리비 항목 지출 비교 -->
+	<select id="getMgmtCostComparisonByAgeGroup" resultType="com.house.team.stats.vo.MgmtCostComparisonVO">
+	    <![CDATA[
+	    -- 연식별 주요 관리비 항목 지출 비교 분석 쿼리
+	    WITH 
+	    -- 1단계: 아파트 노후도 분류 (사용승인일 기준)
+	    apt_age_group AS (
+	        SELECT 
+	            CMPX_CD,
+	            CMPX_NM,
+	            APPR_DT,
+	            UNIT_TOT,
+	            CASE 
+	                WHEN EXTRACT(YEAR FROM APPR_DT) <= 2004 THEN '노후'
+	                WHEN EXTRACT(YEAR FROM APPR_DT) BETWEEN 2005 AND 2014 THEN '중견'
+	                WHEN EXTRACT(YEAR FROM APPR_DT) >= 2015 THEN '신축'
+	                ELSE '미분류'
+	            END AS AGE_GROUP,
+	            EXTRACT(YEAR FROM APPR_DT) AS APPR_YEAR
+	        FROM APT_INFO 
+	        WHERE APPR_DT IS NOT NULL 
+	          AND UNIT_TOT IS NOT NULL 
+	          AND UNIT_TOT > 0
+	    ),
+	
+	    -- 2단계: 2015-2024년 모든 데이터가 있는 아파트만 선별
+	    complete_data_apts AS (
+	        -- 2015-2023년 데이터 (MGMT_ALL_INFO)
+	        SELECT DISTINCT CMPX_CD
+	        FROM MGMT_ALL_INFO 
+	        WHERE SUBSTR(OCC_YM, 1, 4) BETWEEN '2015' AND '2023'
+	        GROUP BY CMPX_CD
+	        HAVING COUNT(DISTINCT SUBSTR(OCC_YM, 1, 4)) = 9  -- 2015~2023 (9년)
+	        
+	        INTERSECT
+	        
+	        -- 2024년 데이터 (MGMT_INFO)
+	        SELECT DISTINCT CMPX_CD
+	        FROM MGMT_INFO
+	        WHERE SUBSTR(OCC_YM, 1, 4) = '2024'
+	    ),
+	
+	    -- 3단계: 2015-2023년 관리비 데이터 (연도별 합계)
+	    mgmt_2015_2023 AS (
+	        SELECT 
+	            CMPX_CD,
+	            SUBSTR(OCC_YM, 1, 4) AS YEAR,
+	            SUM(NVL(REPAIR_COST, 0)) AS REPAIR_COST,           -- 수선비
+	            SUM(NVL(FACILITY_COST, 0)) AS FACILITY_COST,       -- 시설유지비
+	            SUM(NVL(SECURITY_COST, 0)) AS SECURITY_COST,       -- 경비비
+	            SUM(NVL(LABOR_COST, 0)) AS LABOR_COST,             -- 인건비
+	            SUM(NVL(CLEAN_COST, 0)) AS CLEAN_COST              -- 청소비
+	        FROM MGMT_ALL_INFO
+	        WHERE SUBSTR(OCC_YM, 1, 4) BETWEEN '2015' AND '2023'
+	          AND CMPX_CD IN (SELECT CMPX_CD FROM complete_data_apts)
+	        GROUP BY CMPX_CD, SUBSTR(OCC_YM, 1, 4)
+	    ),
+	
+	    -- 4단계: 2024년 관리비 데이터 (연도별 합계)
+	    mgmt_2024 AS (
+	        SELECT 
+	            CMPX_CD,
+	            '2024' AS YEAR,
+	            SUM(NVL(REPAIR_COST, 0)) AS REPAIR_COST,
+	            SUM(NVL(FACILITY_COST, 0)) AS FACILITY_COST,
+	            SUM(NVL(SECURITY_COST, 0)) AS SECURITY_COST,
+	            SUM(NVL(LABOR_COST, 0)) AS LABOR_COST,
+	            SUM(NVL(CLEAN_COST, 0)) AS CLEAN_COST
+	        FROM MGMT_INFO
+	        WHERE SUBSTR(OCC_YM, 1, 4) = '2024'
+	          AND CMPX_CD IN (SELECT CMPX_CD FROM complete_data_apts)
+	        GROUP BY CMPX_CD
+	    ),
+	
+	    -- 5단계: 2015-2024년 전체 관리비 데이터 통합
+	    all_mgmt_data AS (
+	        SELECT * FROM mgmt_2015_2023
+	        UNION ALL
+	        SELECT * FROM mgmt_2024
+	    ),
+	
+	    -- 6단계: 각 아파트-연도별 세대수당 관리비 항목 지출액 계산
+	    per_unit_cost AS (
+	        SELECT 
+	            m.CMPX_CD,
+	            m.YEAR,
+	            a.AGE_GROUP,
+	            a.CMPX_NM,
+	            a.UNIT_TOT,
+	            -- 세대수당 지출액 계산 (NVL로 NULL 처리, 0으로 나누기 방지)
+	            CASE WHEN a.UNIT_TOT > 0 THEN m.REPAIR_COST / a.UNIT_TOT ELSE 0 END AS REPAIR_PER_UNIT,
+	            CASE WHEN a.UNIT_TOT > 0 THEN m.FACILITY_COST / a.UNIT_TOT ELSE 0 END AS FACILITY_PER_UNIT,
+	            CASE WHEN a.UNIT_TOT > 0 THEN m.SECURITY_COST / a.UNIT_TOT ELSE 0 END AS SECURITY_PER_UNIT,
+	            CASE WHEN a.UNIT_TOT > 0 THEN m.LABOR_COST / a.UNIT_TOT ELSE 0 END AS LABOR_PER_UNIT,
+	            CASE WHEN a.UNIT_TOT > 0 THEN m.CLEAN_COST / a.UNIT_TOT ELSE 0 END AS CLEAN_PER_UNIT
+	        FROM all_mgmt_data m
+	        JOIN apt_age_group a ON m.CMPX_CD = a.CMPX_CD
+	        WHERE a.AGE_GROUP != '미분류'
+	    ),
+	
+	    -- 7단계: 각 아파트별 10년(2015-2024)간 연평균 세대수당 지출액 계산
+	    apt_avg_cost AS (
+	        SELECT 
+	            CMPX_CD,
+	            AGE_GROUP,
+	            CMPX_NM,
+	            AVG(REPAIR_PER_UNIT) AS AVG_REPAIR_PER_UNIT,
+	            AVG(FACILITY_PER_UNIT) AS AVG_FACILITY_PER_UNIT,
+	            AVG(SECURITY_PER_UNIT) AS AVG_SECURITY_PER_UNIT,
+	            AVG(LABOR_PER_UNIT) AS AVG_LABOR_PER_UNIT,
+	            AVG(CLEAN_PER_UNIT) AS AVG_CLEAN_PER_UNIT,
+	            COUNT(*) AS DATA_YEARS  -- 데이터 존재 연도 수 확인용
+	        FROM per_unit_cost
+	        GROUP BY CMPX_CD, AGE_GROUP, CMPX_NM
+	        HAVING COUNT(*) = 10  -- 10년 데이터가 모두 있는 아파트만
+	    )
+	
+	    -- 8단계: 최종 결과 - 노후도 그룹별 항목별 연평균 세대수당 지출액
+	    SELECT 
+	        AGE_GROUP AS ageGroup,
+	        COUNT(*) AS apartmentCount,
+	        ROUND(AVG(AVG_REPAIR_PER_UNIT), 0) AS repairCost,
+	        ROUND(AVG(AVG_FACILITY_PER_UNIT), 0) AS facilityCost, 
+	        ROUND(AVG(AVG_SECURITY_PER_UNIT), 0) AS securityCost,
+	        ROUND(AVG(AVG_LABOR_PER_UNIT), 0) AS laborCost,
+	        ROUND(AVG(AVG_CLEAN_PER_UNIT), 0) AS cleanCost
+	    FROM apt_avg_cost
+	    GROUP BY AGE_GROUP
+	    ORDER BY 
+	        CASE AGE_GROUP 
+	            WHEN '노후' THEN 1 
+	            WHEN '중견' THEN 2 
+	            WHEN '신축' THEN 3 
+	        END
+	    ]]>
+	</select>
+	
+	<!-- 1. 노후도 그룹별 10년간 연평균 장충금 현황 조회 -->
+	<select id="getReserveFundStatusByAgeGroup" resultType="com.house.team.stats.vo.ReserveFundStatusVO">
+	    <![CDATA[
+	    WITH 
+	    -- 1단계: 아파트 노후도 분류 (사용승인일 기준)
+	    apt_age_group AS (
+	        SELECT 
+	            CMPX_CD,
+	            CMPX_NM,
+	            APPR_DT,
+	            UNIT_TOT,
+	            CASE 
+	                WHEN EXTRACT(YEAR FROM APPR_DT) <= 2004 THEN '노후'
+	                WHEN EXTRACT(YEAR FROM APPR_DT) BETWEEN 2005 AND 2014 THEN '중견'
+	                WHEN EXTRACT(YEAR FROM APPR_DT) >= 2015 THEN '신축'
+	                ELSE '미분류'
+	            END AS AGE_GROUP
+	        FROM APT_INFO 
+	        WHERE APPR_DT IS NOT NULL 
+	          AND UNIT_TOT IS NOT NULL 
+	          AND UNIT_TOT > 0
+	    ),
+	
+	    -- 2단계: 2015-2024년 모든 장충금 데이터가 있는 아파트만 선별
+	    complete_reserve_data_apts AS (
+	        -- 2015-2023년 데이터 (MGMT_ALL_INFO)
+	        SELECT DISTINCT CMPX_CD
+	        FROM MGMT_ALL_INFO 
+	        WHERE SUBSTR(OCC_YM, 1, 4) BETWEEN '2015' AND '2023'
+	          AND RSV_CHG IS NOT NULL 
+	          AND RSV_USE IS NOT NULL 
+	          AND RSV_TOT IS NOT NULL
+	        GROUP BY CMPX_CD
+	        HAVING COUNT(DISTINCT SUBSTR(OCC_YM, 1, 4)) = 9  -- 2015~2023 (9년)
+	        
+	        INTERSECT
+	        
+	        -- 2024년 데이터 (MGMT_INFO)
+	        SELECT DISTINCT CMPX_CD
+	        FROM MGMT_INFO
+	        WHERE SUBSTR(OCC_YM, 1, 4) = '2024'
+	          AND RSV_CHG IS NOT NULL 
+	          AND RSV_USE IS NOT NULL 
+	          AND RSV_TOT IS NOT NULL
+	    ),
+	
+	    -- 3단계: 2015-2023년 장충금 데이터 (연도별 합계)
+	    reserve_2015_2023 AS (
+	        SELECT 
+	            CMPX_CD,
+	            SUBSTR(OCC_YM, 1, 4) AS YEAR,
+	            SUM(NVL(RSV_CHG, 0)) AS TOTAL_CHARGE,     -- 연간 총 부과액
+	            SUM(NVL(RSV_USE, 0)) AS TOTAL_USAGE,      -- 연간 총 사용액
+	            AVG(NVL(RSV_TOT, 0)) AS AVG_TOTAL         -- 연간 평균 총적립금액
+	        FROM MGMT_ALL_INFO
+	        WHERE SUBSTR(OCC_YM, 1, 4) BETWEEN '2015' AND '2023'
+	          AND CMPX_CD IN (SELECT CMPX_CD FROM complete_reserve_data_apts)
+	        GROUP BY CMPX_CD, SUBSTR(OCC_YM, 1, 4)
+	    ),
+	
+	    -- 4단계: 2024년 장충금 데이터 (연도별 합계)
+	    reserve_2024 AS (
+	        SELECT 
+	            CMPX_CD,
+	            '2024' AS YEAR,
+	            SUM(NVL(RSV_CHG, 0)) AS TOTAL_CHARGE,
+	            SUM(NVL(RSV_USE, 0)) AS TOTAL_USAGE,
+	            AVG(NVL(RSV_TOT, 0)) AS AVG_TOTAL
+	        FROM MGMT_INFO
+	        WHERE SUBSTR(OCC_YM, 1, 4) = '2024'
+	          AND CMPX_CD IN (SELECT CMPX_CD FROM complete_reserve_data_apts)
+	        GROUP BY CMPX_CD
+	    ),
+	
+	    -- 5단계: 2015-2024년 전체 장충금 데이터 통합
+	    all_reserve_data AS (
+	        SELECT * FROM reserve_2015_2023
+	        UNION ALL
+	        SELECT * FROM reserve_2024
+	    ),
+	
+	    -- 6단계: 각 아파트-연도별 세대수당 연평균 장충금 계산
+	    per_unit_reserve AS (
+	        SELECT 
+	            r.CMPX_CD,
+	            r.YEAR,
+	            a.AGE_GROUP,
+	            a.UNIT_TOT,
+	            -- 세대수당 월평균 장충금 계산 (연간 총액을 12로 나누어 월평균 구한 후 세대수로 나누기)
+	            CASE WHEN a.UNIT_TOT > 0 THEN (r.TOTAL_CHARGE / 12) / a.UNIT_TOT ELSE 0 END AS CHARGE_PER_UNIT_MONTHLY,
+	            CASE WHEN a.UNIT_TOT > 0 THEN (r.TOTAL_USAGE / 12) / a.UNIT_TOT ELSE 0 END AS USAGE_PER_UNIT_MONTHLY,
+	            CASE WHEN a.UNIT_TOT > 0 THEN r.AVG_TOTAL / a.UNIT_TOT ELSE 0 END AS TOTAL_PER_UNIT
+	        FROM all_reserve_data r
+	        JOIN apt_age_group a ON r.CMPX_CD = a.CMPX_CD
+	        WHERE a.AGE_GROUP != '미분류'
+	    ),
+	
+	    -- 7단계: 각 아파트별 10년(2015-2024)간 연평균 세대수당 장충금 계산
+	    apt_avg_reserve AS (
+	        SELECT 
+	            CMPX_CD,
+	            AGE_GROUP,
+	            AVG(CHARGE_PER_UNIT_MONTHLY) AS AVG_CHARGE_PER_UNIT,
+	            AVG(USAGE_PER_UNIT_MONTHLY) AS AVG_USAGE_PER_UNIT,
+	            AVG(TOTAL_PER_UNIT) AS AVG_TOTAL_PER_UNIT,
+	            COUNT(*) AS DATA_YEARS  -- 데이터 존재 연도 수 확인용
+	        FROM per_unit_reserve
+	        GROUP BY CMPX_CD, AGE_GROUP
+	        HAVING COUNT(*) = 10  -- 10년 데이터가 모두 있는 아파트만
+	    )
+	
+	    -- 8단계: 최종 결과 - 노후도 그룹별 10년간 연평균 세대수당 장충금 현황
+	    SELECT 
+	        AGE_GROUP AS ageGroup,
+	        COUNT(*) AS apartmentCount,
+	        ROUND(AVG(AVG_CHARGE_PER_UNIT), 0) AS avgChargePerUnit,
+	        ROUND(AVG(AVG_USAGE_PER_UNIT), 0) AS avgUsagePerUnit,
+	        ROUND(AVG(AVG_TOTAL_PER_UNIT), 0) AS avgTotalPerUnit
+	    FROM apt_avg_reserve
+	    GROUP BY AGE_GROUP
+	    ORDER BY 
+	        CASE AGE_GROUP 
+	            WHEN '노후' THEN 1 
+	            WHEN '중견' THEN 2 
+	            WHEN '신축' THEN 3 
+	        END
+	    ]]>
+	</select>
+	
+	<!-- 2. 노후도 그룹별 장충금 총적립금액 연도별 추이 조회 (2015~2024) -->
+	<select id="getReserveFundTrendByAgeGroup" resultType="com.house.team.stats.vo.ReserveFundTrendVO">
+	    <![CDATA[
+	    WITH 
+	    -- 1단계: 아파트 노후도 분류 (사용승인일 기준)
+	    apt_age_group AS (
+	        SELECT 
+	            CMPX_CD,
+	            CMPX_NM,
+	            APPR_DT,
+	            UNIT_TOT,
+	            CASE 
+	                WHEN EXTRACT(YEAR FROM APPR_DT) <= 2004 THEN '노후'
+	                WHEN EXTRACT(YEAR FROM APPR_DT) BETWEEN 2005 AND 2014 THEN '중견'
+	                WHEN EXTRACT(YEAR FROM APPR_DT) >= 2015 THEN '신축'
+	                ELSE '미분류'
+	            END AS AGE_GROUP
+	        FROM APT_INFO 
+	        WHERE APPR_DT IS NOT NULL 
+	          AND UNIT_TOT IS NOT NULL 
+	          AND UNIT_TOT > 0
+	    ),
+	
+	    -- 2단계: 2015-2024년 모든 장충금 데이터가 있는 아파트만 선별
+	    complete_reserve_data_apts AS (
+	        -- 2015-2023년 데이터 (MGMT_ALL_INFO)
+	        SELECT DISTINCT CMPX_CD
+	        FROM MGMT_ALL_INFO 
+	        WHERE SUBSTR(OCC_YM, 1, 4) BETWEEN '2015' AND '2023'
+	          AND RSV_CHG IS NOT NULL 
+	          AND RSV_USE IS NOT NULL 
+	          AND RSV_TOT IS NOT NULL
+	        GROUP BY CMPX_CD
+	        HAVING COUNT(DISTINCT SUBSTR(OCC_YM, 1, 4)) = 9  -- 2015~2023 (9년)
+	        
+	        INTERSECT
+	        
+	        -- 2024년 데이터 (MGMT_INFO)
+	        SELECT DISTINCT CMPX_CD
+	        FROM MGMT_INFO
+	        WHERE SUBSTR(OCC_YM, 1, 4) = '2024'
+	          AND RSV_CHG IS NOT NULL 
+	          AND RSV_USE IS NOT NULL 
+	          AND RSV_TOT IS NOT NULL
+	    ),
+	
+	    -- 3단계: 2015-2023년 장충금 데이터 (연도별 총적립금액 평균)
+	    reserve_trend_2015_2023 AS (
+	        SELECT 
+	            CMPX_CD,
+	            SUBSTR(OCC_YM, 1, 4) AS YEAR,
+	            AVG(NVL(RSV_TOT, 0)) AS AVG_TOTAL_RESERVE    -- 해당 연도 평균 총적립금액
+	        FROM MGMT_ALL_INFO
+	        WHERE SUBSTR(OCC_YM, 1, 4) BETWEEN '2015' AND '2023'
+	          AND CMPX_CD IN (SELECT CMPX_CD FROM complete_reserve_data_apts)
+	        GROUP BY CMPX_CD, SUBSTR(OCC_YM, 1, 4)
+	    ),
+	
+	    -- 4단계: 2024년 장충금 데이터 (연도별 총적립금액 평균)
+	    reserve_trend_2024 AS (
+	        SELECT 
+	            CMPX_CD,
+	            '2024' AS YEAR,
+	            AVG(NVL(RSV_TOT, 0)) AS AVG_TOTAL_RESERVE
+	        FROM MGMT_INFO
+	        WHERE SUBSTR(OCC_YM, 1, 4) = '2024'
+	          AND CMPX_CD IN (SELECT CMPX_CD FROM complete_reserve_data_apts)
+	        GROUP BY CMPX_CD
+	    ),
+	
+	    -- 5단계: 2015-2024년 전체 장충금 추이 데이터 통합
+	    all_reserve_trend_data AS (
+	        SELECT * FROM reserve_trend_2015_2023
+	        UNION ALL
+	        SELECT * FROM reserve_trend_2024
+	    ),
+	
+	    -- 6단계: 각 아파트-연도별 세대수당 총적립금액 계산
+	    per_unit_reserve_trend AS (
+	        SELECT 
+	            r.CMPX_CD,
+	            TO_NUMBER(r.YEAR) AS YEAR,
+	            a.AGE_GROUP,
+	            a.UNIT_TOT,
+	            CASE WHEN a.UNIT_TOT > 0 THEN r.AVG_TOTAL_RESERVE / a.UNIT_TOT ELSE 0 END AS TOTAL_PER_UNIT
+	        FROM all_reserve_trend_data r
+	        JOIN apt_age_group a ON r.CMPX_CD = a.CMPX_CD
+	        WHERE a.AGE_GROUP != '미분류'
+	    )
+	
+	    -- 7단계: 최종 결과 - 노후도 그룹별 연도별 세대수당 평균 총적립금액
+	    SELECT 
+	        AGE_GROUP AS ageGroup,
+	        YEAR AS year,
+	        ROUND(AVG(TOTAL_PER_UNIT), 0) AS avgTotalPerUnit,
+	        COUNT(*) AS apartmentCount
+	    FROM per_unit_reserve_trend
+	    GROUP BY AGE_GROUP, YEAR
+	    ORDER BY 
+	        CASE AGE_GROUP 
+	            WHEN '노후' THEN 1 
+	            WHEN '중견' THEN 2 
+	            WHEN '신축' THEN 3 
+	        END,
+	        YEAR
+	    ]]>
+	</select>
+	
+	<!-- 3. 2024년 노후도 그룹별 월별 장충금 현황 조회 -->
+	<select id="getReserveFundMonthlyByAgeGroup" resultType="com.house.team.stats.vo.ReserveFundMonthlyVO">
+	    <![CDATA[
+	    WITH 
+	    -- 1단계: 아파트 노후도 분류 (사용승인일 기준)
+	    apt_age_group AS (
+	        SELECT 
+	            CMPX_CD,
+	            CMPX_NM,
+	            APPR_DT,
+	            UNIT_TOT,
+	            CASE 
+	                WHEN EXTRACT(YEAR FROM APPR_DT) <= 2004 THEN '노후'
+	                WHEN EXTRACT(YEAR FROM APPR_DT) BETWEEN 2005 AND 2014 THEN '중견'
+	                WHEN EXTRACT(YEAR FROM APPR_DT) >= 2015 THEN '신축'
+	                ELSE '미분류'
+	            END AS AGE_GROUP
+	        FROM APT_INFO 
+	        WHERE APPR_DT IS NOT NULL 
+	          AND UNIT_TOT IS NOT NULL 
+	          AND UNIT_TOT > 0
+	    ),
+	
+	    -- 2단계: 2024년 완전한 장충금 데이터가 있는 아파트만 선별
+	    complete_2024_reserve_apts AS (
+	        SELECT DISTINCT CMPX_CD
+	        FROM MGMT_INFO
+	        WHERE SUBSTR(OCC_YM, 1, 4) = '2024'
+	          AND RSV_CHG IS NOT NULL 
+	          AND RSV_USE IS NOT NULL
+	        GROUP BY CMPX_CD
+	        HAVING COUNT(*) = 12  -- 2024년 12개월 모든 데이터가 있는 아파트만
+	    ),
+	
+	    -- 3단계: 2024년 월별 장충금 데이터
+	    monthly_reserve_2024 AS (
+	        SELECT 
+	            CMPX_CD,
+	            TO_NUMBER(SUBSTR(OCC_YM, 5, 2)) AS MONTH_NUM,    -- 월 추출 (01~12)
+	            NVL(RSV_CHG, 0) AS MONTHLY_CHARGE,               -- 월부과액
+	            NVL(RSV_USE, 0) AS MONTHLY_USAGE                 -- 월사용액
+	        FROM MGMT_INFO
+	        WHERE SUBSTR(OCC_YM, 1, 4) = '2024'
+	          AND CMPX_CD IN (SELECT CMPX_CD FROM complete_2024_reserve_apts)
+	    ),
+	
+	    -- 4단계: 각 아파트-월별 세대수당 장충금 계산
+	    per_unit_monthly_reserve AS (
+	        SELECT 
+	            m.CMPX_CD,
+	            m.MONTH_NUM,
+	            a.AGE_GROUP,
+	            a.UNIT_TOT,
+	            CASE WHEN a.UNIT_TOT > 0 THEN m.MONTHLY_CHARGE / a.UNIT_TOT ELSE 0 END AS CHARGE_PER_UNIT,
+	            CASE WHEN a.UNIT_TOT > 0 THEN m.MONTHLY_USAGE / a.UNIT_TOT ELSE 0 END AS USAGE_PER_UNIT
+	        FROM monthly_reserve_2024 m
+	        JOIN apt_age_group a ON m.CMPX_CD = a.CMPX_CD
+	        WHERE a.AGE_GROUP != '미분류'
+	    )
+	
+	    -- 5단계: 최종 결과 - 노후도 그룹별 2024년 월별 세대수당 평균 장충금 현황
+	    SELECT 
+	        AGE_GROUP AS ageGroup,
+	        MONTH_NUM AS monthNum,
+	        ROUND(AVG(CHARGE_PER_UNIT), 0) AS avgChargePerUnit,
+	        ROUND(AVG(USAGE_PER_UNIT), 0) AS avgUsagePerUnit,
+	        COUNT(DISTINCT CMPX_CD) AS apartmentCount
+	    FROM per_unit_monthly_reserve
+	    GROUP BY AGE_GROUP, MONTH_NUM
+	    ORDER BY 
+	        CASE AGE_GROUP 
+	            WHEN '노후' THEN 1 
+	            WHEN '중견' THEN 2 
+	            WHEN '신축' THEN 3 
+	        END,
+	        MONTH_NUM
+	    ]]>
+	</select>
+	
+	<!-- 전기료 비교 정보 조회 -->
+	<select id="getCompareElectricInfo" parameterType="list" resultType="com.house.team.stats.vo.ElectricComparisonVO">
+	    <![CDATA[
+	    SELECT 
+	        mi.CMPX_CD as cmpxCd,
+	        mi.OCC_YM as occYm,
+	        a.CMPX_NM as cmpxNm,
+	        a.UNIT_TOT as unitTot,
+	        ar.AREA_UNIT as mainAreaUnit,
+	        FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) as buildingAge,
+	        CASE 
+	            WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) >= 20 THEN '노후'
+	            WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) >= 10 THEN '중견'
+	            ELSE '신축'
+	        END as ageCategory,
+	        
+	        -- 전기료 총액 (최신 월 데이터)
+	        mi.ELECTRIC_PUB as electricPubTot,
+	        mi.ELECTRIC_PRIV as electricPrivTot,
+	        (mi.ELECTRIC_PUB + mi.ELECTRIC_PRIV) as electricTotalTot,
+	        
+	        -- 세대당 전기료 계산
+	        ROUND(mi.ELECTRIC_PUB / a.UNIT_TOT, 0) as electricPubPerUnit,
+	        ROUND(mi.ELECTRIC_PRIV / a.UNIT_TOT, 0) as electricPrivPerUnit,
+	        ROUND((mi.ELECTRIC_PUB + mi.ELECTRIC_PRIV) / a.UNIT_TOT, 0) as electricTotalPerUnit,
+	        
+	        -- 평당 전기료 계산 (세대당 전기료를 주요 면적으로 나누기)
+	        ROUND((mi.ELECTRIC_PUB / a.UNIT_TOT) / ar.AREA_UNIT, 2) as electricPubPerArea,
+	        ROUND((mi.ELECTRIC_PRIV / a.UNIT_TOT) / ar.AREA_UNIT, 2) as electricPrivPerArea,
+	        ROUND(((mi.ELECTRIC_PUB + mi.ELECTRIC_PRIV) / a.UNIT_TOT) / ar.AREA_UNIT, 2) as electricTotalPerArea
+	        
+	    FROM APT_INFO a
+	    JOIN (
+	        SELECT 
+	            CMPX_CD,
+	            AREA_UNIT,
+	            UNIT_CNT,
+	            ROW_NUMBER() OVER (PARTITION BY CMPX_CD ORDER BY UNIT_CNT DESC) as rn
+	        FROM AREA_INFO
+	    ) ar ON a.CMPX_CD = ar.CMPX_CD AND ar.rn = 1
+	    JOIN (
+	        SELECT 
+	            CMPX_CD,
+	            OCC_YM,
+	            ELECTRIC_PUB,
+	            ELECTRIC_PRIV,
+	            ROW_NUMBER() OVER (PARTITION BY CMPX_CD ORDER BY OCC_YM DESC) as rn
+	        FROM MGMT_INFO
+	        WHERE ELECTRIC_PUB IS NOT NULL 
+	          AND ELECTRIC_PRIV IS NOT NULL
+	          AND ELECTRIC_PUB > 0 
+	          AND ELECTRIC_PRIV > 0
+	    ) mi ON a.CMPX_CD = mi.CMPX_CD AND mi.rn = 1
+	    WHERE a.CMPX_CD IN
+	    ]]>
+	    <foreach collection="list" item="cmpxCd" open="(" separator="," close=")">
+	        #{cmpxCd}
+	    </foreach>
+	    <![CDATA[
+	      AND a.UNIT_TOT > 0
+	      AND ar.AREA_UNIT > 0
+	    ORDER BY 
+	        CASE WHEN a.CMPX_CD = (SELECT MIN(value) FROM (
+	    ]]>
+	            <foreach collection="list" item="cmpxCd" separator=" UNION ALL ">
+	                SELECT #{cmpxCd} as value FROM DUAL
+	            </foreach>
+	    <![CDATA[
+	        )) THEN 1 ELSE 2 END,
+	        ageCategory,
+	        a.CMPX_NM
+	    ]]>
+	</select>
+	<!-- 관리비 test 페이지 -->
+	<select id="getMonthlyMgmtSummary" parameterType="String" resultType="java.util.HashMap">
+		WITH apt_info_filtered AS (
+		    SELECT
+		        a.CMPX_CD,
+		        a.UNIT_TOT
+		    FROM APT_INFO a
+		    WHERE a.APPR_DT IS NOT NULL
+		      AND a.UNIT_TOT > 0
+		)
+		SELECT
+		    SUBSTR(m.OCC_YM, 5, 2) as month,
+		    -- ABS() 함수나 CASE WHEN 처리 없이 원래 계산 결과 그대로 반환
+		    ROUND(SUM(m.PUB_MGMT_TOT) / SUM(ai.UNIT_TOT), 0) as avgPubMgmtPerHouse,
+		    ROUND(SUM(m.INDIV_USE_TOT) / SUM(ai.UNIT_TOT), 0) as avgIndivUsePerHouse,
+		    COUNT(DISTINCT m.CMPX_CD) as complexCount,
+		    SUM(ai.UNIT_TOT) as totalHouseholds
+		FROM
+		    <choose>
+		        <when test="year == '2024'">MGMT_INFO</when>
+		        <otherwise>MGMT_ALL_INFO</otherwise>
+		    </choose> m
+		JOIN apt_info_filtered ai ON m.CMPX_CD = ai.CMPX_CD
+		WHERE SUBSTR(m.OCC_YM, 1, 4) = #{year}
+		  AND m.PUB_MGMT_TOT IS NOT NULL
+		  AND m.INDIV_USE_TOT IS NOT NULL
+		  <if test="complexCode != null and complexCode != ''">
+		      AND m.CMPX_CD = #{complexCode}
+		  </if>
+		GROUP BY SUBSTR(m.OCC_YM, 5, 2)
+		ORDER BY month
+	</select>
+
+</mapper>

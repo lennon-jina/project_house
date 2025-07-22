@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.team.stats.dao.IAPTInfoDAO">
+
+    <!-- 기준 아파트 정보 조회 -->
+    <select id="getBaseApartmentInfo" parameterType="String" resultType="com.house.team.stats.vo.APTInfoVO">
+        SELECT 
+	        a.CMPX_CD as cmpxCd,
+	        a.CMPX_NM as cmpxNm,
+	        a.CMPX_TP as cmpxTp,
+	        a.LGL_ADDR as lglAddr,
+	        a.RD_ADDR as rdAddr,
+	        a.APPR_DT as apprDt,
+	        a.BLDG_CNT as bldgCnt,
+	        a.UNIT_TOT as unitTot,
+	        a.MGMT_MTD as mgmtMtd,
+	        a.HEAT_TP as heatTp,
+	        a.CORR_TP as corrTp,
+	        a.PARK_TOT as parkTot,
+	        a.CCTV_CNT as cctvCnt,
+	        a.OFFC_TEL as offcTel,
+	        a.OFFC_FAX as offcFax,
+	        a.FLR_MAX as flrMax,
+	        a.BSMNT_FLR as bsmntFlr,
+	        a.VHCL_TOT as vhclTot,
+	        a.EV_TOT as evTot,
+	        a.EVC_GRD as evcGrd,
+	        a.EVC_UNDG as evcUndg,
+	        a.CRT_DT as crtDt,
+	        a.UPD_DT as updDt,
+	        ar.AREA_UNIT as mainAreaUnit,
+	        ar.UNIT_CNT as mainAreaUnitCnt
+	    FROM APT_INFO a
+	    LEFT JOIN (
+	        SELECT CMPX_CD, AREA_UNIT, UNIT_CNT
+	        FROM (
+	            SELECT CMPX_CD, AREA_UNIT, UNIT_CNT,
+	                   ROW_NUMBER() OVER (PARTITION BY CMPX_CD ORDER BY UNIT_CNT DESC) as rn
+	            FROM AREA_INFO
+	        )
+	        WHERE rn = 1
+	    ) ar ON a.CMPX_CD = ar.CMPX_CD
+	    WHERE a.CMPX_CD = #{cmpxCd}
+    </select>
+
+    <!-- 유사한 아파트 목록 조회 -->
+    <select id="getSimilarApartments" parameterType="String" resultType="com.house.team.stats.vo.APTInfoVO">
+        SELECT 
+            a.CMPX_CD as cmpxCd,
+            a.CMPX_NM as cmpxNm,
+            a.CMPX_TP as cmpxTp,
+            a.LGL_ADDR as lglAddr,
+            a.RD_ADDR as rdAddr,
+            a.APPR_DT as apprDt,
+            a.BLDG_CNT as bldgCnt,
+            a.UNIT_TOT as unitTot,
+            a.MGMT_MTD as mgmtMtd,
+            a.HEAT_TP as heatTp,
+            a.CORR_TP as corrTp,
+            a.PARK_TOT as parkTot,
+            a.CCTV_CNT as cctvCnt,
+            a.OFFC_TEL as offcTel,
+            a.OFFC_FAX as offcFax,
+            a.FLR_MAX as flrMax,
+            a.BSMNT_FLR as bsmntFlr,
+            a.VHCL_TOT as vhclTot,
+            a.EV_TOT as evTot,
+            a.EVC_GRD as evcGrd,
+            a.EVC_UNDG as evcUndg,
+            a.CRT_DT as crtDt,
+            a.UPD_DT as updDt,
+            ar.AREA_UNIT as mainAreaUnit,
+            ar.UNIT_CNT as mainAreaUnitCnt,
+            (a.FLR_MAX + NVL(a.BSMNT_FLR, 0)) as totalFloors,
+            FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) as buildingAge,
+            CASE 
+                WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) >= 20 THEN '노후'
+                WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) >= 10 THEN '중간'
+                ELSE '신축'
+            END as ageCategory,
+            (
+                ABS(a.UNIT_TOT - (SELECT a2.UNIT_TOT FROM APT_INFO a2 WHERE a2.CMPX_CD = #{cmpxCd})) +
+                ABS(ar.AREA_UNIT - (
+                    SELECT ar2.AREA_UNIT 
+                    FROM APT_INFO a2
+                    JOIN (
+                        SELECT CMPX_CD, AREA_UNIT, UNIT_CNT,
+                               ROW_NUMBER() OVER (PARTITION BY CMPX_CD ORDER BY UNIT_CNT DESC) as rn
+                        FROM AREA_INFO
+                    ) ar2 ON a2.CMPX_CD = ar2.CMPX_CD AND ar2.rn = 1
+                    WHERE a2.CMPX_CD = #{cmpxCd}
+                )) +
+                ABS((a.FLR_MAX + NVL(a.BSMNT_FLR, 0)) - (
+                    SELECT (FLR_MAX + NVL(BSMNT_FLR, 0)) 
+                    FROM APT_INFO 
+                    WHERE CMPX_CD = #{cmpxCd}
+                )) +
+                ABS(a.BLDG_CNT - (
+                    SELECT BLDG_CNT 
+                    FROM APT_INFO 
+                    WHERE CMPX_CD = #{cmpxCd}
+                ))
+            ) as differenceScore
+        FROM APT_INFO a
+        JOIN (
+            SELECT 
+                CMPX_CD,
+                AREA_UNIT,
+                UNIT_CNT,
+                ROW_NUMBER() OVER (PARTITION BY CMPX_CD ORDER BY UNIT_CNT DESC) as rn
+            FROM AREA_INFO
+        ) ar ON a.CMPX_CD = ar.CMPX_CD AND ar.rn = 1
+        WHERE a.CMPX_CD != #{cmpxCd}
+          AND a.CORR_TP = (SELECT CORR_TP FROM APT_INFO WHERE CMPX_CD = #{cmpxCd})
+          AND a.HEAT_TP = (SELECT HEAT_TP FROM APT_INFO WHERE CMPX_CD = #{cmpxCd})
+        ORDER BY differenceScore ASC
+        FETCH FIRST 20 ROWS ONLY
+    </select>
+
+    <!-- 전체 아파트 목록 조회 -->
+    <select id="getAllApartments" resultType="com.house.team.stats.vo.APTInfoVO">
+        SELECT 
+            CMPX_CD as cmpxCd,
+            CMPX_NM as cmpxNm,
+            CMPX_TP as cmpxTp,
+            UNIT_TOT as unitTot,
+            BLDG_CNT as bldgCnt,
+            HEAT_TP as heatTp,
+            CORR_TP as corrTp,
+            APPR_DT as apprDt
+        FROM APT_INFO 
+        ORDER BY CMPX_NM
+    </select>
+
+	
+	<!-- 연도별 전기료 트렌드 분석 -->
+	<select id="getYearlyElectricTrend" resultType="com.house.team.stats.vo.ElectricTrendVO">
+	    SELECT 
+	        YEAR as year,
+	        APT_GROUP as aptGroup,
+	        COMPLEX_CNT as complexCnt,
+	        TOTAL_HOUSE_CNT as totalHouseCnt,
+	        DATA_MONTHS as dataMonths,
+	        AVG_ELECTRIC_PUB_PER_HOUSE as avgElectricPubPerHouse,
+	        AVG_ELECTRIC_PRIV_PER_HOUSE as avgElectricPrivPerHouse,
+	        AVG_ELECTRIC_TOTAL_PER_HOUSE as avgElectricTotalPerHouse,
+	        TOTAL_ELECTRIC_PUB as totalElectricPub,
+	        TOTAL_ELECTRIC_PRIV as totalElectricPriv,
+	        CRT_DT as crtDt,
+	        UPD_DT as updDt
+	    FROM ELECTRIC_TREND_ANALYSIS
+	    ORDER BY YEAR ASC, 
+	             CASE APT_GROUP 
+	                 WHEN '신축' THEN 1 
+	                 WHEN '중견' THEN 2 
+	                 WHEN '노후' THEN 3 
+	             END
+	</select>
+	
+	<!-- 월별 전기료 데이터 조회 (세대수 기준 가중평균) -->
+	<select id="getMonthlyElectricData" parameterType="String" resultType="java.util.HashMap">
+	    WITH apt_categories AS (
+	        SELECT 
+	            a.CMPX_CD,
+	            a.UNIT_TOT,
+	            CASE 
+	                WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) >= 20 THEN '노후'
+	                WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) >= 10 THEN '중견'
+	                ELSE '신축'
+	            END as age_category
+	        FROM APT_INFO a
+	        WHERE a.APPR_DT IS NOT NULL
+	          AND a.UNIT_TOT > 0
+	    )
+	    SELECT 
+	        SUBSTR(m.OCC_YM, 5, 2) as month,
+	        ac.age_category as ageCategory,
+	        ROUND(SUM(m.ELECTRIC_PUB) / SUM(ac.UNIT_TOT), 0) as avgElectricPubPerHouse,
+	        ROUND(SUM(m.ELECTRIC_PRIV) / SUM(ac.UNIT_TOT), 0) as avgElectricPrivPerHouse,
+	        COUNT(DISTINCT m.CMPX_CD) as complexCount,
+	        SUM(ac.UNIT_TOT) as totalHouseholds
+	    FROM 
+	        <choose>
+	            <when test="year == '2024'">MGMT_INFO</when>
+	            <otherwise>MGMT_ALL_INFO</otherwise>
+	        </choose> m
+	    JOIN apt_categories ac ON m.CMPX_CD = ac.CMPX_CD
+	    WHERE SUBSTR(m.OCC_YM, 1, 4) = #{year}
+	      AND m.ELECTRIC_PUB IS NOT NULL 
+	      AND m.ELECTRIC_PRIV IS NOT NULL
+	    GROUP BY SUBSTR(m.OCC_YM, 5, 2), ac.age_category
+	    ORDER BY month, 
+	             CASE ac.age_category 
+	                 WHEN '신축' THEN 1 
+	                 WHEN '중견' THEN 2 
+	                 WHEN '노후' THEN 3 
+	             END
+	</select>
+	
+	<!-- 전기료 test 쿼리 -->
+	<select id="getMonthlyElectricSummary" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+	    WITH apt_units AS (
+	        SELECT
+	            a.CMPX_CD,
+	            a.UNIT_TOT
+	        FROM APT_INFO a
+	        WHERE a.APPR_DT IS NOT NULL
+	          AND a.UNIT_TOT > 0
+	    )
+	    SELECT
+	        SUBSTR(m.OCC_YM, 5, 2) as month,
+	        ROUND(SUM(m.ELECTRIC_PUB) / SUM(au.UNIT_TOT), 0) as avgElectricPubPerHouse,
+	        ROUND(SUM(m.ELECTRIC_PRIV) / SUM(au.UNIT_TOT), 0) as avgElectricPrivPerHouse,
+	        COUNT(DISTINCT m.CMPX_CD) as complexCount,
+	        SUM(au.UNIT_TOT) as totalHouseholds
+	    FROM
+	        <choose>
+	            <when test="year == '2024'">MGMT_INFO</when>
+	            <otherwise>MGMT_ALL_INFO</otherwise>
+	        </choose> m
+	    JOIN apt_units au ON m.CMPX_CD = au.CMPX_CD
+	    WHERE SUBSTR(m.OCC_YM, 1, 4) = #{year}
+	      AND m.ELECTRIC_PUB IS NOT NULL
+	      AND m.ELECTRIC_PRIV IS NOT NULL
+	      -- **여기부터 아파트별 필터링 조건 추가**
+	      <if test="complexCode != null and complexCode != ''">
+	          AND m.CMPX_CD = #{complexCode}
+	      </if>
+	      -- **여기까지 아파트별 필터링 조건 추가**
+	    GROUP BY SUBSTR(m.OCC_YM, 5, 2)
+	    ORDER BY month
+	</select>
+	
+	<!-- 계절별 전기료 데이터 조회 -->
+    <select id="getSeasonalElectricData" resultType="com.house.team.stats.vo.SeasonalElectricVO">
+        WITH apt_categories AS (
+            SELECT 
+                a.CMPX_CD,
+                a.UNIT_TOT,
+                CASE 
+                    WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) >= 20 THEN '노후'
+                    WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, a.APPR_DT) / 12) >= 10 THEN '중견'
+                    ELSE '신축'
+                END as age_category
+            FROM APT_INFO a
+            WHERE a.APPR_DT IS NOT NULL
+              AND a.UNIT_TOT > 0
+        ),
+        seasonal_data AS (
+            SELECT 
+                ac.age_category,
+                SUBSTR(m.OCC_YM, 1, 4) as year,
+                SUBSTR(m.OCC_YM, 5, 2) as month,
+                CASE 
+                    WHEN SUBSTR(m.OCC_YM, 5, 2) IN ('07', '08') THEN '여름철'
+                    WHEN SUBSTR(m.OCC_YM, 5, 2) IN ('12', '01') THEN '겨울철'
+                    ELSE NULL
+                END as season,
+                m.ELECTRIC_PUB,
+                m.ELECTRIC_PRIV,
+                ac.UNIT_TOT
+            FROM MGMT_ALL_INFO m
+            JOIN apt_categories ac ON m.CMPX_CD = ac.CMPX_CD
+            WHERE SUBSTR(m.OCC_YM, 5, 2) IN ('01', '07', '08', '12')
+              AND m.ELECTRIC_PUB IS NOT NULL 
+              AND m.ELECTRIC_PRIV IS NOT NULL
+            
+            UNION ALL
+            
+            SELECT 
+                ac.age_category,
+                SUBSTR(m.OCC_YM, 1, 4) as year,
+                SUBSTR(m.OCC_YM, 5, 2) as month,
+                CASE 
+                    WHEN SUBSTR(m.OCC_YM, 5, 2) IN ('07', '08') THEN '여름철'
+                    WHEN SUBSTR(m.OCC_YM, 5, 2) IN ('12', '01') THEN '겨울철'
+                    ELSE NULL
+                END as season,
+                m.ELECTRIC_PUB,
+                m.ELECTRIC_PRIV,
+                ac.UNIT_TOT
+            FROM MGMT_INFO m
+            JOIN apt_categories ac ON m.CMPX_CD = ac.CMPX_CD
+            WHERE SUBSTR(m.OCC_YM, 5, 2) IN ('01', '07', '08', '12')
+              AND m.ELECTRIC_PUB IS NOT NULL 
+              AND m.ELECTRIC_PRIV IS NOT NULL
+        )
+        SELECT 
+            age_category as ageCategory,
+            season,
+            ROUND(SUM(ELECTRIC_PUB) / SUM(UNIT_TOT), 0) as avgElectricPubPerHouse,
+            ROUND(SUM(ELECTRIC_PRIV) / SUM(UNIT_TOT), 0) as avgElectricPrivPerHouse
+        FROM seasonal_data
+        WHERE season IS NOT NULL
+        GROUP BY age_category, season
+        ORDER BY 
+            CASE age_category 
+                WHEN '신축' THEN 1 
+                WHEN '중견' THEN 2 
+                WHEN '노후' THEN 3 
+            END,
+            CASE season 
+                WHEN '여름철' THEN 1 
+                WHEN '겨울철' THEN 2 
+            END
+    </select>
+    
+    <!-- 면적당 전기료 효율 데이터 조회 (전체 연도) -->
+    <select id="getElectricAreaEfficiency" resultType="com.house.team.stats.vo.ElectricAreaVO">
+        SELECT 
+            ANALYSIS_YEAR as analysisYear,
+            AGE_CATEGORY as ageCategory,
+            AVG_ELECTRIC_PUB_PER_SQM as avgElectricPubPerSqm,
+            TOTAL_COMPLEX_COUNT as totalComplexCount,
+            DATA_MONTHS_COUNT as dataMonthsCount
+        FROM ELECTRIC_AREA_EFFICIENCY
+        ORDER BY 
+            ANALYSIS_YEAR ASC,
+            CASE AGE_CATEGORY 
+                WHEN '신축' THEN 1 
+                WHEN '중견' THEN 2 
+                WHEN '노후' THEN 3 
+            END
+    </select>
+    
+    <!-- 특정 연도 면적당 전기료 효율 데이터 조회 -->
+    <select id="getElectricAreaEfficiencyByYear" parameterType="String" resultType="com.house.team.stats.vo.ElectricAreaVO">
+        SELECT 
+            ANALYSIS_YEAR as analysisYear,
+            AGE_CATEGORY as ageCategory,
+            AVG_ELECTRIC_PUB_PER_SQM as avgElectricPubPerSqm,
+            TOTAL_COMPLEX_COUNT as totalComplexCount,
+            DATA_MONTHS_COUNT as dataMonthsCount
+        FROM ELECTRIC_AREA_EFFICIENCY
+        WHERE ANALYSIS_YEAR = #{year}
+        ORDER BY 
+            CASE AGE_CATEGORY 
+                WHEN '신축' THEN 1 
+                WHEN '중견' THEN 2 
+                WHEN '노후' THEN 3 
+            END
+    </select>
+</mapper>

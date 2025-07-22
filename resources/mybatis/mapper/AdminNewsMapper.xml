@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.house.team.admin.dao.AdminNewsDAO">
+
+    <select id="selectNewsPage" resultType="AdminNewsVO">
+        SELECT NEWS_NO, CAT, NEWS_TITLE, NEWS_TEXT, UPLOAD_DT, NEWS_IMG, WRITER, NEWS_URL, DEL_YN
+        FROM BOARDS_NEWS
+        WHERE DEL_YN = 'N' <choose>
+            <when test="sortOrder == 'latest'">
+                ORDER BY UPLOAD_DT DESC
+            </when>
+            <when test="sortOrder == 'oldest'">
+                ORDER BY UPLOAD_DT ASC
+            </when>
+            <otherwise>
+                ORDER BY NEWS_NO DESC, UPLOAD_DT DESC
+            </otherwise>
+        </choose>
+        OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+    </select>
+
+    <select id="selectNewsCount" resultType="int">
+        SELECT COUNT(*) FROM BOARDS_NEWS
+        WHERE DEL_YN = 'N' </select>
+
+    <select id="selectNewsByCategoryPage" parameterType="map" resultType="AdminNewsVO">
+        SELECT NEWS_NO, CAT, NEWS_TITLE, NEWS_TEXT, UPLOAD_DT, NEWS_IMG, WRITER, NEWS_URL, DEL_YN
+        FROM BOARDS_NEWS
+        WHERE CAT = #{category}
+        AND DEL_YN = 'N'
+        <choose>
+            <when test="sortOrder == 'latest'">
+                ORDER BY UPLOAD_DT DESC
+            </when>
+            <when test="sortOrder == 'oldest'">
+                ORDER BY UPLOAD_DT ASC
+            </when>
+            <otherwise>
+                ORDER BY NEWS_NO DESC, UPLOAD_DT DESC
+            </otherwise>
+        </choose>
+        OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+    </select>
+
+    <select id="countNewsByCategory" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM BOARDS_NEWS
+        WHERE CAT = #{category} AND DEL_YN = 'N'
+	</select>
+
+    <select id="searchNewsPage" parameterType="map" resultType="AdminNewsVO">
+        SELECT NEWS_NO, CAT, NEWS_TITLE, NEWS_TEXT, UPLOAD_DT, NEWS_IMG, WRITER, NEWS_URL, DEL_YN
+        FROM BOARDS_NEWS
+        WHERE DEL_YN = 'N'
+        <if test="keyword != null and keyword != ''">
+            <choose>
+                <when test="searchField == 'title'">
+                    AND NEWS_TITLE LIKE '%' || #{keyword} || '%'
+                </when>
+                <when test="searchField == 'content'">
+                    AND NEWS_TEXT LIKE '%' || #{keyword} || '%'
+                </when>
+                <otherwise> AND (NEWS_TITLE LIKE '%' || #{keyword} || '%' OR NEWS_TEXT LIKE '%' || #{keyword} || '%')
+                </otherwise>
+            </choose>
+        </if>
+        <if test="category != null and category != ''">
+            AND CAT = #{category}
+        </if>
+        <choose>
+            <when test="sortOrder == 'latest'">
+                ORDER BY UPLOAD_DT DESC
+            </when>
+            <when test="sortOrder == 'oldest'">
+                ORDER BY UPLOAD_DT ASC
+            </when>
+            <otherwise>
+                ORDER BY NEWS_NO DESC, UPLOAD_DT DESC
+            </otherwise>
+        </choose>
+        OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+    </select>
+
+    <select id="countSearchNews" parameterType="map" resultType="int">
+	  SELECT COUNT(*) FROM BOARDS_NEWS
+	  WHERE DEL_YN = 'N'
+	  <if test="category != null and category != ''">
+	  	AND CAT = #{category}
+	  </if>
+
+	  <if test="keyword != null and keyword != ''">
+	    <choose>
+	        <when test="searchField == 'title'">
+	            AND NEWS_TITLE LIKE '%' || #{keyword} || '%'
+	        </when>
+	        <when test="searchField == 'content'">
+	            AND NEWS_TEXT LIKE '%' || #{keyword} || '%'
+	        </when>
+	        <otherwise> AND (NEWS_TITLE LIKE '%' || #{keyword} || '%' OR NEWS_TEXT LIKE '%' || #{keyword} || '%')
+	        </otherwise>
+	    </choose>
+	  </if>
+	</select>
+	
+	<!-- 기사 삭제 -->
+    <update id="updateNewsDelYnToY" parameterType="list">
+        UPDATE BOARDS_NEWS
+        SET DEL_YN = 'Y'
+        WHERE NEWS_NO IN
+        <foreach item="item" collection="newsNos" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+    
+    <!-- 새 기사 등록 -->
+    <insert id="insertNews" parameterType="AdminNewsVO">
+        INSERT INTO BOARDS_NEWS (
+	            CAT,
+	            NEWS_TITLE,
+	            NEWS_TEXT,
+	            UPLOAD_DT,
+	            NEWS_IMG,
+	            WRITER,
+	            NEWS_URL
+	        ) VALUES (
+	            #{cat},
+	            #{newsTitle},
+	            #{newsText},
+	            #{uploadDt},
+	            #{newsImg},
+	            #{writer},
+	            #{newsUrl}
+        	)
+    </insert>
+    
+    <!-- 뉴스 상세 정보-->
+	<select id="getNewsById" parameterType="int" resultType="AdminNewsVO">
+		SELECT NEWS_NO, CAT, NEWS_TITLE, NEWS_TEXT, UPLOAD_DT, NEWS_IMG, WRITER, NEWS_URL, DEL_YN
+        FROM BOARDS_NEWS
+        WHERE NEWS_NO = #{newsNo}
+        AND DEL_YN = 'N'
+	</select>
+    
+    <!-- 기사 수정 -->
+    <update id="updateNews" parameterType="AdminNewsVO">
+        UPDATE BOARDS_NEWS
+		SET CAT = #{cat},
+		    NEWS_TITLE = #{newsTitle},
+		    NEWS_TEXT  = #{newsText},
+		    UPLOAD_DT = #{uploadDt},
+		    NEWS_IMG = #{newsImg},
+		    WRITER = #{writer},
+		    NEWS_URL = #{newsUrl}
+		WHERE NEWS_NO = #{newsNo}
+    </update>
+</mapper>

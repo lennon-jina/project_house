@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.house.team.admin.dao.IAdminQnADAO">
+	<!-- 문의글 리스트 -->
+	<select id="getQnaList" resultType="AdminQnAVO">
+		SELECT *
+		FROM (
+            	SELECT ROWNUM as RN,
+            		   A.*
+            	FROM (
+		                SELECT b.BOARD_NO,
+						       m.NICKNAME,
+						       b.MEM_NO,
+						       b.Q_TITLE,
+						       b.Q_TEXT,
+						       b.POST_PW,
+						       b.CREATE_DT,
+						       b.UPDATE_DT,
+						       b.COMM_STATE,
+						       b.COMMENTS,
+						       b.RATE,
+						    b.DEL_YN
+						FROM MEMBERS m
+						INNER JOIN BOARDS_QNA b ON m.MEM_NO = b.MEM_NO
+						WHERE b.DEL_YN = 'N'
+		                <if test="searchField != null and keyword != null">
+		                    <choose>
+		                        <when test="searchField == 'title'">
+		                            AND b.Q_TITLE LIKE '%' || #{keyword} || '%'
+		                        </when>
+		                        <when test="searchField == 'text'">
+		                            AND b.Q_TEXT LIKE '%' || #{keyword} || '%'
+		                        </when>
+		                        <otherwise>
+		                            AND (b.Q_TITLE LIKE '%' || #{keyword} || '%' OR b.Q_TEXT LIKE '%' || #{keyword} || '%')
+		                        </otherwise>
+		                    </choose>
+		                </if>
+		                <choose>
+					        <when test="sortOrder == 'latest'">
+					            ORDER BY b.CREATE_DT DESC, b.BOARD_NO DESC
+					        </when>
+					        <when test="sortOrder == 'popularity'">
+					            ORDER BY b.RATE DESC, b.CREATE_DT DESC, b.BOARD_NO DESC
+					        </when>
+					        <otherwise>
+					            ORDER BY b.BOARD_NO DESC
+					        </otherwise>
+					    </choose>
+		        ) A
+                WHERE ROWNUM &lt;= #{end}
+        )
+        WHERE RN &gt;= #{start}
+	</select>
+	
+	<!-- 키워드별 검색 결과-->
+	<select id="getQnaCount" resultType="int">
+		SELECT COUNT(*)
+		FROM (SELECT b.BOARD_NO,
+			         m.NICKNAME,
+			         b.MEM_NO,
+			         b.Q_TITLE,
+			         b.Q_TEXT,
+			         b.POST_PW,
+			         b.CREATE_DT,
+			         b.UPDATE_DT,
+			 		 b.COMM_STATE,
+			         b.COMMENTS,
+			         b.RATE,
+			         b.DEL_YN
+			FROM MEMBERS m
+			INNER JOIN BOARDS_QNA b ON m.MEM_NO = b.MEM_NO
+			WHERE b.DEL_YN = 'N'
+	        <if test="searchField != null and keyword != null">
+	            <choose>
+	                <when test="searchField == 'title'">
+	                    AND Q_TITLE LIKE '%' || #{keyword} || '%'
+	                </when>
+	                <when test="searchField == 'text'">
+	                    AND Q_TEXT LIKE '%' || #{keyword} || '%'
+	                </when>
+	                <otherwise>
+	                    AND (Q_TITLE LIKE '%' || #{keyword} || '%' OR Q_TEXT LIKE '%' || #{keyword} || '%')
+	                </otherwise>
+	            </choose>
+	        </if>
+	        <choose>
+		        <when test="sortOrder == 'latest'">
+		            ORDER BY b.CREATE_DT DESC, b.BOARD_NO DESC
+		        </when>
+		        <when test="sortOrder == 'popularity'">
+		            ORDER BY b.RATE DESC, b.CREATE_DT DESC, b.BOARD_NO DESC
+		        </when>
+		        <otherwise>
+		            ORDER BY b.BOARD_NO DESC
+		        </otherwise>
+		    </choose>
+	    ) A
+	</select>
+	
+	<!-- 문의글 상세 정보 페이지 -->
+	<select id="getQnaById" parameterType="int" resultType="AdminQnAVO">
+		SELECT *
+    	FROM (SELECT b.BOARD_NO,
+			       m.NICKNAME,
+			       b.MEM_NO,
+			       b.Q_TITLE,
+			       b.Q_TEXT,
+			       b.POST_PW,
+			       b.CREATE_DT,
+			       b.UPDATE_DT,
+			       b.COMM_STATE,
+			       b.COMMENTS,
+			       b.RATE
+			FROM MEMBERS m
+			INNER JOIN BOARDS_QNA b ON m.MEM_NO = b.MEM_NO)
+    	WHERE BOARD_NO = #{boardNo}
+	</select>
+				
+	<!-- 문의글 삭제 -->
+	<update id="deleteQna">
+        UPDATE BOARDS_QNA
+        SET DEL_YN = 'Y'
+        WHERE BOARD_NO = #{boardNo}
+    </update>
+    
+    <!-- 체크박스 문의글 삭제 -->
+    <update id="checkDelete" parameterType="list">
+        UPDATE BOARDS_QNA
+        SET DEL_YN = 'Y'
+        WHERE BOARD_NO IN
+        <foreach item="item" collection="boardNos" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+	
+	
+	<!-- 답변 작성 또는 수정 -->
+	<update id="updateQnaAnswer">
+        UPDATE BOARDS_QNA
+        SET COMMENTS = #{comments},
+            COMM_STATE = #{commState}
+        WHERE BOARD_NO = #{boardNo}
+    </update>
+	
+	<!-- 답변 삭제 -->
+    <update id="clearQnaAnswer">
+        UPDATE BOARDS_QNA
+        SET COMMENTS = NULL,
+            COMM_STATE = '대기'
+        WHERE BOARD_NO = #{boardNo}
+    </update>
+    
+    <!-- 대기 중인 문의글 -->
+     <select id="noCommList" resultType="AdminQnAVO">
+	    SELECT *
+	    FROM ( SELECT ROWNUM AS RN,
+	    	   		  a.*
+	    	   FROM ( SELECT b.*,
+				             m.NICKNAME
+					  FROM MEMBERS m
+					  INNER JOIN BOARDS_QNA b ON m.MEM_NO = b.MEM_NO
+					  WHERE b.COMM_STATE= '답변 대기'
+					  AND b.DEL_YN = 'N'
+					  ORDER BY b.CREATE_DT DESC
+				) a
+				WHERE ROWNUM &lt;= #{end}
+		)
+		WHERE RN &gt;= #{start}
+    </select>
+    <select id="getNoCommCount" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARDS_QNA 
+        WHERE COMM_STATE = '답변 대기'
+        AND DEL_YN = 'N'
+    </select>
+
+</mapper>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.house.team.admin.dao.IViewCountDAO">
+	
+	<!-- 게시판 조회 로그 저장 -->
+    <insert id="insertViewLog" parameterType="AdminViewCountVO">
+        INSERT INTO VIEW_LOG(BOARD_CATEGORY, MEM_NO, BOARD_NO)
+        VALUES (#{boardCategory}, #{memNo}, #{boardNo})
+    </insert>
+	
+	<!-- 월별 조회수 그래프 -->
+	<select id="getMonthlyBoardViewCounts" resultType="AdminViewCountVO">
+		SELECT TO_CHAR(VIEW_DT, 'YYYY-MM') AS yearMonth,
+				BOARD_CATEGORY,
+	         	COUNT(*) AS viewCount
+	    FROM VIEW_LOG
+		WHERE VIEW_DT IS NOT NULL AND BOARD_CATEGORY IS NOT NULL
+		GROUP BY TO_CHAR(VIEW_DT, 'YYYY-MM'), BOARD_CATEGORY
+		ORDER BY yearMonth, BOARD_CATEGORY
+	</select>
+	
+	<!-- 요일별 조회수 그래프 -->
+	<select id="getWeeklyViewCounts" resultType="java.util.HashMap">
+        <![CDATA[ 
+        SELECT BOARD_CATEGORY,
+		        -- 현재 주차의 월요일 날짜와 VIEW_DT가 일치하는 경우 -> 카운트
+	            SUM(CASE WHEN TRUNC(VIEW_DT) = TRUNC(SYSDATE, 'IW') THEN 1 ELSE 0 END) AS "월요일",
+	            SUM(CASE WHEN TRUNC(VIEW_DT) = TRUNC(SYSDATE, 'IW') + 1 THEN 1 ELSE 0 END) AS "화요일",
+	            SUM(CASE WHEN TRUNC(VIEW_DT) = TRUNC(SYSDATE, 'IW') + 2 THEN 1 ELSE 0 END) AS "수요일",
+	            SUM(CASE WHEN TRUNC(VIEW_DT) = TRUNC(SYSDATE, 'IW') + 3 THEN 1 ELSE 0 END) AS "목요일",
+	            SUM(CASE WHEN TRUNC(VIEW_DT) = TRUNC(SYSDATE, 'IW') + 4 THEN 1 ELSE 0 END) AS "금요일",
+	            SUM(CASE WHEN TRUNC(VIEW_DT) = TRUNC(SYSDATE, 'IW') + 5 THEN 1 ELSE 0 END) AS "토요일",
+	            SUM(CASE WHEN TRUNC(VIEW_DT) = TRUNC(SYSDATE, 'IW') + 6 THEN 1 ELSE 0 END) AS "일요일"
+        FROM VIEW_LOG
+        WHERE VIEW_DT >= TRUNC(SYSDATE, 'IW')
+        AND   VIEW_DT < TRUNC(SYSDATE, 'IW')+7
+        GROUP BY BOARD_CATEGORY
+        ORDER BY BOARD_CATEGORY
+        ]]>  
+    </select>
+</mapper>

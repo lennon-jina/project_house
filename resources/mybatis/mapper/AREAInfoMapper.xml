@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.team.stats.dao.IAREAInfoDAO">
+
+    <!-- 특정 아파트의 면적 정보 조회 -->
+    <select id="getAreaInfoByCmpxCd" parameterType="String" resultType="com.house.team.stats.vo.AREAInfoVO">
+        SELECT 
+            CMPX_CD as cmpxCd,
+            MGT_AREA as mgtArea,
+            AREA_SUM as areaSum,
+            AREA_UNIT as areaUnit,
+            UNIT_CNT as unitCnt
+        FROM AREA_INFO 
+        WHERE CMPX_CD = #{cmpxCd}
+        ORDER BY UNIT_CNT DESC, AREA_UNIT ASC
+    </select>
+
+    <!-- 특정 아파트의 가장 많은 세대수를 가진 면적 정보 조회 -->
+    <select id="getMainAreaInfo" parameterType="String" resultType="com.house.team.stats.vo.AREAInfoVO">
+        SELECT 
+            CMPX_CD as cmpxCd,
+            MGT_AREA as mgtArea,
+            AREA_SUM as areaSum,
+            AREA_UNIT as areaUnit,
+            UNIT_CNT as unitCnt
+        FROM (
+            SELECT 
+                CMPX_CD,
+                MGT_AREA,
+                AREA_SUM,
+                AREA_UNIT,
+                UNIT_CNT,
+                ROW_NUMBER() OVER (PARTITION BY CMPX_CD ORDER BY UNIT_CNT DESC) as rn
+            FROM AREA_INFO
+            WHERE CMPX_CD = #{cmpxCd}
+        )
+        WHERE rn = 1
+    </select>
+
+</mapper>

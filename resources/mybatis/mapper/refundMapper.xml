@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.team.mypage.dao.RefundMapper">
+
+	<select id="selectRsvChgBetween" resultType="RefundDetail">
+    SELECT 
+        TO_CHAR(TO_DATE(OCC_YM, 'YYYYMM'), 'YYYY.MM') AS month,
+        M.RSV_CHG AS totalAmount,
+        ROUND(M.RSV_CHG / A.UNIT_TOT) AS amount
+    FROM MGMT_ALL_INFO M
+    JOIN APT_INFO A ON M.CMPX_CD = A.CMPX_CD
+    WHERE M.CMPX_CD = #{cmpxCd}
+      AND TO_DATE(OCC_YM, 'YYYYMM') BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD') AND LAST_DAY(TO_DATE(#{end}, 'YYYY-MM-DD'))
+    ORDER BY OCC_YM
+	</select>
+
+</mapper>

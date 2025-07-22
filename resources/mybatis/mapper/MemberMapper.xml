@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.house.team.user.dao.MemberMapper">
+	
+	<select id="selectByEmail" resultType="com.house.team.user.vo.MemberVO">
+        SELECT * FROM MEMBERS WHERE MEM_EMAIL = #{email}
+    </select>
+
+    <insert id="insertMemberVO" keyProperty="memNo">
+        <selectKey keyProperty="memNo" resultType="long" order="BEFORE">
+        	SELECT MEMBERS_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO MEMBERS (MEM_NO, MEM_EMAIL, NICKNAME, CREATE_DT, UPDATE_DT, USE_YN)
+        VALUES (#{memNo}, #{memEmail}, #{memNick}, #{createDt}, #{updateDt}, #{useYn})
+    </insert>
+
+    <select id="selectById" resultType="com.house.team.user.vo.MemberVO">
+        SELECT * FROM MEMBERS WHERE MEM_NO = #{memNo}
+    </select>
+    
+    <update id="updateUseYnToN">
+	    UPDATE MEMBERS
+	    SET USE_YN = 'N',
+	        UPDATE_DT = SYSDATE
+	    WHERE MEM_NO = #{memNo}
+	</update>
+    
+    <select id="selectMemberByMemNo" resultType="com.house.team.user.vo.MemberVO">
+    	SELECT CMPX_CD ,MEM_NO, MEM_EMAIL, NICKNAME as memNick, CREATE_DT, UPDATE_DT, USE_YN, USER_TYPE, APT_NAME, DONG_NO, ROOM_NO, CMPX_CD, PROFILE_IMG 
+    	FROM MEMBERS
+    	WHERE MEM_NO = #{memNo}
+	</select>
+	
+	<update id="updateNickname" parameterType="com.house.team.user.vo.MemberVO">
+	    UPDATE MEMBERS
+	    SET NICKNAME = #{memNick}, UPDATE_DT = SYSDATE
+	    WHERE MEM_NO = #{memNo}
+	</update>
+	
+	<select id="countByEmail" resultType="int">
+		SELECT COUNT(*) FROM MEMBERS WHERE MEM_EMAIL = #{email}
+	</select>
+	
+	<select id="countByNickname" resultType="int">
+		SELECT COUNT(*) FROM MEMBERS WHERE NICKNAME = #{nickname}
+	</select>
+	
+	<!-- 월별 가입자 수 조회 -->
+	<select id="getNewMembers" resultType="map" parameterType="int">
+        SELECT TO_CHAR(CREATE_DT, 'MM') as month,
+                COUNT(*) as memberCount
+        FROM MEMBERS 
+        WHERE TO_CHAR(CREATE_DT, 'YYYY') = #{year}
+        GROUP BY TO_CHAR(CREATE_DT, 'MM')
+        ORDER BY month ASC
+    </select>
+    <!-- 하루(요일별) 가입자 수 조회 -->
+	<select id="getWeeklyNewMembers" resultType="java.util.HashMap">
+        <![CDATA[
+        SELECT
+            SUM(CASE WHEN TRUNC(CREATE_DT) = TRUNC(SYSDATE, 'IW') THEN 1 ELSE 0 END) AS "월요일",
+            SUM(CASE WHEN TRUNC(CREATE_DT) = TRUNC(SYSDATE, 'IW') + 1 THEN 1 ELSE 0 END) AS "화요일",
+            SUM(CASE WHEN TRUNC(CREATE_DT) = TRUNC(SYSDATE, 'IW') + 2 THEN 1 ELSE 0 END) AS "수요일",
+            SUM(CASE WHEN TRUNC(CREATE_DT) = TRUNC(SYSDATE, 'IW') + 3 THEN 1 ELSE 0 END) AS "목요일",
+            SUM(CASE WHEN TRUNC(CREATE_DT) = TRUNC(SYSDATE, 'IW') + 4 THEN 1 ELSE 0 END) AS "금요일",
+            SUM(CASE WHEN TRUNC(CREATE_DT) = TRUNC(SYSDATE, 'IW') + 5 THEN 1 ELSE 0 END) AS "토요일",
+            SUM(CASE WHEN TRUNC(CREATE_DT) = TRUNC(SYSDATE, 'IW') + 6 THEN 1 ELSE 0 END) AS "일요일"
+        FROM
+            MEMBERS
+        WHERE
+            CREATE_DT >= TRUNC(SYSDATE, 'IW') AND CREATE_DT < TRUNC(SYSDATE, 'IW') + 7
+        ]]>
+    </select>
+    
+    <update id="updateUserType">
+    	UPDATE MEMBERS
+    	SET USER_TYPE = #{userType},
+    		UPDATE_DT = SYSDATE
+    	WHERE MEM_NO = #{memNo}
+    </update>
+    
+	<update id="updateAptInfo" parameterType="map">
+	    UPDATE MEMBERS
+	    SET CMPX_CD = #{cmpxCd},
+	        APT_NAME = #{aptName},
+	        DONG_NO = #{dongNo},
+	        ROOM_NO = #{roomNo}
+	    WHERE MEM_NO = #{memNo}
+	</update>
+	
+	<update id="updateProfileImage" parameterType="map">
+		UPDATE MEMBERS
+		SET PROFILE_IMG = #{profileImg},
+			UPDATE_DT = SYSDATE
+		WHERE MEM_NO = #{memNo}
+	</update>
+</mapper>

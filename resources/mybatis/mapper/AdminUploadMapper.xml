@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.house.team.admin.dao.IAdminUploadDAO">
+    <insert id="mergeAdminUpload" parameterType="com.house.team.admin.vo.AdminUploadVO">
+        MERGE INTO CMPX_EXPENSES D
+        USING (SELECT #{cmpxCd} AS CMPX_CD,
+                      #{expYearMonth} AS EXP_YEAR_MONTH,
+                      #{mgmtFeeTotal} AS MGMT_FEE_TOTAL,
+                      #{cleaningFee} AS CLEANING_FEE,
+                      #{securityFee} AS SECURITY_FEE,
+                      #{disinfectionFee} AS DISINFECTION_FEE,
+                      #{elevatorMaintFee} AS ELEVATOR_MAINT_FEE,
+                      #{repairFee} AS REPAIR_FEE,
+                      #{heatingFeePublic} AS HEATING_FEE_PUBLIC,
+                      #{heatingFeePrivate} AS HEATING_FEE_PRIVATE,
+                      #{gasUsagePublic} AS GAS_USAGE_PUBLIC,
+                      #{gasUsagePrivate} AS GAS_USAGE_PRIVATE,
+                      #{elecUsagePublic} AS ELEC_USAGE_PUBLIC,
+                      #{elecUsagePrivate} AS ELEC_USAGE_PRIVATE,
+                      #{waterUsagePublic} AS WATER_USAGE_PUBLIC,
+                      #{waterUsagePrivate} AS WATER_USAGE_PRIVATE
+               FROM DUAL) S
+        ON (D.CMPX_CD = S.CMPX_CD AND D.EXP_YEAR_MONTH = S.EXP_YEAR_MONTH)
+        WHEN MATCHED THEN
+            UPDATE SET
+                MGMT_FEE_TOTAL = S.MGMT_FEE_TOTAL,
+                CLEANING_FEE = S.CLEANING_FEE,
+                SECURITY_FEE = S.SECURITY_FEE,
+                DISINFECTION_FEE = S.DISINFECTION_FEE,
+                ELEVATOR_MAINT_FEE = S.ELEVATOR_MAINT_FEE,
+                REPAIR_FEE = S.REPAIR_FEE,
+                HEATING_FEE_PUBLIC = S.HEATING_FEE_PUBLIC,
+                HEATING_FEE_PRIVATE = S.HEATING_FEE_PRIVATE,
+                GAS_USAGE_PUBLIC = S.GAS_USAGE_PUBLIC,
+                GAS_USAGE_PRIVATE = S.GAS_USAGE_PRIVATE,
+                ELEC_USAGE_PUBLIC = S.ELEC_USAGE_PUBLIC,
+                ELEC_USAGE_PRIVATE = S.ELEC_USAGE_PRIVATE,
+                WATER_USAGE_PUBLIC = S.WATER_USAGE_PUBLIC,
+                WATER_USAGE_PRIVATE = S.WATER_USAGE_PRIVATE
+        WHEN NOT MATCHED THEN
+            INSERT (
+                CMPX_CD, MGMT_FEE_TOTAL, CLEANING_FEE, SECURITY_FEE, DISINFECTION_FEE,
+                ELEVATOR_MAINT_FEE, REPAIR_FEE, HEATING_FEE_PUBLIC, HEATING_FEE_PRIVATE,
+                GAS_USAGE_PUBLIC, GAS_USAGE_PRIVATE, ELEC_USAGE_PUBLIC, ELEC_USAGE_PRIVATE,
+                WATER_USAGE_PUBLIC, WATER_USAGE_PRIVATE, EXP_YEAR_MONTH
+            ) VALUES (
+                S.CMPX_CD, S.MGMT_FEE_TOTAL, S.CLEANING_FEE, S.SECURITY_FEE, S.DISINFECTION_FEE,
+                S.ELEVATOR_MAINT_FEE, S.REPAIR_FEE, S.HEATING_FEE_PUBLIC, S.HEATING_FEE_PRIVATE,
+                S.GAS_USAGE_PUBLIC, S.GAS_USAGE_PRIVATE, S.ELEC_USAGE_PUBLIC, S.ELEC_USAGE_PRIVATE,
+                S.WATER_USAGE_PUBLIC, S.WATER_USAGE_PRIVATE, S.EXP_YEAR_MONTH
+            )
+    </insert>
+</mapper>

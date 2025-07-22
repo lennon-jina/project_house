@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.house.team.management.dao.IManDAO">
+ 
+ <select id="selectExpenseByCmpxCd" resultType="com.house.team.management.vo.IManVO">
+    SELECT
+        CMPX_CD,
+        MGMT_FEE_TOTAL,
+        CLEANING_FEE,
+        SECURITY_FEE,
+        DISINFECTION_FEE,
+        ELEVATOR_MAINT_FEE,
+        REPAIR_FEE,
+        HEATING_FEE_PUBLIC,
+        HEATING_FEE_PRIVATE,
+        GAS_USAGE_PUBLIC,
+        GAS_USAGE_PRIVATE,
+        ELEC_USAGE_PUBLIC,
+        ELEC_USAGE_PRIVATE,
+        WATER_USAGE_PUBLIC,
+        WATER_USAGE_PRIVATE,
+        EXP_YEAR_MONTH
+    FROM CMPX_EXPENSES
+    WHERE CMPX_CD = #{cmpxCd}
+      AND EXP_YEAR_MONTH = (
+          SELECT MAX(EXP_YEAR_MONTH)
+          FROM CMPX_EXPENSES
+          WHERE CMPX_CD = #{cmpxCd}
+      )
+    </select>
+ 
+ 
+ 
+<select id="selectwoExpenses" resultType="com.house.team.management.vo.IManVO">
+  SELECT *
+  FROM (
+    SELECT
+      e.CMPX_CD,
+      e.MGMT_FEE_TOTAL,
+      e.CLEANING_FEE,
+      e.SECURITY_FEE,
+      e.DISINFECTION_FEE,
+      e.ELEVATOR_MAINT_FEE,
+      e.REPAIR_FEE,
+      e.HEATING_FEE_PUBLIC,
+      e.HEATING_FEE_PRIVATE,
+      e.GAS_USAGE_PUBLIC,
+      e.GAS_USAGE_PRIVATE,
+      e.ELEC_USAGE_PUBLIC,
+      e.ELEC_USAGE_PRIVATE,
+      e.WATER_USAGE_PUBLIC,
+      e.WATER_USAGE_PRIVATE,
+      e.EXP_YEAR_MONTH,
+      a.UNIT_TOT,
+      ROW_NUMBER() OVER (ORDER BY e.EXP_YEAR_MONTH DESC) AS RN
+    FROM CMPX_EXPENSES e
+    JOIN APT_INFO a ON e.CMPX_CD = a.CMPX_CD
+    WHERE e.CMPX_CD = #{cmpxCd}
+  )
+  WHERE RN &lt;= 2
+  ORDER BY EXP_YEAR_MONTH DESC
+</select>
+
+ 
+
+ 
+ 
+ </mapper>

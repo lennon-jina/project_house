@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+ <mapper namespace="com.house.team.bookmark.dao.IBookmarkDAO">
+
+    <select id="countBookmark" resultType="int" parameterType="com.house.team.bookmark.vo.BookmarkVO">
+        SELECT COUNT(*)
+        FROM BOOKMARK_CMPX
+        WHERE MEM_NO = #{memNo}
+          AND CMPX_CD = #{cmpxCd}
+    </select>
+
+    <insert id="insertBookmark" parameterType="com.house.team.bookmark.vo.BookmarkVO">
+        INSERT INTO BOOKMARK_CMPX (MEM_NO, CMPX_CD)
+        VALUES (#{memNo}, #{cmpxCd})
+    </insert>
+
+    <delete id="deleteBookmark" parameterType="map">
+        DELETE FROM BOOKMARK_CMPX
+        WHERE MEM_NO = #{memNo}
+          AND CMPX_CD = #{cmpxCd}
+    </delete>
+    
+	<select id="selectBookmarksByUser" parameterType="string" resultType="com.house.team.bookmark.vo.BookmarkVO">
+	    SELECT B.CMPX_CD, A.CMPX_NM, A.APPR_DT, A.UNIT_TOT
+	    FROM BOOKMARK_CHECK B
+	    JOIN APT_INFO A ON B.CMPX_CD = A.CMPX_CD
+	    WHERE B.MEM_NO = #{memNo}
+	      AND B.DEL_YN = 'N'
+	</select>
+
+
+</mapper>

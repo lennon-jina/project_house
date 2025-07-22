@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.house.team.admin.dao.IAdminNoticeDAO">
+	<!-- 공지글 리스트 -->
+	<select id="selectNoticeList" resultType="AdminNoticeVO">
+		SELECT *
+        FROM (
+	            SELECT ROWNUM AS rn, n.*
+	            FROM (
+		                SELECT *
+		                FROM BOARDS_NOTICE
+		                WHERE DEL_YN = 'N'
+		                <if test="searchField != null and keyword != null and keyword != ''">
+		                    <choose>
+		                        <when test="searchField == 'title'">
+		                            AND NOTICE_TITLE LIKE '%' || #{keyword} || '%'
+		                        </when>
+		                        <when test="searchField == 'content'">
+		                            AND NOTICE_TEXT LIKE '%' || #{keyword} || '%'
+		                        </when>
+		                        <otherwise>
+		                            AND (NOTICE_TITLE LIKE '%' || #{keyword} || '%'
+		                             OR NOTICE_TEXT LIKE '%' || #{keyword} || '%')
+		                        </otherwise>
+		                    </choose>
+		                </if>
+		                <choose>
+					        <when test="sortOrder == 'latest'">
+					            ORDER BY CREATE_DT DESC, NOTICE_NO DESC
+					        </when>
+					        <when test="sortOrder == 'popularity'">
+					            ORDER BY VIEW_CNT DESC, CREATE_DT DESC, NOTICE_NO DESC
+					        </when>
+					        <otherwise>
+					            ORDER BY BOARD_NO DESC
+					        </otherwise>
+					    </choose>
+	            ) n
+	    )
+        WHERE rn &gt; #{offset} AND rn &lt;= #{offset} + #{size}
+	</select>
+	
+	<!-- 키워드별 검색 결과-->
+	<select id="getNoticeCount" resultType="int">
+		SELECT COUNT(*)
+		FROM BOARDS_NOTICE
+		WHERE DEL_YN = 'N'
+        <if test="searchField != null and keyword != null">
+            <choose>
+                <when test="searchField == 'title'">
+			      AND NOTICE_TITLE LIKE '%' || #{keyword} || '%'
+			    </when>
+			    <when test="searchField == 'content'">
+			      AND NOTICE_TEXT LIKE '%' || #{keyword} || '%'
+			    </when>
+			    <when test="searchField == 'all'">
+			      AND (NOTICE_TITLE LIKE '%' || #{keyword} || '%' OR NOTICE_TEXT LIKE '%' || #{keyword} || '%')
+			    </when>
+            </choose>
+        </if>
+        <choose>
+	        <when test="sortOrder == 'latest'">
+	            ORDER BY CREATE_DT DESC, NOTICE_NO DESC
+	        </when>
+	        <when test="sortOrder == 'popularity'">
+	            ORDER BY VIEW_CNT DESC, CREATE_DT DESC, NOTICE_NO DESC
+	        </when>
+	        <otherwise>
+	            ORDER BY BOARD_NO DESC
+	        </otherwise>
+	    </choose>
+	</select>
+	
+	<!-- 상세 정보 페이지 -->
+	<select id="getNoticeById" parameterType="int" resultType="AdminNoticeVO">
+		SELECT NOTICE_NO,
+		       NOTICE_TITLE,
+		       NOTICE_TEXT,
+		       CREATE_DT,
+		       UPDATE_DT,
+		       VIEW_CNT
+		FROM BOARDS_NOTICE
+    	WHERE NOTICE_NO = #{noticeNo}
+	</select>
+	
+	<!-- 공지글 작성 -->
+	<insert id="insertNotice" parameterType="AdminNoticeVO">
+		INSERT INTO BOARDS_NOTICE ( NOTICE_TITLE, NOTICE_TEXT)
+		VALUES (#{noticeTitle}, #{noticeText})
+    </insert>
+    
+	<!-- 공지글 수정 -->
+	<update id="updateNotice" parameterType="AdminNoticeVO">
+        UPDATE BOARDS_NOTICE
+		SET NOTICE_TITLE = #{noticeTitle},
+		    NOTICE_TEXT  = #{noticeText},
+		    UPDATE_DT = SYSDATE
+		WHERE NOTICE_NO = #{noticeNo}
+    </update>
+    
+	<!-- 공지글 삭제 -->
+    <update id="deleteNotice" parameterType="list">
+        UPDATE BOARDS_NOTICE
+        SET DEL_YN = 'Y'
+        WHERE NOTICE_NO IN
+        <foreach item="item" collection="noticeNos" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+</mapper>

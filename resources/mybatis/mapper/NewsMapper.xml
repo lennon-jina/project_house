@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.house.team.board.dao.NewsMapper">
+
+    <!-- 전체 뉴스 페이징 -->
+    <select id="selectNewsPage" resultType="com.house.team.board.vo.NewsVO">
+        SELECT * FROM BOARDS_NEWS 
+        ORDER BY UPLOAD_DT DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+    </select>
+
+    <select id="selectNewsCount" resultType="int">
+        SELECT COUNT(*) FROM BOARDS_NEWS
+    </select>
+
+    <!-- 카테고리 뉴스 페이징 -->
+    <select id="selectNewsByCategoryPage" parameterType="map" resultType="com.house.team.board.vo.NewsVO">
+        SELECT * FROM BOARDS_NEWS 
+        WHERE CAT = #{category}
+        ORDER BY UPLOAD_DT DESC
+        OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+    </select>
+
+    <select id="countNewsByCategory" parameterType="String" resultType="int">
+        SELECT COUNT(*) FROM BOARDS_NEWS 
+        WHERE CAT = #{category}
+    </select>
+
+    <!-- 🔍 키워드 + 카테고리 기반 뉴스 검색 페이징 -->
+    <select id="searchNewsPage" parameterType="map" resultType="com.house.team.board.vo.NewsVO">
+        <![CDATA[
+		    SELECT * FROM (
+		      SELECT A.*, ROWNUM RNUM FROM (
+		        SELECT * FROM BOARDS_NEWS
+		        WHERE 1=1
+		  ]]>
+		  
+		  <if test="searchField == 'title'">
+		    <![CDATA[
+		      AND NEWS_TITLE LIKE '%' || #{keyword} || '%'
+		    ]]>
+		  </if>
+		  <if test="searchField == 'content'">
+		    <![CDATA[
+		      AND NEWS_TEXT LIKE '%' || #{keyword} || '%'
+		    ]]>
+		  </if>
+		  <if test="searchField == '' or searchField == null">
+		    <![CDATA[
+		      AND (NEWS_TITLE LIKE '%' || #{keyword} || '%' OR NEWS_TEXT LIKE '%' || #{keyword} || '%')
+		    ]]>
+		  </if>
+		
+		  <if test="category != null and category != ''">
+		    <![CDATA[
+		      AND CAT = #{category}
+		    ]]>
+		  </if>
+		
+		  <![CDATA[
+		        ORDER BY UPLOAD_DT DESC
+		      ) A
+		      WHERE ROWNUM <= #{endRow}
+		    )
+		    WHERE RNUM > #{offset}
+		  ]]>
+    </select>
+
+    <select id="countSearchNews" parameterType="map" resultType="int">
+	  SELECT COUNT(*) FROM BOARDS_NEWS
+	  WHERE 1 = 1
+	
+	  <!-- 카테고리 조건 -->
+	  <if test="category != null and category != ''">
+	    AND CAT = #{category}
+	  </if>
+	
+	  <!-- 검색 조건 -->
+	  <choose>
+	    <when test="searchField == 'title'">
+	      AND NEWS_TITLE LIKE '%' || #{keyword} || '%'
+	    </when>
+	    <when test="searchField == 'content'">
+	      AND NEWS_TEXT LIKE '%' || #{keyword} || '%'
+	    </when>
+	    <when test="searchField == 'title_content'">
+	      AND (NEWS_TITLE LIKE '%' || #{keyword} || '%' OR NEWS_TEXT LIKE '%' || #{keyword} || '%')
+	    </when>
+	    <otherwise>
+	      AND (NEWS_TITLE LIKE '%' || #{keyword} || '%' OR NEWS_TEXT LIKE '%' || #{keyword} || '%')
+	    </otherwise>
+	  </choose>
+	</select>
+	<!-- 뉴스 상세 정보-->
+	<select id="selectedNewsById" parameterType="long" resultType="com.house.team.board.vo.NewsVO">
+		SELECT NEWS_NO, CAT, NEWS_TITLE, NEWS_TEXT, UPLOAD_DT, NEWS_IMG, WRITER, NEWS_URL, DEL_YN
+        FROM BOARDS_NEWS
+        WHERE NEWS_NO = #{newsNo}
+        AND DEL_YN = 'N'
+	</select>
+	<!-- 조회수 증가 -->
+    <update id="incrementViewCnt" parameterType="int">
+        UPDATE BOARDS_NEWS
+        SET VIEW_CNT = VIEW_CNT + 1
+        WHERE NEWS_NO = #{NEWS_NO}
+    </update>
+</mapper>

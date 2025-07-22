@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.team.mypage.dao.IMypageDAO">
+
+<select id="selectbookmarker" resultType="com.house.team.mypage.vo.MypageVo">
+   SELECT AI.*
+  FROM BOOKMARK_CMPX BC
+  INNER JOIN APT_INFO AI ON RTRIM(BC.CMPX_CD) = RTRIM(AI.CMPX_CD)
+  WHERE BC.MEM_NO = #{memNo}
+    AND BC.DEL_YN = 'N'
+</select>
+
+ <select id="selectM" resultType="com.house.team.mypage.vo.MypageVo">
+	SELECT *
+FROM (
+    SELECT
+        ce.CMPX_CD,
+        ce.MGMT_FEE_TOTAL,
+        ce.CLEANING_FEE,
+        ce.SECURITY_FEE,
+        ce.DISINFECTION_FEE,
+        ce.ELEVATOR_MAINT_FEE,
+        ce.REPAIR_FEE,
+        ce.HEATING_FEE_PUBLIC,
+        ce.HEATING_FEE_PRIVATE,
+        ce.GAS_USAGE_PUBLIC,
+        ce.GAS_USAGE_PRIVATE,
+        ce.ELEC_USAGE_PUBLIC,
+        ce.ELEC_USAGE_PRIVATE,
+        ce.WATER_USAGE_PUBLIC,
+        ce.WATER_USAGE_PRIVATE,
+        ce.EXP_YEAR_MONTH,
+        ma.LABOR_COST as laborCost,
+        ma.OFFICE_COST as officeCost,
+        ma.TAX_COST as taxCost,
+        ma.UNIFORM_COST as uniformCost,
+        ma.TRAINING_COST as trainingCost,
+        ma.CAR_MAINT_COST as carMaintCost,
+        ma.ETC_COST as etcCost,
+        ma.NETWORK_COST as networkCost,
+        ma.FACILITY_COST as facilityCost,
+        ma.SAFETY_CHK_COST as safetyChkCost,
+        ma.DISASTER_PREV_COST as disasterPrevCost,
+        ma.MGMT_FEE_COST as mgmtFeeCost,
+        ROW_NUMBER() OVER (ORDER BY ce.EXP_YEAR_MONTH DESC) AS RN
+    FROM CMPX_EXPENSES ce
+    LEFT JOIN MGMT_ALL_INFO ma
+        ON ce.CMPX_CD = ma.CMPX_CD
+       AND TO_CHAR(TO_DATE(ce.EXP_YEAR_MONTH, 'RR/MM/DD'), 'YYYYMM') = ma.OCC_YM
+    WHERE ce.CMPX_CD = #{cmpxCd}
+)
+WHERE RN &lt;= 2  
+ORDER BY EXP_YEAR_MONTH DESC;
+    </select>
+
+</mapper>
