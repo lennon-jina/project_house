@@ -1,0 +1,825 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: rgb(255, 255, 255);
+}
+
+/* ========================================= */
+/* 1. 메인 지도 화면 컨트롤 Wrapper */
+/* ========================================= */
+#mapControlWrapper {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+#leftControls, #rightControls {
+    pointer-events: auto;
+}
+
+#leftControls {
+    padding-top: 10px;
+    padding-left: 10px;
+}
+
+.map-search-box {
+    display: flex;
+    gap: 6px;
+    background: white;
+    padding: 6px 10px;
+    border-radius: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    align-items: center;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.map-search-box:focus-within {
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+    border-color: #007bff;
+}
+
+.map-search-box input {
+    padding: 10px;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    flex: 1;
+    background: transparent;
+}
+
+.map-search-box button {
+    background: none;
+    border: none;
+    font-size: 14px;
+    cursor: pointer;
+    color: #007bff;
+    padding: 6px;
+    transition: transform 0.2s ease;
+}
+
+.map-search-box button:active {
+    transform: scale(0.95);
+}
+
+#rightControls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+/* ========================================= */
+/* 2. 지도 위 버튼 박스 (노후도, 소음도) */
+/* ========================================= */
+.map-button-box {
+    display: flex;
+    gap: 10px;
+}
+
+#filterSelect {
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 120px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#filterSelect:hover {
+    border-color: #007bff;
+}
+
+#map {
+    width: 100%;
+    height: 800px;
+    border-radius: 12px;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+#sh_wrapper {
+    min-height: 200vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#sh_container {
+    flex-grow: 1;
+}
+
+.color-dot {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 12px;
+    flex-shrink: 0;
+    border: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+/* ========================================= */
+/* 3. 팝업 오버레이 및 컨테이너 */
+/* ========================================= */
+#buildingInfoPopup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+.popup-content.fade-out {
+    animation: fadeOut 0.3s ease-in forwards;
+}
+
+/* 팝업 내용 컨테이너 */
+.popup-content {
+	background-color: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 650px;
+    height: auto;
+    max-height: 100vh;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: slideInUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+    flex-shrink: 0; 
+}
+
+#buildingName {
+    font-size: 1.5em;
+    font-weight: 700;
+    color: #1e3a5f;
+    margin: 15px 0 0 0;
+}
+
+.popup-header h4 {
+    margin: 0;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.popup-close-btn {
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    cursor: pointer;
+    color: #888;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.popup-close-btn:hover {
+    color: #333;
+    transform: rotate(90deg);
+}
+
+/* 팝업 내부 스크롤 가능한 영역 */
+.popup-scroll-content {
+    flex-grow: 1; 
+    overflow-y: auto; 
+    padding-right: 15px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    min-height: 0; 
+}
+
+/* 커스텀 스크롤바 */
+.popup-scroll-content::-webkit-scrollbar {
+    width: 8px;
+}
+.popup-scroll-content::-webkit-scrollbar-thumb {
+    background-color: #c4c4c4;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+.popup-scroll-content::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+.building-details {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.building-details p {
+    margin: 5px 0;
+    font-size: 1.2em;
+    color: #555;
+    display: flex;
+    align-items: center;
+}
+.building-details p i {
+    margin-right: 10px;
+    color: #888;
+    width: 20px;
+    text-align: center;
+}
+
+.content-section {
+    padding: 25px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.management-fee-container {
+    max-width: 100%;
+    margin: auto;
+	color: #333;
+	margin-top: 50px;
+}
+
+.management-fee-title {
+  color: #333;
+}
+
+.management-fee-container h1, .management-fee-container h2 {
+	font-size: 1.8em;
+    color: #1e3a5f;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+    margin-top: 30px;
+    font-weight: 700;
+}
+
+.management-fee-container h1 {
+    margin-bottom: 25px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+.management-fee-container .summary-box {
+    background-color: #f1f8e9;
+    border: 1px solid #dcedc8;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.management-fee-container .summary-item {
+    flex: 1;
+    padding: 0 10px;
+}
+.management-fee-container .summary-item:not(:last-child) {
+    border-right: 1px solid #e0e0e0;
+}
+
+.management-fee-container .summary-item h3 {
+    color: #388e3c;
+    margin-bottom: 5px;
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.management-fee-container .summary-item p {
+    font-size: 1.4em;
+    font-weight: 800;
+    color: #1b5e20;
+}
+
+.management-fee-container .section {
+    margin-bottom: 30px;
+}
+
+.management-fee-container .chart-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.management-fee-container .data-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.management-fee-container .data-list li {
+    background-color: #f8f9fa;
+    padding: 10px 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1em;
+    border: 1px solid #e9ecef;
+}
+
+.management-fee-container .data-list li strong {
+    color: #4a69bd;
+}
+
+.management-fee-container .data-list li span {
+    font-weight: bold;
+    color: #333;
+}
+
+.management-fee-container .highlight-text {
+    font-size: 0.7em;
+    font-weight: bold;
+    color: #d35400;
+    background-color: #fff0e7;
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-left: 8px;
+    animation: pulse 1.5s infinite ease-in-out;
+	border: transparent;
+}
+
+.management-fee-container .note {
+    font-style: italic;
+    color: #888;
+    margin-top: 10px;
+    padding-left: 10px;
+    border-left: 3px solid #ccc;
+    font-size: 0.9em;
+}
+
+.management-fee-container hr {
+    border: none;
+    border-top: 1px solid #eee;
+    margin: 25px 0;
+}
+
+/* 에너지 효율 등급 섹션 */
+.energy-efficiency-section h5 {
+    margin-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+    text-align: center;
+    padding-left: 0;
+	font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #1e3a5f;
+	margin-top: 70px;
+	font-weight: bold;
+}
+
+.energy-grade{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0;
+    padding-top: 0;
+    height: 500px;
+}
+
+#myDiv {
+    z-index: 0;
+    margin-bottom: 0;
+}
+
+.energy-saving-info {
+    text-align: center;
+    font-size: 1.0em;
+    color: #888;
+    margin-top: -100px;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 580px;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.building-grade-info {
+    text-align: center;
+    font-size: 1.4em;
+    font-weight: bold;
+    z-index: 1;
+    margin-top: 30px;
+    width: 100%;
+    max-width: 580px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    color: #2c3e50;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+/* 함께 보면 좋은 건물 섹션 전체 컨테이너 */
+.similar-buildings-section {
+    position: relative;
+    text-align: center;
+    padding-top: 20px;
+}
+
+.similar-buildings-section h5 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #1e3a5f;
+	font-weight: bold;
+}
+
+/* ========================================= */
+/* 4. 슬라이더 화살표 */
+/* ========================================= */
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.95); /* 배경 불투명도 증가 */
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 50px; /* 크기 증가 */
+    height: 50px; /* 크기 증가 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2); /* 그림자 더 강하게 */
+    transition: all 0.3s ease;
+}
+
+/* 호버 시 애니메이션 */
+.slider-arrow:hover {
+    background-color: #ffffff;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    transform: translateY(-50%) scale(1.15); /* 호버 시 크게 확대 */
+    border-color: #007bff;
+}
+
+.slider-arrow.prev-slide {
+    left: 10px;
+}
+
+.slider-arrow.next-slide {
+    right: 10px;
+}
+
+.slider-arrow i {
+    color: #555;
+    font-size: 1.8em; /* 아이콘 크기 증가 */
+    transition: color 0.3s ease;
+}
+.slider-arrow:hover i {
+    color: #007bff;
+}
+
+
+/* 아파트 목록을 감싸는 컨테이너 */
+.similar-building-list {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 15px;
+    gap: 30px;
+    justify-content: flex-start;
+    padding: 0 50px;
+	scroll-snap-type: x mandatory;
+}
+
+/* 개별 아파트 정보 카드 */
+.similar-building-list .image-container {
+    flex-shrink: 0;
+    width: 280px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+	scroll-snap-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.similar-building-list .image-container:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+}
+
+/* 이미지 스타일 */
+.similar-building-list .image-container img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+}
+
+
+/* 정보 텍스트 컨테이너 */
+.similar-building-list .image-container .details {
+    padding: 15px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(to top, #f9f9f9, #ffffff);
+}
+
+.similar-building-list .image-container .details h6 {
+    font-size: 1.2em;
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 700;
+}
+
+.similar-building-list .image-container .details p {
+    font-size: 0.95em;
+    color: #777;
+    margin: 3px 0;
+}
+
+/* 스크롤바 숨기기 */
+.similar-building-list::-webkit-scrollbar {
+    height: 8px;
+}
+.similar-building-list::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+.similar-building-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* ========================================= */
+/* 5. 찜 알림창 및 아이콘 */
+/* ========================================= */
+#wish-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 50px;
+    z-index: 1001;
+    display: none;
+    font-size: 1em;
+    white-space: nowrap;
+    animation: fadeIn 0.3s, fadeOut 0.3s 2.5s forwards;
+    backdrop-filter: blur(5px);
+}
+
+.toggle-wish-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 28px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-wish-icon:hover {
+    transform: scale(1.2);
+}
+
+.toggle-wish-icon.active {
+    color: #ff4d4d;
+    -webkit-text-stroke: 0;
+    animation: popIn 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+/* ========================================= */
+/* 6. 아이콘 메뉴 (탭) */
+/* ========================================= */
+.icons-menu {
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+    border-bottom: 2px solid #e9ecef; 
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
+}
+.icon-item {
+    text-align: center;
+    cursor: pointer;
+    padding: 10px 5px; /* 패딩 증가 */
+    flex-grow: 1;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+    color: #6c757d; /* 비활성화된 아이콘 색상 */
+    font-weight: 500;
+}
+.icon-item i {
+    font-size: 28px; /* 아이콘 크기 증가 */
+    color: #6c757d;
+    margin-bottom: 8px; /* 아이콘과 텍스트 간격 증가 */
+    transition: all 0.3s ease-in-out;
+}
+.icon-item span {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9em;
+}
+/* 호버 시 효과 */
+.icon-item:hover {
+    background-color: #e9ecef;
+    border-radius: 8px;
+    color: #007bff;
+}
+.icon-item:hover i {
+    color: #007bff;
+    transform: translateY(-3px); /* 아이콘만 살짝 위로 이동 */
+}
+/* 활성화된 아이콘 */
+.icon-item.active {
+    color: #007bff;
+    font-weight: 700;
+}
+.icon-item.active i {
+    color: #007bff;
+    transform: scale(1.1); /* 활성화 시 아이콘 확대 */
+}
+/* 활성화된 아이콘 아래의 바 애니메이션 */
+.icon-item.active::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -15px; /* 밑줄 위치 조정 */
+    left: 15%;
+    width: 70%; /* 밑줄 길이 */
+    height: 4px; /* 밑줄 두께 증가 */
+    background-color: #007bff;
+    border-radius: 2px;
+    animation: underlineExpand 0.4s ease-out forwards;
+}
+
+/* ========================================= */
+/* 7. 애니메이션 키프레임 */
+/* ========================================= */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes slideInUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes underlineExpand {
+    from { width: 0; }
+    to { width: 70%; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(211, 84, 0, 0.4); }
+    70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(211, 84, 0, 0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(211, 84, 0, 0); }
+}
+
+@keyframes popIn {
+    0% { transform: scale(0); }
+    60% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* ========================================= */
+/* 8. 유사 단지 슬라이더 및 아이템 스타일 */
+/* ========================================= */
+
+/* similar-building-list 컨테이너 (슬라이더 레이아웃) */
+.similar-building-list {
+    display: flex; /* 가로로 나열 */
+    overflow-x: auto; /* 내용이 넘칠 경우 스크롤바 표시 */
+    scroll-snap-type: x mandatory; /* 부드러운 스크롤 스냅 효과 */
+    -webkit-overflow-scrolling: touch; /* iOS에서 부드러운 스크롤 */
+    padding: 10px; /* 상하좌우 여백 */
+    gap: 20px; /* 아이템 간 간격 */
+    width: calc(100% - 20px); /* 패딩 고려한 너비 */
+    box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+    /* 슬라이더 화살표와 겹치지 않도록 마진 조정 */
+    margin: 0 auto; 
+}
+
+/* 개별 유사 아파트 아이템 */
+.similar-building-item {
+    flex: 0 0 auto; /* 아이템이 줄바꿈되지 않고, 콘텐츠 크기에 맞게 */
+    width: 180px; /* 아이템의 고정 너비 (필요에 따라 조절) */
+    display: flex;
+    flex-direction: column; /* 세로로 정렬: 이미지-이름-주소 */
+    align-items: center; /* 수평 가운데 정렬 */
+    text-align: center;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    scroll-snap-align: start; /* 스크롤 스냅 정렬 */
+    cursor: pointer; /* 클릭 가능한 요소임을 나타냄 */
+}
+
+.similar-building-item:hover {
+    transform: translateY(-5px); /* 호버 시 살짝 위로 */
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12); /* 호버 시 그림자 강화 */
+}
+
+/* 이미지 썸네일 컨테이너 */
+.similar-building-item .image-container {
+    width: 100%;
+    height: 120px; /* 이미지 컨테이너 높이 고정 */
+    overflow: hidden; /* 이미지가 컨테이너 밖으로 넘어가지 않도록 */
+    border-radius: 8px; /* 둥근 모서리 */
+    margin-bottom: 10px;
+    position: relative;
+}
+
+/* 이미지 썸네일 스타일 */
+.similar-building-item .building-thumbnail { /* class="building-thumbnail" 사용 */
+    width: 100%; /* 부모 아이템 너비에 꽉 채우기 */
+    height: 100%; /* 컨테이너 높이에 꽉 채우기 */
+    object-fit: cover; /* 이미지가 잘리지 않게 비율 유지하며 채움 */
+    display: block; /* 이미지 하단 여백 제거 */
+    border-radius: 8px; /* 둥근 모서리 */
+}
+
+/* 텍스트 상세 정보 */
+.similar-building-item .details {
+    width: 100%; /* 부모 아이템 너비에 꽉 채우기 */
+}
+
+.similar-building-item .details h6 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 5px;
+    white-space: nowrap; /* 단지명 줄바꿈 방지 */
+    overflow: hidden; /* 넘치는 텍스트 숨김 */
+    text-overflow: ellipsis; /* 넘치는 텍스트에 ... 표시 */
+}
+
+.similar-building-item .details p {
+    font-size: 13px;
+    color: #777;
+    margin-top: 0;
+    margin-bottom: 3px;
+    line-height: 1.4;
+    white-space: nowrap; /* 주소, 년차/세대 줄바꿈 방지 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

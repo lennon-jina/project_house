@@ -1,0 +1,444 @@
+/* record.css */
+@charset "utf-8";
+
+/* 페이지 제목 */
+.page-title {
+    font-size: 32px; /* Increased font size */
+    font-weight: bold;
+    padding-bottom: 25px; /* Increased padding */
+    border-bottom: 4px solid #333; /* Thicker border */
+    text-align: center;
+    color: #2c2c2c;
+    margin-bottom: 40px; /* Increased margin */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05); /* Subtle text shadow */
+}
+
+/* 북마크된 건물 섹션  */
+.bookmarked-buildings-section { 
+    margin-top: 80px; /* Increased margin for separation */
+    padding: 30px 0; /* Increased padding */
+}
+
+.bookmarked-buildings-section .section-title-wrapper {
+    text-align: center;
+    margin-bottom: 50px; /* Increased margin */
+}
+
+.bookmarked-buildings-section .section-title.animated-title {
+    display: inline-block;
+    color: rgb(106, 140, 255); /* More vibrant blue */
+    padding-bottom: 12px; /* Increased padding */
+    border-bottom: 4px solid rgb(106, 140, 255); /* Thicker, matching border */
+    animation: pulse 1.8s infinite alternate; /* Slower, smoother pulse */
+    font-size: 32px; /* Larger font size */
+    font-weight: bold;
+    letter-spacing: 1px; /* Slight letter spacing */
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.08); /* Subtle shadow */
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.9;
+        transform: scale(1);
+        box-shadow: 0 0 8px rgba(106, 140, 255, 0.4); /* Softer initial shadow */
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.03); /* Slightly less aggressive scale */
+        box-shadow: 0 0 15px rgba(106, 140, 255, 0.6); /* More pronounced shadow */
+    }
+}
+
+
+.bookmarked-building-list-container { 
+    position: relative;
+    margin: 0 30px; /* Increased horizontal margin */
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+.bookmarked-building-list {
+    display: flex;
+    overflow-x: hidden; 
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    gap: 25px; /* Increased gap between cards */
+    padding-bottom: 20px; /* Increased padding */
+    scrollbar-width: thin;
+    scrollbar-color: #a3b8ff #f1f4f8; /* Custom scrollbar colors */
+    width: calc(100% - 120px); /* Adjusted width for arrows */
+    justify-content: flex-start; 
+}
+
+.bookmarked-building-list::-webkit-scrollbar { 
+    height: 10px; /* Thicker scrollbar */
+}
+
+.bookmarked-building-list::-webkit-scrollbar-track { 
+    background: #f1f4f8; /* Lighter track */
+    border-radius: 10px;
+}
+
+.bookmarked-building-list::-webkit-scrollbar-thumb { 
+    background: #a3b8ff; /* Softer blue thumb */
+    border-radius: 10px;
+}
+
+.bookmarked-building-list::-webkit-scrollbar-thumb:hover { 
+    background: #8e9fe8; /* Darker on hover */
+}
+
+.bookmarked-building-card {
+    flex: 0 0 auto;
+    width: 420px; /* Slightly larger card width */
+    border: 1px solid #e0e0e0;
+    border-radius: 12px; /* More rounded corners */
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); /* Stronger, softer shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Slower transition */
+    background-color: #fff;
+    text-align: left; 
+}
+
+.bookmarked-building-card:hover { 
+    transform: translateY(-8px); /* More pronounced lift */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15); /* Stronger shadow on hover */
+}
+
+.bookmarked-building-card img {
+    width: 100%;
+    height: 300px; /* Adjusted image height */
+    object-fit: cover;
+    display: block;
+    border-bottom: 1px solid #eee; /* Separator for image */
+}
+
+.bookmarked-building-info {
+    padding: 20px; /* Increased padding */
+}
+
+.bookmarked-building-info h5 {
+    margin-top: 0;
+    margin-bottom: 10px; /* Increased margin */
+    font-size: 20px; /* Larger font size */
+    color: #333;
+    font-weight: 700; /* Bolder */
+}
+
+.bookmarked-building-info p {
+    font-size: 15px; /* Slightly larger font */
+    color: #666;
+    line-height: 1.6; /* Increased line height */
+    margin-bottom: 8px; /* Adjusted margin */
+}
+
+.slider-arrow {
+    position: absolute;
+    top: 50%; 
+    transform: translateY(-50%);
+    background-color: #ffffff; /* White background */
+    color: rgb(106, 140, 255); /* More vibrant blue */
+    border: 2px solid rgb(106, 140, 255); /* Matching border */
+    width: 45px; /* Larger arrow buttons */
+    height: 45px; /* Larger arrow buttons */
+    font-size: 28px; /* Larger icon */
+    padding: 0;
+    cursor: pointer;
+    z-index: 10;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease; /* Smoother transition */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15); /* Stronger shadow */
+}
+
+.slider-arrow:hover {
+    background-color: rgb(106, 140, 255); /* Fill color on hover */
+    border-color: rgb(106, 140, 255); /* Matching border on hover */
+    color: #fff; /* White icon on hover */
+    transform: translateY(-50%) scale(1.05); /* Slight scale and lift */
+    box-shadow: 0 6px 15px rgba(0,0,0,0.25); /* Stronger shadow on hover */
+}
+
+.prev-slide {
+    left: -15px; /* Adjusted position */
+}
+
+.next-slide {
+    right: -15px; /* Adjusted position */
+}
+
+/* 모달 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6); /* Darker overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease-out; /* Fade in animation */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 35px; /* Increased padding */
+    border: none; /* Removed border */
+    width: 90%;
+    max-width: 750px; /* Increased max-width */
+    border-radius: 16px; /* More rounded corners */
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25); /* Stronger, softer shadow */
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideInTop 0.4s ease-out; /* Slide in animation */
+}
+
+.close-button {
+    color: #aaa;
+    font-size: 32px; /* Larger close button */
+    font-weight: bold;
+    position: absolute;
+    top: 20px; /* Adjusted position */
+    right: 30px; /* Adjusted position */
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #555; /* Darker on hover */
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #e0e0e0; /* Softer border */
+    padding-bottom: 15px; /* Increased padding */
+    margin-bottom: 25px; /* Increased margin */
+    font-size: 28px; /* Larger font size */
+    font-weight: bold;
+}
+
+.checklist-item {
+    margin-bottom: 20px; /* Increased margin */
+    border: 1px solid #e0e0e0; /* Softer border */
+    padding: 18px; /* Increased padding */
+    border-radius: 10px; /* More rounded */
+    background-color: #fcfcfc; /* Slightly off-white background */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Subtle shadow */
+    transition: box-shadow 0.2s ease;
+}
+
+.checklist-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Enhanced shadow on hover */
+}
+
+.checklist-item label {
+    display: flex; /* Use flex for alignment */
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 10px; /* Increased margin */
+    color: #444; /* Darker color */
+    font-size: 18px; /* Larger font size */
+    cursor: pointer; /* Indicate clickable label */
+}
+
+.checklist-item input[type="checkbox"] {
+    margin-right: 15px; /* Increased margin */
+    transform: scale(1.4); /* Larger checkbox */
+    accent-color: #6a8cff; /* Custom checkbox color */
+}
+
+.checklist-item textarea {
+    width: calc(100% - 24px); /* Adjusted width for padding */
+    padding: 12px; /* Increased padding */
+    margin-top: 10px; /* Adjusted margin */
+    border: 1px solid #ccc;
+    border-radius: 6px; /* More rounded */
+    resize: vertical;
+    min-height: 80px; /* Increased min-height */
+    font-size: 15px; /* Slightly larger font */
+    color: #333;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.checklist-item textarea:focus {
+    border-color: #6a8cff; /* Highlight on focus */
+    box-shadow: 0 0 0 3px rgba(106, 140, 255, 0.2); /* Glow effect on focus */
+    outline: none;
+}
+
+.modal-buttons {
+    text-align: right;
+    margin-top: 40px; /* Increased margin */
+    padding-top: 20px; /* Added padding top */
+    border-top: 1px solid #eee; /* Separator line */
+}
+
+.modal-buttons button {
+    padding: 12px 25px; /* Increased padding */
+    border: none;
+    border-radius: 8px; /* More rounded */
+    cursor: pointer;
+    font-size: 17px; /* Slightly larger font */
+    margin-left: 15px; /* Increased margin */
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* All-round transition */
+    font-weight: 600;
+}
+
+.modal-buttons .save-button {
+    background-color: #28a745;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.modal-buttons .save-button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.modal-buttons .cancel-button {
+    background-color: #6c757d;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.modal-buttons .cancel-button:hover {
+    background-color: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInTop {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Responsive adjustments for record.css */
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 26px;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+
+    .bookmarked-buildings-section .section-title.animated-title {
+        font-size: 26px;
+        padding-bottom: 10px;
+    }
+
+    .bookmarked-building-list-container {
+        margin: 0 10px;
+    }
+
+    .bookmarked-building-list {
+        width: calc(100% - 60px); /* Adjust width for smaller arrows */
+        gap: 15px;
+        padding-bottom: 10px;
+    }
+
+    .bookmarked-building-card {
+        width: 300px; /* Smaller card width */
+        border-radius: 10px;
+    }
+
+    .bookmarked-building-card img {
+        height: 200px; /* Smaller image height */
+    }
+
+    .bookmarked-building-info {
+        padding: 15px;
+    }
+
+    .bookmarked-building-info h5 {
+        font-size: 18px;
+    }
+
+    .bookmarked-building-info p {
+        font-size: 13px;
+    }
+
+    .slider-arrow {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .prev-slide {
+        left: 0;
+    }
+
+    .next-slide {
+        right: 0;
+    }
+
+    .modal-content {
+        padding: 25px;
+        border-radius: 12px;
+    }
+
+    .close-button {
+        font-size: 24px;
+        top: 15px;
+        right: 20px;
+    }
+
+    .modal-content h3 {
+        font-size: 22px;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .checklist-item {
+        margin-bottom: 15px;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .checklist-item label {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .checklist-item input[type="checkbox"] {
+        transform: scale(1.1);
+        margin-right: 10px;
+    }
+
+    .checklist-item textarea {
+        width: calc(100% - 20px);
+        padding: 10px;
+        min-height: 60px;
+        font-size: 14px;
+    }
+
+    .modal-buttons {
+        margin-top: 25px;
+        padding-top: 15px;
+    }
+
+    .modal-buttons button {
+        padding: 10px 20px;
+        font-size: 15px;
+        margin-left: 10px;
+    }
+}

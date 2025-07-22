@@ -1,0 +1,113 @@
+@charset "utf-8";
+
+/* 페이지 제목 */
+.page-title {
+    font-size: 28px;
+    font-weight: bold;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #333;
+    text-align: center;
+    color: #2c2c2c;
+}
+
+/* 공지사항 상세 영역 스타일 */
+.notice-view-area {
+    width: 100%;
+    max-width: 1200px; /* sh_content의 최대 너비에 맞게 조절 */
+    margin: 0 auto;
+    padding: 120px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-top: 30px; /* 상단 여백 추가 */
+    margin-bottom: 30px; /* 하단 여백 추가 */
+}
+
+/* 헤더 부분 스타일 */
+.notice-view-header {
+    border-bottom: 2px solid #0072ec; /* 밑줄 */
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.notice-view-header .notice-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.notice-view-header .notice-meta {
+    font-size: 14px;
+    color: #777;
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+    gap: 15px; /* 정보 간 간격 */
+}
+
+/* 본문 내용 스타일 */
+.notice-view-content {
+    min-height: 200px; /* 최소 높이 */
+    line-height: 1.8;
+    color: #444;
+    font-size: 16px;
+    padding: 20px 0;
+    border-bottom: 1px dashed #e0e0e0; /* 점선 구분선 */
+    margin-bottom: 20px;
+}
+
+.notice-view-content p {
+    margin-bottom: 15px;
+}
+
+.notice-view-content ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    padding-left: 0;
+    margin-bottom: 15px;
+}
+
+.notice-view-content strong {
+    color: #313131;
+}
+
+/* 푸터 (버튼) 스타일 */
+.notice-view-footer {
+    text-align: center;
+}
+
+.notice-view-footer .btn-list {
+    display: inline-block;
+    padding: 10px 30px;
+    background-color: #0072ec; /* 회색 버튼 */
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.notice-view-footer .btn-list:hover {
+    background-color: #0056b3; /* 호버 시 더 진한 회색 */
+}
+
+/* 반응형 디자인 (선택 사항) */
+@media (max-width: 768px) {
+    .notice-view-area {
+        padding: 15px;
+    }
+    .notice-view-header .notice-title {
+        font-size: 24px;
+    }
+    .notice-view-header .notice-meta {
+        flex-direction: column; /* 작은 화면에서 세로로 배치 */
+        align-items: flex-end;
+        gap: 5px;
+    }
+    .notice-view-content {
+        font-size: 15px;
+    }
+}

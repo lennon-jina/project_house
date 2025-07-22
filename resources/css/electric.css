@@ -1,0 +1,2901 @@
+
+.mySwiper {
+    width: 100%;
+    height: auto;
+}
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* 검색 섹션 - 컨테이너 박스 제거 */
+.search-section {
+    background: transparent;
+    border-radius: 0;
+    padding: 20px 0;
+    box-shadow: none;
+    border: none;
+    margin-bottom: 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-end;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.search-form .form-group {
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+}
+
+.search-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 15px;
+}
+
+.search-form .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #374151;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-form .form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    outline: none;
+}
+
+.search-form .btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap;
+}
+
+.search-form .btn-primary {
+    background-color: rgb(209, 209, 209);
+    color: white;
+}
+
+.search-form .btn-primary:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+/* 비교 섹션 스타일링 */
+.comparison-section {
+    background: transparent;
+    border-radius: 0;
+    padding: 40px 0;
+    box-shadow: none;
+    border: none;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+
+/* 카드 그리드 개선 */
+.similar-apartments-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    padding: 0 8px;
+    max-width: 1320px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* 기본 카드 스타일 */
+.similar-apartment-card { 
+    background: rgba(223, 243, 255, 0.3);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(78, 141, 252, 0.15);
+    border-radius: 32px;
+    padding: 2rem;
+    
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
+    
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    margin: 20px 0;
+    min-width: 0;
+    width: 100%;
+    display: block !important;
+    visibility: visible !important;
+    overflow: hidden;
+    
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #222;
+}
+
+.similar-apartment-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    background: rgba(223, 243, 255, 0.5);
+    border-color: rgba(78, 141, 252, 0.25);
+}
+
+/* 중견 (10-20년) - 연두색 */
+.similar-apartment-card[data-age-category="medium"] {
+    background: rgba(220, 252, 231, 0.3);
+    border: 1px solid rgba(34, 197, 94, 0.15);
+}
+
+.similar-apartment-card[data-age-category="medium"]:hover {
+    background: rgba(220, 252, 231, 0.5);
+    border-color: rgba(34, 197, 94, 0.25);
+}
+
+/* 노후 (20년 이상) - 노란~주황색 */
+.similar-apartment-card[data-age-category="old"] {
+    background: rgba(255, 247, 210, 0.3);
+    border: 1px solid rgba(251, 146, 60, 0.15);
+}
+
+.similar-apartment-card[data-age-category="old"]:hover {
+    background: rgba(255, 247, 210, 0.5);
+    border-color: rgba(251, 146, 60, 0.25);
+}
+
+/* --- 기준 아파트 카드 특별 UI --- */
+.similar-apartment-card.base-apartment-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transform: translateY(-8px);
+    box-shadow: 
+        0 16px 50px rgba(0, 0, 0, 0.1),
+        0 4px 16px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* 기준 카드가 신축일 때 */
+.similar-apartment-card.base-apartment-card[data-age-category="new"] {
+    background: rgba(223, 243, 255, 0.8);
+    border: 2px solid rgba(78, 141, 252, 0.4);
+}
+
+.similar-apartment-card.base-apartment-card[data-age-category="new"]:hover {
+    background: rgba(223, 243, 255, 0.9);
+    box-shadow: 
+        0 25px 80px rgba(0, 0, 0, 0.2),
+        0 0 50px rgba(78, 141, 252, 0.25);
+}
+
+/* 기준 카드가 중견일 때 */
+.similar-apartment-card.base-apartment-card[data-age-category="medium"] {
+    background: rgba(220, 252, 231, 0.8);
+    border: 2px solid rgba(34, 197, 94, 0.4);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.15),
+        0 0 40px rgba(34, 197, 94, 0.2);
+}
+
+.similar-apartment-card.base-apartment-card[data-age-category="medium"]:hover {
+    background: rgba(220, 252, 231, 0.9);
+    box-shadow: 
+        0 25px 80px rgba(0, 0, 0, 0.2),
+        0 0 50px rgba(34, 197, 94, 0.25);
+}
+
+/* 기준 카드가 노후일 때 */
+.similar-apartment-card.base-apartment-card[data-age-category="old"] {
+    background: rgba(255, 247, 210, 0.8);
+    border: 2px solid rgba(251, 146, 60, 0.4);
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.15),
+        0 0 40px rgba(251, 146, 60, 0.2);
+}
+
+.similar-apartment-card.base-apartment-card[data-age-category="old"]:hover {
+    background: rgba(255, 247, 210, 0.9);
+    box-shadow: 
+        0 25px 80px rgba(0, 0, 0, 0.2),
+        0 0 50px rgba(251, 146, 60, 0.25);
+}
+
+/* 유사도와 단지코드를 감싸는 Wrapper */
+.similar-apartment-card .similarity-score-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* 유사도 태그 스타일 - 더욱 투명하고 모던하게 */
+.similar-apartment-card .similarity-score {
+    background: rgba(255, 255, 255, 0.6);
+    color: #4a5568;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+/* 단지 코드 스타일 - 더욱 투명하고 깔끔하게 */
+.similar-apartment-card .apartment-code-small {
+    font-size: 11px;
+    font-weight: 500;
+    color: #6b7280;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 6px 10px;
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* 아파트명 스타일 */
+.similar-apartment-card .apartment-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 24px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* 정보 항목들 - 완전히 심플하고 구분선만, 패딩 줄이고 양옆 퍼지게 */
+.similar-apartment-card .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 4px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    margin-bottom: 0;
+    background: transparent;
+    border-radius: 0;
+    /* 파란색 라벨 완전 제거 */
+    border-left: none !important;
+    padding-left: 4px !important;
+}
+
+.similar-apartment-card .info-item:last-child {
+    border-bottom: none;
+}
+
+.similar-apartment-card .info-item:hover {
+    background: rgba(248, 250, 252, 0.3);
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 8px;
+    margin: 0 -8px;
+}
+
+.similar-apartment-card .info-item .label {
+    font-size: 16px;
+    color: #6b7280;
+    font-weight: 500;
+    flex-shrink: 0;
+    min-width: 110px;
+    text-align: left;
+}
+
+.similar-apartment-card .info-item .value {
+    font-size: 17px;
+    font-weight: 600;
+    color: #1a202c;
+    text-align: right;
+    flex: 1;
+    margin-left: 16px;
+}
+
+/* 건물 연식 태그 스타일 - 모던하게 */
+.similar-apartment-card .age-category {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    margin-left: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    color: #555;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* 신축 */
+.similar-apartment-card .age-category.new {
+	font-size: 1.1rem;
+    color: #059669; /* Existing color */
+    background-color: rgba(16, 185, 129, 0.2); 
+    border: 1px solid rgba(16, 185, 129, 0.4); 
+    padding: 0.3em 0.6em;
+    border-radius: 0.4rem;
+    text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.3);
+}
+
+/* 중견 */
+.badge-warning.age-category.medium {
+    font-size: 1.1rem; 
+    color: #ff6600; 
+    background-color: #ffe0b3; 
+    border: 1px solid #ff9933; 
+    padding: 0.3em 0.6em; 
+    border-radius: 0.4rem;
+    text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.3); 
+}
+
+/* 노후 */
+.similar-apartment-card .age-category.old {
+   font-size: 1.1rem;
+   color: #dc2626; /* Existing color */
+   background-color: rgba(239, 68, 68, 0.2); 
+   border: 1px solid rgba(239, 68, 68, 0.4);
+   padding: 0.3em 0.6em;
+   border-radius: 0.4rem;
+   text-shadow: 0.5px 0.5px 1px rgba(0, 0, 0, 0.3);
+}
+
+/* 카드 헤더 조정 */
+.similar-apartment-card .card-header {
+    margin-top: 0;
+    margin-bottom: 24px;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* 주소 항목 - 전체 너비 및 정렬 개선 */
+.similar-apartment-card .info-item.full-width-item {
+    grid-column: 1 / -1;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    background: rgba(248, 250, 252, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.similar-apartment-card .info-item.full-width-item .label {
+    margin-bottom: 8px;
+    min-width: auto;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.similar-apartment-card .info-item.full-width-item .value {
+    text-align: left;
+    line-height: 1.5;
+    color: #374151;
+    font-weight: 500;
+    font-size: 15px;
+    word-break: keep-all;
+    width: 100%;
+}
+
+/* 통계 섹션 */
+.statistics-section {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.stat-card {
+    background-color: #fdfefe;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    text-align: center;
+}
+
+.stat-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+.chart-small {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #cbd5e1;
+    font-style: italic;
+}
+
+/* 차트 섹션 - 모든 차트 섹션에 대한 일반 스타일링 */
+.chart-section {
+    background: transparent;
+    border-radius: 0;
+    padding: 30px 0;
+    box-shadow: none;
+    border: none;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 15px;
+}
+
+.chart-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.chart-header h3 {
+    font-size: 19px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* 탭 버튼 */
+.chart-tabs {
+    display: flex;
+    gap: 4px;
+    background: #f1f5f9;
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.tab-button {
+	flex: 1; /* 버튼들이 가용 공간을 균등하게 차지하도록 */
+    padding: 10px 15px; /* 패딩 조정 */
+    border-radius: 10px; /* 둥근 모서리 */
+    font-size: 1rem; /* 폰트 크기 조정 */
+    font-weight: 500;
+    color: #475569;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    text-align: center;
+}
+
+.tab-button.active {
+  	background-color: #ffffff;
+    color: #007bff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+}
+
+
+.tab-button:hover:not(.active) {
+    background-color: #e2e8f0;
+    color: #1a202c;
+}
+
+
+
+/* 개별 차트 (공용/전용) 섹션 */
+.chart-section.chart-yearly-monthly-sub { 
+  flex: 1; 
+  min-width: 0; 
+  display: flex; 
+  flex-direction: column;
+}
+
+.charts-wrapper {
+  display: flex; 
+  justify-content: center; 
+  align-items: flex-start; 
+  gap: 20px;
+  width: 100%; 
+  margin-bottom: 20px;
+}
+
+/* 개별 차트 섹션 (공용/전용) - 그나마 같은 높이까지 도달 */
+.chart-section .chart-header {
+    margin: 0;
+    padding: 10px 10px 10px 10px; 
+    display: flex;
+    justify-content: space-between; 
+    align-items: center; 
+    width: 100%;
+}
+
+.chart-section .chart-header h2 {
+    margin: 0;
+    padding: 0;
+}
+
+/* 탭 컨테이너들도 일관된 스타일 적용 */
+.chart-section .tab-container,
+.chart-section .chart-tabs {
+    margin: 0;
+    padding: 0; 
+}
+
+
+/* chart 내부 캔버스 */
+.chart-wrapper canvas,
+.chart-container canvas {
+  width: 100% !important; 
+  height: 100% !important; 
+  display: block;
+  max-height: 460px !important;
+  aspect-ratio: 16/10; 
+}
+
+.chart-large {
+  width: 100%;
+  height: 100%;
+}
+
+/* 연도 선택기 스타일 */
+.year-selector {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  padding-right: 10px;
+}
+
+.year-selector select {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>');
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 1.2em;
+}
+
+.year-selector select:focus {
+  border-color: #3b82f6;
+}
+
+
+/* 범례 - 모든 범례에 대한 일반 스타일링 */
+.legend {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    background: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+    margin: 20px auto 0 auto;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.legend-color {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+.legend-color.new {
+    background: #10b981;
+}
+
+.legend-color.medium {
+    background: #f59e0b;
+}
+
+.legend-color.old {
+    background: #ef4444;
+}
+
+/* 계절별 색상 */
+.legend-color.summer {
+    background: #f97316;
+}
+
+.legend-color.winter {
+    background: #3b82f6;
+}
+
+.legend-item span {
+    font-size: 15px;
+    color: #374151;
+    font-weight: 500;
+}
+
+/* 계절별 섹션 */
+.seasonal-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: rgb(207, 86, 5);
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.seasonal-section h2::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #f97316;
+    border-radius: 2px;
+}
+
+.seasonal-charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.seasonal-legend {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+}
+
+/* 로딩 인디케이터 */
+.loading, .error-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    font-size: 16px;
+    color: #64748b;
+    backdrop-filter: blur(3px);
+}
+
+.loading.hidden {
+    display: none;
+}
+/* 로딩 오버레이가 차트 컨테이너를 덮도록 설정 */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20; /* 차트 위에 표시 */
+}
+
+/* 스피너 스타일 (management.css에서 가져오거나 유사하게 적용) */
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading p {
+    color: #64748b;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+/* 에러 메시지 */
+.error-message {
+    text-align: center;
+    border: 1px solid #fca5a5;
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.1);
+}
+
+.error-message.hidden {
+    display: none;
+}
+
+.error-message p {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* 세 번째 섹션 - 통합된 효율 차트 스타일 */
+.efficiency-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: rgb(0, 98, 0);
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 10px;
+    margin-top: 15px;
+}
+
+.efficiency-section h2::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #10b981;
+    border-radius: 2px;
+}
+
+.efficiency-single-chart {
+    height: 395px;
+    margin-bottom: 30px;
+    padding-top: 10px;
+    width: 100%;
+}
+
+.efficiency-single-chart canvas {
+    max-height: 350px;
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* Swiper 컨테이너 스타일 - 성능 최적화 */
+.swiper {
+    width: 100%;
+    height: auto;
+    padding: 0;
+    box-sizing: border-box;
+    margin-bottom: 40px;
+    margin-top: 50px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative; /* 화살표 위치 조정을 위한 기준점 */
+    overflow: hidden; /* 여러 차트가 보이지 않도록 넘치는 내용 숨김 */
+}
+
+.swiper-slide {
+    width: 100%;
+    height: auto; /* 내용에 따라 높이 자동 조절 */
+    display: flex; /* 내부 콘텐츠 정렬을 위해 flexbox 사용 */
+    justify-content: center; /* 슬라이드 내부 콘텐츠 중앙 정렬 */
+    align-items: flex-start; /* 상단 정렬 (필요시 center로 변경) */
+}
+
+.swiper-slide-active {
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* 비활성 슬라이드 흐림 효과 제거 - 성능 향상 */
+.swiper-slide:not(.swiper-slide-active) {
+    opacity: 1 !important; /* 0.5에서 1로 변경 */
+}
+
+/* --- 화살표 스타일 (기존 코드에서 원형 박스 제거된 버전) --- */
+.swiper-button-prev,
+.swiper-button-next {
+    position: absolute;
+    top: 50%; /* Swiper 컨테이너의 중앙에 위치 */
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.swiper-button-prev {
+    left: 10px; /* Swiper 컨테이너의 왼쪽에서 간격 */
+}
+
+.swiper-button-next {
+    right: 10px; /* Swiper 컨테이너의 오른쪽에서 간격 */
+}
+
+/* 화살표 아이콘 자체 스타일 */
+.swiper-button-prev::after,
+.swiper-button-next::after {
+    font-size: 32px !important;
+    color: #555555 !important;
+    font-weight: bold;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* 호버 시 화살표 색상 변경 및 확대 */
+.swiper-button-prev:hover::after,
+.swiper-button-next:hover::after {
+    color: #2c3e50 !important;
+    transform: scale(1.1);
+}
+
+/* Swiper Pagination (점들) 스타일 (선택 사항) */
+.swiper-pagination-bullet {
+    background: #bbb; /* 기본 점 색상 */
+    opacity: 0.7;
+    width: 10px; /* 점 크기 */
+    height: 10px; /* 점 크기 */
+}
+
+.swiper-pagination-bullet-active {
+    background: #4a69bd; /* 활성화된 점 색상 (페이지 헤더 색상과 유사하게) */
+    opacity: 1;
+}
+
+/* 미디어 쿼리: 작은 화면에서 화살표 크기 및 위치 조정 */
+@media (max-width: 768px) {
+    .chart-controls {
+        flex-direction: column;
+        align-items: flex-start; /* Align items to the left on small screens */
+    }
+
+    .tab-buttons-container {
+        width: 100%;
+        justify-content: space-between; /* Distribute buttons and year select */
+        margin-bottom: 10px;
+    }
+
+    .tab-buttons {
+        flex-grow: 1; /* Allow buttons to take more space */
+    }
+
+    .tab-button {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    .year-select-container {
+        margin-left: 0; /* Remove left margin on small screens */
+    }
+
+    .form-select {
+        width: auto; /* Adjust width if needed */
+    }
+	.electric-chart .chart-controls .seasonal-chart{
+        flex-direction: column; /* 세로로 정렬 */
+        align-items: center; /* 중앙 정렬 */
+        gap: 15px; /* 간격 조정 */
+    }
+
+    .electric-chart .chart-controls .seasonal-chart .tab-buttons-container,
+    .year-select-container {
+        max-width: 90%; /* 모바일에서 거의 전체 너비 사용 */
+        min-width: unset; /* 최소 너비 제한 해제 */
+    }
+}
+
+@media (max-width: 480px) {
+    .tab-button {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+    }
+}
+
+
+
+/* 통합 슬라이드 내부의 개별 차트 섹션 */
+.chart-yearly-monthly-sub {
+    flex: 0 0 calc(50% - 5px);
+    min-width: calc(45% - 2.5px);
+    max-width: calc(45% - 2.5px);
+    box-sizing: border-box;
+}
+
+.chart-yearly-monthly-sub canvas {
+    width: 110% !important; /* 부모 너비에 맞춤 */
+    height: 100% !important; /* 부모 높이에 맞춤 */
+    max-height: 100% !important; /* 최대 높이도 부모에 맞춤 */
+}
+
+/* 공용/전용 통합 슬라이드의 메인 제목 */
+.slide-main-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: rgb(0, 0, 128);
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 10px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.slide-main-title::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #3b82f6;
+    border-radius: 2px;
+}
+
+/* 왼쪽 정렬 섹션 타이틀 */
+.section-title-left {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1f2937;
+    text-align: left;
+    margin-bottom: 40px;
+    margin-left: 20px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.section-title-left::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 80px;
+    height: 4px;
+    background-color: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 2px;
+}
+
+/* 제목 스타일 */
+.animated-section-title {
+	font-size: 2.4rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    position: relative;
+    display: inline-block;
+    line-height: 2.2;
+    background: linear-gradient(90deg, #4a69bd, #6a4caf);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+	display: block; 
+    margin-left: auto; 
+    margin-right: auto;
+    width: fit-content;
+	opacity: 0;
+    transform: translateY(20px); 
+    animation: fadeInSlideIn 1s ease-out forwards;
+}
+
+.animated-section-title::after {
+	content: '';
+    position: absolute;
+    left: 50%;
+	transform: translateX(-50%);
+    bottom: 0;
+    width: 40%;
+    height: 7px;
+    background: linear-gradient(90deg, #4a69bd, #6a4caf);
+    border-radius: 1.5px;
+}
+
+@keyframes fadeInSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 992px) { 
+    .animated-section-title {
+        font-size: 2.2rem;
+        margin-bottom: 25px;
+        padding-bottom: 8px;
+    }
+    .animated-section-title::after {
+        width: 50%;
+        height: 2.5px;
+    }
+}
+
+@media (max-width: 768px) {
+    .animated-section-title {
+        font-size: 2rem;
+        margin-bottom: 20px;
+        padding-bottom: 7px;
+    }
+    .animated-section-title::after {
+        width: 40%;
+        height: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .animated-section-title {
+        font-size: 1.6rem; 
+        margin-bottom: 15px;
+        padding-bottom: 5px;
+    }
+    .animated-section-title::after {
+        width: 30%;
+        height: 1.5px;
+    }
+}
+
+/* 섹션 구분선 */
+.section-divider {
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, #e2e8f0, #cbd5e1, #e2e8f0);
+    margin: 60px 0 40px 0;
+    border-radius: 1px;
+}
+.analysis-section {
+    background: rgb(247, 255, 255, 0.5); 
+    border-radius: 20px; 
+    padding: 35px;
+	transform: translateY(-5px); 
+    box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.1);
+	width: 1200px;  
+}
+
+/* 상세 분석 섹션 */
+.detailed-analysis-section {
+    background: transparent;
+    border-radius: 0;
+    padding: 20px 0;
+    box-shadow: none;
+    border: none;
+    margin-bottom: 40px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1200px) {
+    .container {
+        max-width: 100%;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+    
+    .swiper {
+        padding: 0;
+    }
+    
+    .similar-apartments-grid {
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 28px;
+        padding: 0 15px;
+    }
+    
+    .similar-apartment-card {
+        padding: 28px;
+    }
+    
+    .chart-container {
+        height: 400px;
+        width: 100%;
+        padding: 15px 30px;
+    }
+    
+	.chart-container canvas {
+	    width: 100% !important;
+	    height: 100% !important;  /* 또는 450px 고정도 가능 */
+	    max-height: 460px !important;
+	    display: block;
+	}
+}
+
+@media (max-width: 992px) {
+    .chart-container {
+        height: 300px;
+        padding: 12px 25px;
+    }
+    .chart-container canvas {
+        max-height: 250px !important;
+    }
+    .swiper {
+         padding: 0;
+    }
+    .swiper-slide {
+        padding: 0;
+        min-height: 280px;
+    }
+    .search-section, .statistics-section, .detailed-analysis-section {
+        padding: 30px;
+    }
+    .chart-group-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .chart-yearly-monthly-sub {
+        min-width: 100%;
+        max-width: 100%;
+    }
+    .seasonal-charts-grid {
+        grid-template-columns: 1fr;
+    }
+    .seasonal-chart, .efficiency-single-chart {
+        height: 160px;
+    }
+    .section-title, .slide-main-title, .seasonal-section h2, .efficiency-section h2 {
+        font-size: 20px;
+        margin-bottom: 25px;
+    }
+    .similar-apartments-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 0 8px;
+        max-width: 800px;
+    }
+    .similar-apartment-card {
+        padding: 28px;
+    }
+    .similar-apartment-card .apartment-name {
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    .similar-apartment-card .info-item {
+        padding: 14px 4px;
+    }
+    .similar-apartment-card .info-item .label {
+        font-size: 15px;
+        min-width: 100px;
+    }
+    .similar-apartment-card .info-item .value {
+        font-size: 16px;
+        margin-left: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .swiper {
+        padding: 0;
+    }
+    .swiper-slide {
+        padding: 0;
+        min-height: 240px;
+    }
+    .seasonal-chart, .efficiency-single-chart {
+        height: 130px;
+    }
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .search-form .form-group {
+        min-width: unset;
+        width: 100%;
+        max-width: none;
+    }
+    .search-form .btn {
+        width: 100%;
+    }
+    .chart-container {
+        height: 250px;
+        padding: 10px 20px;
+    }
+    .chart-container canvas {
+        max-height: 200px !important;
+    }
+    .similar-apartments-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0;
+    }
+    .similar-apartment-card {
+        padding: 20px;
+        border-radius: 20px;
+    }
+    .similar-apartment-card .apartment-name {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+    .similar-apartment-card .info-item {
+        padding: 12px 16px;
+        margin-bottom: 6px;
+    }
+    .similar-apartment-card .info-item .label {
+        font-size: 14px;
+        min-width: 80px;
+    }
+    .similar-apartment-card .info-item .value {
+        font-size: 15px;
+    }
+    .search-section, .statistics-section, .detailed-analysis-section {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .swiper {
+        padding: 0;
+    }
+	.swiper-slide {
+        padding: 0;
+        min-height: 240px;
+    }
+    .section-title, .slide-main-title, .seasonal-section h2, .efficiency-section h2 {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+    .chart-header h2 {
+        font-size: 14px;
+    }
+    .chart-header h3 {
+        font-size: 12px;
+    }
+    .seasonal-chart, .efficiency-single-chart {
+        height: 100px;
+    }
+    .legend, .seasonal-legend {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+    .loading p, .error-message p {
+        font-size: 12px;
+    }
+    .stat-card h3 {
+        font-size: 14px;
+    }
+    .search-section, .statistics-section, .detailed-analysis-section {
+        padding: 15px;
+    }
+    .chart-container {
+        height: 200px;
+        padding: 8px 15px;
+    }
+    .chart-container canvas {
+        max-height: 150px !important;
+    }
+}
+
+/* 숨김 클래스 */
+.hidden {
+    display: none !important;
+}
+
+/* 메인 컨테이너 */
+/* 메인 컨테이너 - 배경 투명하게 */
+.comparison-section {
+    background: transparent;
+    border-radius: 0;
+    padding: 60px 0;
+    box-shadow: none;
+    border: none;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.comparison-section .container {
+    max-width: 1400px;
+    padding: 0 40px;
+}
+
+/* 카드 그리드 - 3개 카드가 완벽하게 보이도록 조정 */
+.similar-apartments-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 0 20px;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* 카드만 하늘색 글래스모피즘 효과*/
+.similar-apartment-card {
+    /* 더 연한 하늘색 글래스모피즘 배경 */
+    background: rgba(223, 243, 255, 0.3);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(78, 141, 252, 0.15);
+    border-radius: 32px;
+    padding: 2rem;
+    /* 사진과 동일한 그림자 효과 */
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
+    /* 부드러운 애니메이션 */
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    margin: 20px 0;
+    min-width: 0;
+    width: 100%;
+    display: block !important;
+    visibility: visible !important;
+    overflow: hidden;
+    /* 사진과 같은 폰트 적용 */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #222;
+}
+
+.similar-apartment-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    background: rgba(223, 243, 255, 0.5);
+    border-color: rgba(78, 141, 252, 0.25);
+}
+
+/* --- 기준 아파트 카드 - 더 진한 하늘색으로 특별한 효과 --- */
+.similar-apartment-card.base-apartment-card {
+    background: rgba(223, 243, 255, 0.8);
+    border: 2px solid rgba(78, 141, 252, 0.4);
+    transform: translateY(-12px) scale(1.03);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), 0 0 40px rgba(78, 141, 252, 0.2);
+}
+
+.similar-apartment-card.base-apartment-card:hover {
+    transform: translateY(-16px) scale(1.05);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.2), 0 0 50px rgba(78, 141, 252, 0.25);
+    background: rgba(223, 243, 255, 0.9);
+}
+
+/* 유사도와 단지코드를 감싸는 Wrapper - 일반 카드만 */
+.similar-apartment-card:not(.base-apartment-card):not(.perfect-match) .similarity-score-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* 유사도 태그 - 사진의 파란 버튼 스타일 */
+.similar-apartment-card .similarity-score {
+    background: rgba(78, 141, 252, 0.9);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(78, 141, 252, 0.3);
+    border: none;
+}
+
+/* 기준 카드의 유사도 태그는 유지 (오른쪽 버튼) */
+.similar-apartment-card.base-apartment-card .similarity-score {
+    background: linear-gradient(135deg, #4e8dfc, #356ee6);
+    color: white;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* 단지 코드 - 사진처럼 연한 배경 */
+.similar-apartment-card .apartment-code-small {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #666;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 0.4rem 0.8rem;
+    border-radius: 16px;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* 아파트명 - 사진의 제목처럼 중앙 정렬 및 강조 */
+.similar-apartment-card .apartment-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    text-align: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.similar-apartment-card .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+    margin-bottom: 0;
+    background: transparent;
+}
+.electric-chart .chart-controls .seasonal-chart{
+    display: flex;
+    flex-wrap: wrap; /* 작은 화면에서 줄바꿈 */
+    justify-content: center; /* 버튼 그룹들을 중앙 정렬 */
+    gap: 20px; /* 각 버튼 컨테이너 사이의 간격 */
+    margin-bottom: 20px;
+}
+.electric-chart .chart-controls .seasonal-chart .tab-buttons-container {
+    flex-grow: 1; 
+    height: 400px;
+    display: flex; 
+    justify-content: center; 
+}
+.tab-buttons {
+    display: flex;
+	gap: 8px;
+	background: #eef2f6; 
+    border-radius: 14px;
+    padding: 6px;
+	width: 100%;
+    margin: 0 auto;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.form-select {
+	width: 100%; /* 부모 year-select-container의 너비를 따르도록 */
+    max-width: 200px; /* 셀렉트 박스 최대 너비 (조정 가능) */
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 0.9rem;
+    color: #333;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #4e8dfc;
+    box-shadow: 0 0 0 3px rgba(78, 141, 252, 0.2);
+}
+
+/* 다시 시도 버튼 스타일 (옵션) */
+.retry-button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+.retry-button:hover {
+    background-color: #e60000;
+}
+
+.no-data {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    padding: 50px 0;
+}
+
+.popular-menu-section {
+    display: flex;
+    align-items: center;
+    padding: 12px 10px;
+    color: #475569;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    margin-bottom: 5px;
+}
+
+.popular-menu-section:hover {
+	background-color: rgb(230, 242, 255); 
+	color: rgb(0, 128, 192); 
+}
+
+.popular-menu-section .sidebar-icon {
+    font-size: 20px;
+    margin-right: 10px;
+    color: #64748b;
+    transition: color 0.2s ease;
+}
+
+.popular-menu-section:hover .sidebar-icon {
+    color: #4a69bd;
+}
+
+.popular-menu-section h4 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+
+/* 메인 컨테이너 */
+.main-container {
+    min-height: calc(100vh - 120px);
+    padding: 2rem 0;
+}
+
+/* 섹션 공통 스타일 */
+section {
+    margin-bottom: 3rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem 1.5rem 0;
+    border-bottom: 3px solid #3498db;
+    background: linear-gradient(90deg, #3498db, #2980b9);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 검색 섹션 */
+.search-section {
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    color: white;
+}
+
+.search-section .section-title {
+    color: white;
+    -webkit-text-fill-color: white;
+    border-bottom-color: rgba(255,255,255,0.3);
+}
+
+.search-form {
+    padding: 0 1.5rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1rem;
+    align-items: end;
+}
+
+
+.mySwiper {
+    width: 100%;
+    height: auto;
+}
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* 검색 섹션 - 컨테이너 박스 제거 */
+.search-section {
+    background: transparent;
+    border-radius: 0;
+    padding: 20px 0;
+    box-shadow: none;
+    border: none;
+    margin-bottom: 20px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: flex-end;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.search-form .form-group {
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+}
+
+.search-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 15px;
+}
+
+.search-form .form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    font-size: 16px;
+    color: #374151;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-form .form-control:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    outline: none;
+}
+
+.search-form .btn {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap;
+}
+
+.search-form .btn-primary {
+    background-color: rgb(209, 209, 209);
+    color: white;
+}
+
+.search-form .btn-primary:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+/* 비교 섹션 스타일링 */
+.comparison-section {
+    background: transparent;
+    border-radius: 0;
+    padding: 40px 0;
+    box-shadow: none;
+    border: none;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.comparison-section .container {
+    max-width: 1400px;
+    padding: 0 40px;
+}
+
+/* 카드 그리드 개선 */
+.similar-apartments-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    padding: 0 8px;
+    max-width: 1320px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* 기본 카드 스타일 */
+.similar-apartment-card {
+    background: rgba(223, 243, 255, 0.3);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(78, 141, 252, 0.15);
+    border-radius: 32px;
+    padding: 2rem;
+
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.1);
+
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    margin: 20px 0;
+    min-width: 0;
+    width: 100%;
+    display: block !important;
+    visibility: visible !important;
+    overflow: hidden;
+
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #222;
+}
+
+.similar-apartment-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    background: rgba(223, 243, 255, 0.5);
+    border-color: rgba(78, 141, 252, 0.25);
+}
+
+/* 중견 (10-20년) - 연두색 */
+.similar-apartment-card[data-age-category="medium"] {
+    background: rgba(220, 252, 231, 0.3);
+    border: 1px solid rgba(34, 197, 94, 0.15);
+}
+
+.similar-apartment-card[data-age-category="medium"]:hover {
+    background: rgba(220, 252, 231, 0.5);
+    border-color: rgba(34, 197, 94, 0.25);
+}
+
+/* 노후 (20년 이상) - 노란~주황색 */
+.similar-apartment-card[data-age-category="old"] {
+    background: rgba(255, 247, 210, 0.3);
+    border: 1px solid rgba(251, 146, 60, 0.15);
+}
+
+.similar-apartment-card[data-age-category="old"]:hover {
+    background: rgba(255, 247, 210, 0.5);
+    border-color: rgba(251, 146, 60, 0.25);
+}
+
+/* --- 기준 아파트 카드 특별 UI --- */
+.similar-apartment-card.base-apartment-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transform: translateY(-8px);
+    box-shadow:
+        0 16px 50px rgba(0, 0, 0, 0.1),
+        0 4px 16px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* 기준 카드가 신축일 때 */
+.similar-apartment-card.base-apartment-card[data-age-category="new"] {
+    background: rgba(223, 243, 255, 0.8);
+    border: 2px solid rgba(78, 141, 252, 0.4);
+}
+
+.similar-apartment-card.base-apartment-card[data-age-category="new"]:hover {
+    background: rgba(223, 243, 255, 0.9);
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.2),
+        0 0 50px rgba(78, 141, 252, 0.25);
+}
+
+/* 기준 카드가 중견일 때 */
+.similar-apartment-card.base-apartment-card[data-age-category="medium"] {
+    background: rgba(220, 252, 231, 0.8);
+    border: 2px solid rgba(34, 197, 94, 0.4);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.15),
+        0 0 40px rgba(34, 197, 94, 0.2);
+}
+
+.similar-apartment-card.base-apartment-card[data-age-category="medium"]:hover {
+    background: rgba(220, 252, 231, 0.9);
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.2),
+        0 0 50px rgba(34, 197, 94, 0.25);
+}
+
+/* 기준 카드가 노후일 때 */
+.similar-apartment-card.base-apartment-card[data-age-category="old"] {
+    background: rgba(255, 247, 210, 0.8);
+    border: 2px solid rgba(251, 146, 60, 0.4);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.15),
+        0 0 40px rgba(251, 146, 60, 0.2);
+}
+
+.similar-apartment-card.base-apartment-card[data-age-category="old"]:hover {
+    background: rgba(255, 247, 210, 0.9);
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.2),
+        0 0 50px rgba(251, 146, 60, 0.25);
+}
+
+/* 유사도와 단지코드를 감싸는 Wrapper */
+.similar-apartment-card .similarity-score-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* 유사도 태그 스타일 - 더욱 투명하고 모던하게 */
+.similar-apartment-card .similarity-score {
+    background: rgba(255, 255, 255, 0.6);
+    color: #4a5568;
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+/* 단지 코드 스타일 - 더욱 투명하고 깔끔하게 */
+.similar-apartment-card .apartment-code-small {
+    font-size: 11px;
+    font-weight: 500;
+    color: #6b7280;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 6px 10px;
+    border-radius: 8px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* 아파트명 스타일 */
+.similar-apartment-card .apartment-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 24px;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* 정보 항목들 - 완전히 심플하고 구분선만, 패딩 줄이고 양옆 퍼지게 */
+.similar-apartment-card .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 4px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    margin-bottom: 0;
+    background: transparent;
+    border-radius: 0;
+    /* 파란색 라벨 완전 제거 */
+    border-left: none !important;
+    padding-left: 4px !important;
+}
+
+.similar-apartment-card .info-item:last-child {
+    border-bottom: none;
+}
+
+.similar-apartment-card .info-item:hover {
+    background: rgba(248, 250, 252, 0.3);
+    padding-left: 12px;
+    padding-right: 12px;
+    border-radius: 8px;
+    margin: 0 -8px;
+}
+
+.similar-apartment-card .info-item .label {
+    font-size: 16px;
+    color: #6b7280;
+    font-weight: 500;
+    flex-shrink: 0;
+    min-width: 110px;
+    text-align: left;
+}
+
+.similar-apartment-card .info-item .value {
+    font-size: 17px;
+    font-weight: 600;
+    color: #1a202c;
+    text-align: right;
+    flex: 1;
+    margin-left: 16px;
+}
+
+/* 건물 연식 태그 스타일 - 모던하게 */
+.similar-apartment-card .age-category {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    margin-left: 8px;
+    background: rgba(0, 0, 0, 0.05);
+    color: #555;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* 신축 */
+.similar-apartment-card .age-category.new {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border-color: rgba(16, 185, 129, 0.2);
+}
+
+/* 중견 */
+.similar-apartment-card .age-category.medium {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+    border-color: rgba(245, 158, 11, 0.2);
+}
+
+/* 노후 */
+.similar-apartment-card .age-category.old {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* 카드 헤더 조정 */
+.similar-apartment-card .card-header {
+    margin-top: 0;
+    margin-bottom: 24px;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+/* 주소 항목 - 전체 너비 및 정렬 개선 */
+.similar-apartment-card .info-item.full-width-item {
+    grid-column: 1 / -1;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+    background: rgba(248, 250, 252, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.similar-apartment-card .info-item.full-width-item .label {
+    margin-bottom: 8px;
+    min-width: auto;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.similar-apartment-card .info-item.full-width-item .value {
+    text-align: left;
+    line-height: 1.5;
+    color: #374151;
+    font-weight: 500;
+    font-size: 15px;
+    word-break: keep-all;
+    width: 100%;
+}
+
+/* 통계 섹션 */
+.statistics-section {
+    background: white;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 40px;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.stat-card {
+    background-color: #fdfefe;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    text-align: center;
+}
+
+.stat-card h3 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 20px;
+}
+
+.chart-small {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #cbd5e1;
+    font-style: italic;
+}
+
+/* 차트 섹션 - 모든 차트 섹션에 대한 일반 스타일링 */
+.chart-section {
+    background: transparent;
+    border-radius: 0;
+    padding: 30px 0;
+    box-shadow: none;
+    border: none;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 15px;
+}
+
+.chart-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.chart-header h3 {
+    font-size: 19px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+/* 탭 버튼 */
+.chart-tabs {
+    display: flex;
+    gap: 4px;
+    background: #f1f5f9;
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.tab-button {
+	padding: 8px 16px; 
+	border: 1px solid #d1d5db; 
+	border-radius: 8px;
+	background-color: white; 
+	color: #374151; 
+	font-size: 14px; 
+	cursor: pointer; 
+	outline: none;
+	transition: all 0.2s ease; 
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
+/* 마우스 오버 시 스타일 */
+.tab-button:hover {
+  border-color: #9ca3af;
+  background-color: #f3f4f6;
+}
+
+/* 활성화된 버튼 (선택된 탭) 스타일 */
+.tab-button.active {
+  background-color: #3b82f6; 
+  color: white;
+  border-color: #3b82f6; 
+}
+
+
+.tab-button:hover:not(.active) {
+    background-color: #e2e8f0;
+    color: #1a202c;
+}
+
+/* 두 개의 주요 차트 섹션을 감싸는 컨테이너 */
+/* 이 컨테이너가 핵심입니다. */
+.chart-group-container {
+  display: flex; 
+  gap: 20px; 
+  width: 100%; 
+}
+
+/* 개별 차트 (공용/전용) 섹션 */
+.chart-section.chart-yearly-monthly-sub { 
+  flex: 1;
+  min-width: 0; 
+  display: flex; 
+  flex-direction: column;
+}
+
+/* 차트 전체를 감싸는 영역 */
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column; 
+  justify-content: flex-start;
+  align-items: center;
+  flex-grow: 1; 
+}
+
+/* 연별/월별 공통 차트 박스 */
+.chart-container {
+  position: relative;
+  width: 100%;
+  min-height: 450px; 
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
+
+/* ✅ 숨김 처리 */
+.chart-container.hidden {
+  display: none !important;
+}
+
+/* chart 내부 캔버스 */
+.chart-wrapper canvas,
+.chart-container canvas {
+  width: 100% !important; 
+  height: 100% !important; 
+  display: block;
+  max-height: 460px !important;
+  aspect-ratio: 16/10; 
+}
+
+.chart-large {
+  width: 100%;
+  height: 100%;
+}
+
+/* 연도 선택기 스타일 */
+.year-selector {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+  padding-right: 10px;
+}
+
+.year-selector select {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>');
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 1.2em;
+}
+
+.year-selector select:focus {
+  border-color: #3b82f6;
+}
+
+
+/* 범례 - 모든 범례에 대한 일반 스타일링 */
+.legend {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    background: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+    margin: 20px auto 0 auto;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.legend-color {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+
+.legend-color.new {
+    background: #10b981;
+}
+
+.legend-color.medium {
+    background: #f59e0b;
+}
+
+.legend-color.old {
+    background: #ef4444;
+}
+
+/* 계절별 색상 */
+.legend-color.summer {
+    background: #f97316;
+}
+
+.legend-color.winter {
+    background: #3b82f6;
+}
+
+.legend-item span {
+    font-size: 15px;
+    color: #374151;
+    font-weight: 500;
+}
+
+/* 계절별 섹션 */
+.seasonal-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: rgb(207, 86, 5);
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.seasonal-section h2::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #f97316;
+    border-radius: 2px;
+}
+
+.seasonal-charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 20px;
+}
+
+.seasonal-legend {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e2e8f0;
+    flex-wrap: wrap;
+}
+
+/* 로딩 인디케이터 */
+.loading, .error-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    font-size: 16px;
+    color: #64748b;
+    backdrop-filter: blur(3px);
+}
+
+.loading.hidden {
+    display: none;
+}
+
+/* 로딩 오버레이가 차트 컨테이너를 덮도록 설정 */
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20; /* 차트 위에 표시 */
+}
+
+/* 스피너 스타일 (management.css에서 가져오거나 유사하게 적용) */
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading p {
+    color: #64748b;
+    font-size: 17px;
+    font-weight: 500;
+}
+
+/* 에러 메시지 */
+.error-message {
+    text-align: center;
+    border: 1px solid #fca5a5;
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.1);
+}
+
+.error-message.hidden {
+    display: none;
+}
+
+.error-message p {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+/* 세 번째 섹션 - 통합된 효율 차트 스타일 */
+.efficiency-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: rgb(0, 98, 0);
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    padding-bottom: 10px;
+    margin-top: 15px;
+}
+
+.efficiency-section h2::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #10b981;
+    border-radius: 2px;
+}
+
+.efficiency-single-chart {
+    height: 395px;
+    margin-bottom: 30px;
+    padding-top: 10px;
+    width: 100%;
+}
+
+.efficiency-single-chart canvas {
+    max-height: 350px;
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* Swiper 컨테이너 스타일 - 성능 최적화 */
+.swiper {
+    width: 100%;
+    height: auto;
+    padding: 0;
+    box-sizing: border-box;
+    margin-bottom: 40px;
+    margin-top: 50px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative; /* 화살표 위치 조정을 위한 기준점 */
+    overflow: hidden; /* 여러 차트가 보이지 않도록 넘치는 내용 숨김 */
+}
+
+.swiper-slide {
+    width: 100%;
+    height: auto; /* 내용에 따라 높이 자동 조절 */
+    display: flex; /* 내부 콘텐츠 정렬을 위해 flexbox 사용 */
+    justify-content: center; /* 슬라이드 내부 콘텐츠 중앙 정렬 */
+    align-items: flex-start; /* 상단 정렬 (필요시 center로 변경) */
+}
+
+.swiper-slide-active {
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* 비활성 슬라이드 흐림 효과 제거 - 성능 향상 */
+.swiper-slide:not(.swiper-slide-active) {
+    opacity: 1 !important; /* 0.5에서 1로 변경 */
+}
+
+/* --- 화살표 스타일 (기존 코드에서 원형 박스 제거된 버전) --- */
+.swiper-button-prev, .swiper-button-next {
+    position: absolute;
+    top: 50%; /* Swiper 컨테이너의 중앙에 위치 */
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.swiper-button-prev {
+    left: 10px; /* Swiper 컨테이너의 왼쪽에서 간격 */
+}
+
+.swiper-button-next {
+    right: 10px; /* Swiper 컨테이너의 오른쪽에서 간격 */
+}
+
+.swiper-button-prev::after, .swiper-button-next::after {
+    font-family: 'Font Awesome 5 Free'; /* Font Awesome 5 Free 사용 */
+    font-weight: 900; /* Solid 아이콘을 위한 폰트 굵기 */
+    font-size: 20px;
+    color: #4a69bd; /* 파란색으로 아이콘 색상 설정 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.3s ease;
+}
+
+.swiper-button-prev::after {
+    content: '\f053'; /* Chevron left icon */
+}
+
+.swiper-button-next::after {
+    content: '\f054'; /* Chevron right icon */
+}
+
+.swiper-button-prev:hover::after, .swiper-button-next:hover::after {
+    transform: scale(1.1);
+    color: #2e4a8d; /* 호버 시 색상 더 진하게 */
+}
+
+.swiper-button-disabled {
+    opacity: 0.3;
+    cursor: auto;
+}
+
+/* 드롭다운 스타일 */
+.form-select {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    padding-right: 30px; /* 화살표 아이콘 공간 확보 */
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666' width='18px' height='18px'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3Cpath d='M0 0h24v24H0z' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #4e8dfc;
+    box-shadow: 0 0 0 3px rgba(78, 141, 252, 0.2);
+}
+
+/* 다시 시도 버튼 스타일 (옵션) */
+.retry-button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+.retry-button:hover {
+    background-color: #e60000;
+}
+
+.no-data {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    padding: 50px;
+}
+
+/* 관리비 정보 섹션 스타일 */
+.management-info-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid rgba(78, 141, 252, 0.2);
+}
+
+.management-info-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #4e8dfc;
+    text-align: center;
+    margin-bottom: 1.2rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.management-info-title::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(135deg, #4e8dfc, #356ee6);
+    border-radius: 1px;
+}
+
+.management-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(78, 141, 252, 0.1);
+    transition: all 0.3s ease;
+}
+
+.management-info-item:last-child {
+    border-bottom: none;
+}
+
+.management-info-item:hover {
+    background: rgba(78, 141, 252, 0.05);
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    border-radius: 12px;
+    margin: 0 -0.8rem;
+}
+
+.management-info-item .label {
+    font-size: 0.9rem;
+    color: #4e8dfc;
+    font-weight: 600;
+    flex-shrink: 0;
+    min-width: 120px;
+    text-align: left;
+}
+
+.management-info-item .value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2563eb;
+    text-align: right;
+    flex: 1;
+    margin-left: 12px;
+}
+
+/* 강조 효과 */
+.management-info-item.highlight {
+    background: rgba(78, 141, 252, 0.08);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    margin: 0.2rem 0;
+    border: 1px solid rgba(78, 141, 252, 0.2);
+}
+
+.management-info-item.highlight .value {
+    color: #1d4ed8;
+    font-size: 1.1rem;
+}
+
+/* 관리비 정보 섹션 - 노후도별 글씨 색상 */
+
+/* 신축 카드의 관리비 정보 글씨 색상 (하늘색 계열) */
+.similar-apartment-card[data-age-category="new"] .management-info-title {
+    color: #1d4ed8; /* 진한 파란색 */
+}
+
+.similar-apartment-card[data-age-category="new"] .management-info-item .label {
+    color: #2563eb; /* 파란색 */
+}
+
+.similar-apartment-card[data-age-category="new"] .management-info-item .value {
+    color: #1e40af; /* 진한 파란색 */
+}
+
+.similar-apartment-card[data-age-category="new"] .management-info-item.highlight .value {
+    color: #1d4ed8; /* 더 진한 파란색 */
+}
+
+/* 중견 카드의 관리비 정보 글씨 색상 (녹색 계열) */
+.similar-apartment-card[data-age-category="medium"] .management-info-title {
+    color: #15803d; /* 진한 녹색 */
+}
+
+.similar-apartment-card[data-age-category="medium"] .management-info-item .label {
+    color: #16a34a; /* 녹색 */
+}
+
+.similar-apartment-card[data-age-category="medium"] .management-info-item .value {
+    color: #15803d; /* 진한 녹색 */
+}
+
+.similar-apartment-card[data-age-category="medium"] .management-info-item.highlight .value {
+    color: #14532d; /* 더 진한 녹색 */
+}
+
+/* 노후 카드의 관리비 정보 글씨 색상 (주황색 계열) */
+.similar-apartment-card[data-age-category="old"] .management-info-title {
+    color: #c2410c; /* 진한 주황색 */
+}
+
+.similar-apartment-card[data-age-category="old"] .management-info-item .label {
+    color: #ea580c; /* 주황색 */
+}
+
+.similar-apartment-card[data-age-category="old"] .management-info-item .value {
+    color: #c2410c; /* 진한 주황색 */
+}
+
+.similar-apartment-card[data-age-category="old"] .management-info-item.highlight .value {
+    color: #9a3412; /* 더 진한 주황색 */
+}
+
+
+/* 전기료 정보 섹션 스타일 */
+.electric-info-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid rgba(0, 123, 255, 0.2); /* 전기료 섹션에 맞는 파란색 */
+}
+
+.electric-info-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #007bff; /* 전기료 섹션에 맞는 파란색 */
+    text-align: center;
+    margin-bottom: 1.2rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.electric-info-title::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(135deg, #007bff, #0056b3); /* 전기료 섹션에 맞는 파란색 그라데이션 */
+    border-radius: 1px;
+}
+
+.electric-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(0, 123, 255, 0.1); /* 전기료 섹션에 맞는 파란색 */
+    transition: all 0.3s ease;
+}
+
+.electric-info-item:last-child {
+    border-bottom: none;
+}
+
+.electric-info-item:hover {
+    background: rgba(0, 123, 255, 0.05); /* 전기료 섹션에 맞는 파란색 */
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    border-radius: 12px;
+    margin: 0 -0.8rem;
+}
+
+.electric-info-item .label {
+    font-size: 0.9rem;
+    color: #007bff; /* 전기료 섹션에 맞는 파란색 */
+    font-weight: 600;
+    flex-shrink: 0;
+    min-width: 120px;
+    text-align: left;
+}
+
+.electric-info-item .value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0056b3; /* 전기료 섹션에 맞는 진한 파란색 */
+    text-align: right;
+    flex: 1;
+    margin-left: 12px;
+}
+
+/* 전기료 강조 효과 */
+.electric-info-item.highlight {
+    background: rgba(0, 123, 255, 0.08); /* 전기료 섹션에 맞는 파란색 */
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    margin: 0.2rem 0;
+    border: 1px solid rgba(0, 123, 255, 0.2); /* 전기료 섹션에 맞는 파란색 */
+}
+
+.electric-info-item.highlight .value {
+    color: #004085; /* 전기료 섹션에 맞는 더 진한 파란색 */
+    font-size: 1.1rem;
+}
+
+/* 전기료 정보 섹션 - 노후도별 글씨 색상 */
+
+/* 신축 카드의 전기료 정보 글씨 색상 (하늘색 계열) */
+.similar-apartment-card[data-age-category="new"] .electric-info-title {
+    color: #1d4ed8; /* 진한 파란색 */
+}
+
+.similar-apartment-card[data-age-category="new"] .electric-info-item .label {
+    color: #2563eb; /* 파란색 */
+}
+
+.similar-apartment-card[data-age-category="new"] .electric-info-item .value {
+    color: #1e40af; /* 진한 파란색 */
+}
+
+.similar-apartment-card[data-age-category="new"] .electric-info-item.highlight .value {
+    color: #1d4ed8; /* 더 진한 파란색 */
+}
+
+/* 중견 카드의 전기료 정보 글씨 색상 (녹색 계열) */
+.similar-apartment-card[data-age-category="medium"] .electric-info-title {
+    color: #15803d; /* 진한 녹색 */
+}
+
+.similar-apartment-card[data-age-category="medium"] .electric-info-item .label {
+    color: #16a34a; /* 녹색 */
+}
+
+.similar-apartment-card[data-age-category="medium"] .electric-info-item .value {
+    color: #15803d; /* 진한 녹색 */
+}
+
+.similar-apartment-card[data-age-category="medium"] .electric-info-item.highlight .value {
+    color: #14532d; /* 더 진한 녹색 */
+}
+
+/* 노후 카드의 전기료 정보 글씨 색상 (주황색 계열) */
+.similar-apartment-card[data-age-category="old"] .electric-info-title {
+    color: #c2410c; /* 진한 주황색 */
+}
+
+.similar-apartment-card[data-age-category="old"] .electric-info-item .label {
+    color: #ea580c; /* 주황색 */
+}
+
+.similar-apartment-card[data-age-category="old"] .electric-info-item .value {
+    color: #c2410c; /* 진한 주황색 */
+}
+
+.similar-apartment-card[data-age-category="old"] .electric-info-item.highlight .value {
+    color: #9a3412; /* 더 진한 주황색 */
+}
+
+
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .management-info-item .label,
+    .electric-info-item .label {
+        font-size: 0.85rem;
+        min-width: 100px;
+    }
+    
+    .chart-wrapper {
+        max-height: 400px; 
+        padding: 20px;
+    }
+    
+    .management-info-item .value,
+    .electric-info-item .value {
+        font-size: 0.9rem;
+    }
+    
+    .management-info-title,
+    .electric-info-title {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .management-info-item .label,
+    .electric-info-item .label {
+        font-size: 0.8rem;
+        min-width: 90px;
+    }
+    
+    .chart-wrapper {
+        max-height: 300px; 
+        padding: 15px;
+    }
+    
+    .management-info-item .value,
+    .electric-info-item .value {
+        font-size: 0.85rem;
+    }
+}

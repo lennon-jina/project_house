@@ -1,0 +1,1209 @@
+/* mypage.css */
+@charset "utf-8";
+
+.detail-table tbody {
+    display: block;
+    max-height: 300px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.detail-table thead,
+.detail-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.detail-table thead {
+    width: calc(100% - 17px);
+}
+
+/* 페이지 제목 */
+.page-title {
+    font-size: 32px; 
+    font-weight: bold;
+    padding-bottom: 25px; 
+    border-bottom: 4px solid #333; 
+    text-align: center;
+    color: #2c2c2c;
+    margin-bottom: 40px; 
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+/* 마이페이지 컨테이너 */
+.my-page-container {
+    background-color: #fff;
+    padding: 50px;
+    border-radius: 18px; 
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1); 
+    max-width: 1100px;
+    margin: 100px auto;
+    border: 1px solid #e0e0e0; 
+}
+
+/* 프로필 섹션 */
+.profile-section {
+    display: flex;
+    align-items: center; 
+    padding: 35px; 
+    background-color: #f8faff; 
+    border-radius: 15px; 
+    margin-bottom: 40px; /* Increased margin */
+    gap: 40px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+}
+
+.profile-photo {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid #dbe2ff; 
+    flex-shrink: 0;
+}
+
+.profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease; 
+}
+
+.profile-photo img:hover {
+    transform: scale(1.05); 
+}
+
+.photo-upload {
+    position: absolute;
+    bottom: 5px; 
+    right: 5px; 
+    background-color: #9cb3ff; 
+    width: 40px;
+    height: 40px; 
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.photo-upload:hover {
+    background-color: #8da4ff; 
+    transform: translateY(-2px); 
+}
+
+.photo-upload input {
+    display: none;
+}
+
+.photo-upload label {
+    color: white;
+    cursor: pointer;
+    font-size: 18px; 
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: 28px; 
+    font-weight: bold;
+    color: #2c2c2c;
+    margin-bottom: 15px; 
+}
+
+.profile-details {
+    margin-bottom: 30px; 
+}
+
+.profile-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; 
+    padding: 10px 0;
+    border-bottom: 1px dashed #e6e8ff; 
+}
+
+.profile-item:last-child {
+    border-bottom: none; 
+}
+
+.profile-item .label {
+    font-weight: 700; 
+    color: #444; 
+    width: 90px; 
+    margin-right: 20px; 
+}
+
+.profile-item .value {
+    color: #555; 
+    font-size: 17px; 
+}
+
+.my-page-submit-btn {
+    background-color: #6a8cff; 
+    color: #ffffff;
+    border: none;
+    padding: 14px 35px;
+    border-radius: 10px; 
+    font-size: 17px; 
+    font-weight: 700; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+}
+
+.my-page-submit-btn:hover {
+    background-color: #5a7bdc; 
+    transform: translateY(-3px); 
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.my-page-submits-btn {
+    background-color: rgb(0, 117, 0); 
+    color: #ffffff;
+    border: none;
+    padding: 14px 35px;
+    border-radius: 10px; 
+    font-size: 17px; 
+    font-weight: 700; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+}
+
+.my-page-submits-btn:hover {
+    background-color: #5a7bdc; 
+    transform: translateY(-3px); 
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* 우리집 정보 섹션 */
+.home-info-section {
+    padding: 35px; 
+    background-color: #f2fff2; 
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.section-title {
+    font-size: 26px;
+    font-weight: bold;
+    color: #2c2c2c;
+    margin-bottom: 25px; 
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid #e0ffe0; 
+    padding-bottom: 10px;
+}
+
+.home-address {
+    background-color: #eafbea;
+    padding: 25px; 
+    border-radius: 10px; 
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: inset 0 1px 5px rgba(0,0,0,0.05); 
+}
+
+.home-address i {
+    color: #4CAF50;
+    font-size: 24px; 
+}
+
+.home-address span {
+    font-size: 20px; 
+    font-weight: 700; 
+    color: #2c2c2c;
+}
+
+.home-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 25px; 
+}
+
+.feature-item {
+    background-color: #ffffff;
+    padding: 25px; 
+    border-radius: 10px; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    gap: 12px; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #e0ffe0; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+    text-align: center;
+}
+
+.feature-item:hover {
+    background-color: #f6fff6; 
+    border-color: #90d890;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1); 
+}
+
+.feature-item i {
+    font-size: 36px; 
+    color: #4CAF50; 
+    margin-bottom: 5px; 
+}
+
+.feature-item span {
+    font-size: 18px; 
+    font-weight: 700; 
+    color: #2c2c2c;
+}
+
+/* 모달 스타일 */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    padding: 20px;
+}
+
+/* 모달이 보일 때 적용될 클래스 */
+.modal.show-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 0;
+    border: none;
+    width: 95%;
+    max-width: 650px;
+    max-height: 90vh;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+    position: relative;
+    overflow-y: auto;
+    margin-bottom: 50px;
+    animation: slideInTop 0.4s ease-out;
+}
+
+.modal-content.large {
+    max-width: 800px;
+    max-height: 90vh;
+}
+
+.close {
+    color: #888;
+    font-size: 32px;
+    font-weight: bold;
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    cursor: pointer;
+    z-index: 1001;
+    transition: color 0.2s ease;
+}
+
+.close:hover {
+    color: #555;
+}
+
+.modal-header {
+    background-color: #f0f4ff;
+    padding: 30px 35px;
+    border-radius: 16px 16px 0 0;
+    border-bottom: 2px solid #dbe2ff;
+}
+
+.modal-header h4 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #2c2c2c;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.modal-body {
+    padding: 35px;
+}
+
+.amount-display {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.amount {
+    font-size: 42px;
+    font-weight: bold;
+    color: #2c2c2c;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.08);
+}
+
+.usage-period {
+    text-align: center;
+    color: #777;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+.detail-section h5 {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2c2c2c;
+    margin-bottom: 18px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.detail-list {
+    background-color: #f8faff;
+    border-radius: 10px;
+    padding: 25px;
+    max-height: 350px;
+    overflow-y: auto;
+    box-shadow: inset 0 1px 5px rgba(0,0,0,0.05);
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e6e8ff;
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-item span:first-child {
+    color: #444;
+    font-weight: 600;
+}
+
+.detail-item span:last-child {
+    color: #2c2c2c;
+    font-weight: 700;
+    font-size: 17px;
+}
+
+/* New CSS for price changes */
+.price-change.increase {
+    color: #ff0000; /* Red for increase */
+    font-weight: bold;
+}
+
+.price-change.decrease {
+    color: #0000ff; /* Blue for decrease */
+    font-weight: bold;
+}
+
+.price-change.no-change {
+    color: #808080; /* Gray for no change */
+}
+
+/* You might want to apply these to a specific element that shows the '13원' or similar */
+/* For example, if your HTML for '13원' looked like this: <span class="price-change increase">13원</span> */
+/* 에너지 사용 현황 스타일 */
+.energy-breakdown {
+    margin-top: 30px; 
+}
+
+.energy-item {
+    margin-bottom: 25px; 
+    background-color: #f8faff;
+    padding: 20px; 
+    border-radius: 10px; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.energy-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px; 
+}
+
+.energy-icon {
+    width: 35px;
+    font-size: 24px; 
+    margin-right: 15px; 
+}
+
+.energy-icon.electric {
+    color: #FFD700; 
+}
+
+.energy-icon.water {
+    color: #4a90e2; 
+}
+
+.energy-icon.hot-water {
+    color: #FF6B6B; 
+}
+
+.energy-icon.heating {
+    color: #FF8C42; 
+}
+
+.energy-label {
+    font-weight: 700; 
+    color: #2c2c2c;
+    flex: 1;
+    font-size: 17px; 
+}
+
+.energy-amount {
+    font-weight: bold;
+    color: #2c2c2c;
+    font-size: 18px; 
+}
+
+.energy-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #eef2ff; 
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.energy-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.5s ease-out; 
+}
+
+.electric-fill {
+    background-color: #FFD700;
+}
+
+.water-fill {
+    background-color: #4a90e2;
+}
+
+.hot-water-fill {
+    background-color: #FF6B6B;
+}
+
+.heating-fill {
+    background-color: #FF8C42;
+}
+
+/* 장충금 환급 스타일 */
+.refund-info {
+    text-align: center;
+    padding: 30px;
+}
+
+.refund-info h4 {
+    font-size: 28px; 
+    font-weight: bold;
+    color: #2c2c2c;
+    margin-bottom: 25px; 
+}
+
+.refund-info p {
+    color: #555;
+    line-height: 1.8; 
+    margin-bottom: 20px; 
+    font-size: 16px; 
+}
+
+.refund-check-btn {
+    background-color: #6a8cff; 
+    color: #ffffff; 
+    border: none;
+    padding: 16px 45px; 
+    border-radius: 10px; 
+    font-size: 19px; 
+    font-weight: 700; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 25px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+}
+
+.refund-check-btn:hover {
+    background-color: #5a7bdc; 
+    transform: translateY(-3px); 
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15); 
+}
+
+.refund-calculator h4 {
+    font-size: 24px; 
+    font-weight: bold;
+    color: #2c2c2c;
+    margin-bottom: 35px; 
+    text-align: center;
+}
+
+.date-selection {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px; 
+    margin-bottom: 40px; 
+}
+
+.date-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; 
+}
+
+.date-input label {
+    font-weight: 700; 
+    color: #555;
+    font-size: 16px;
+}
+
+.date-input input {
+    padding: 12px 18px;
+    border: 2px solid #c9d8ff; 
+    border-radius: 8px; 
+    font-size: 17px; 
+    color: #2c2c2c;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.date-input input:focus {
+    border-color: #6a8cff; 
+    box-shadow: 0 0 0 3px rgba(106, 140, 255, 0.2); 
+    outline: none;
+}
+
+.date-separator {
+    font-size: 24px; 
+    color: #aaa; 
+    margin-top: 30px; 
+}
+
+.refund-notice {
+    background-color: #fffde7; 
+    padding: 25px; 
+    border-radius: 10px;
+    border-left: 5px solid #FFC107; 
+    margin-bottom: 30px; 
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+}
+
+.refund-notice h5 {
+    color: #E65100; 
+    font-size: 18px; 
+    font-weight: bold;
+    margin-bottom: 12px; 
+}
+
+.refund-notice p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 10px; 
+    font-size: 15px; 
+}
+
+.refund-calculate-btn {
+    background-color: #4CAF50; 
+    color: white;
+    border: none;
+    padding: 16px 45px;
+    border-radius: 10px; 
+    font-size: 19px;
+    font-weight: 700; 
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+}
+
+.refund-calculate-btn:hover {
+    background-color: #43A047; 
+    transform: translateY(-3px); 
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15); 
+}
+
+/* 환급 결과 스타일 */
+.refund-result {
+    text-align: center;
+}
+
+.result-header {
+    margin-bottom: 35px; 
+}
+
+.result-header i {
+    font-size: 60px; 
+    color: #FFD700; 
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 5px rgba(0,0,0,0.1); 
+}
+
+.result-header h4 {
+    font-size: 24px; 
+    color: #2c2c2c;
+    margin-bottom: 15px; 
+}
+
+.result-amount {
+    font-size: 48px; 
+    font-weight: bold;
+    color: #4CAF50; 
+    margin-bottom: 40px;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.1); 
+}
+
+.result-detail {
+    background-color: #f8faff; 
+    border-radius: 12px; 
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); 
+}
+
+.detail-header {
+    background-color: #e6efff; 
+    padding: 18px 25px; 
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.detail-header:hover {
+    background-color: #dbe5ff; 
+}
+
+.detail-header span {
+    font-weight: 700; 
+    color: #2c2c2c;
+    font-size: 17px; 
+}
+
+.detail-table {
+    padding: 25px; 
+    max-height: 450px; 
+    overflow-y: auto;
+    position: relative;
+}
+
+.detail-table table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 25px; 
+    border-radius: 8px; 
+    overflow: hidden; 
+}
+
+.detail-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.detail-table thead::before {
+    content: '';
+    position: absolute;
+    top: -25px; 
+    left: -25px; 
+    right: -25px; 
+    height: 25px; 
+    background-color: #f8faff; 
+    z-index: 99;
+}
+
+.detail-table th {
+    background-color: #e0e8ff; 
+    padding: 15px; 
+    text-align: center;
+    font-weight: 700; 
+    color: #2c2c2c;
+    border: 1px solid #dbe2ff; 
+    position: relative;
+    z-index: 101;
+}
+
+.detail-table td {
+    padding: 12px 15px; 
+    text-align: center;
+    border: 1px solid #e6e8ff;
+    color: #555;
+    background-color: #fff;
+    border-top: none;
+}
+
+.detail-table tr:first-child td {
+    border-top: 1px solid #e6e8ff;
+}
+
+.detail-table tr:nth-child(even) td {
+    background-color: #f5f8ff; 
+}
+
+/* 스크롤바 스타일링 */
+.detail-table::-webkit-scrollbar {
+    width: 10px; 
+}
+
+.detail-table::-webkit-scrollbar-track {
+    background: #f1f4f8; 
+    border-radius: 5px; 
+}
+
+.detail-table::-webkit-scrollbar-thumb {
+    background: #a3b8ff; 
+    border-radius: 5px; 
+}
+
+.detail-table::-webkit-scrollbar-thumb:hover {
+    background: #8e9fe8; 
+}
+
+.modal-content::-webkit-scrollbar {
+    width: 10px; 
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #f1f4f8; 
+    border-radius: 5px; 
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #a3b8ff; 
+    border-radius: 5px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: #8e9fe8; 
+}
+
+.fold-btn {
+    background-color: #6a8cff; 
+    color: #ffffff; 
+    border: none;
+    padding: 12px 30px; 
+    border-radius: 8px; 
+    font-size: 15px; 
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 20px; /* Added margin */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
+}
+
+.fold-btn:hover {
+    background-color: #5a7bdc; 
+    transform: translateY(-2px); 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15); 
+}
+
+
+/* 아파트 등록 스타일 */
+.form-group {
+    margin-bottom: 25px; 
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 18px;
+    font-weight: 700;
+    color: #444;
+    margin-bottom: 10px; 
+    display: block;
+}
+
+.form-group select,
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 14px 20px;
+    border: 2px solid #dbe2ff; 
+    border-radius: 10px;
+    font-size: 17px;
+    color: #2c2c2c;
+    background-color: #fff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); 
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    -webkit-appearance: none; 
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%20viewBox%3D%220%200%20292.4%20292.4%22%3E%3Cpath%20fill%3D%22%236a8cff%22%20d%3D%22M287%20197.9c-3.7%203.7-9.7%203.7-13.4%200l-123.6-123.6-123.6%20123.6c-3.7%203.7-9.7%203.7-13.4%200s-3.7-9.7%200-13.4L139.7%2059.9c3.7-3.7%209.7-3.7%2013.4%200l133.9%20133.9c3.7%203.7%203.7%209.7%200%2013.4z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow for select */
+    background-repeat: no-repeat;
+    background-position: right 15px top 50%;
+    background-size: 12px auto;
+}
+
+.form-group select:focus,
+.form-group input[type="text"]:focus {
+    border-color: #6a8cff; 
+    box-shadow: 0 0 0 4px rgba(106, 140, 255, 0.2); 
+    outline: none;
+}
+
+/* Specific styling for disabled select */
+.form-group select:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+    border-color: #ced4da;
+}
+
+/* Adjust button margin for the form */
+form .my-page-submit-btn {
+    margin-top: 30px; 
+    width: auto; 
+    display: block; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .form-group label {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .form-group select,
+    .form-group input[type="text"] {
+        padding: 10px 15px;
+        font-size: 15px;
+        border-radius: 8px;
+        background-position: right 10px top 50%;
+        background-size: 10px auto;
+    }
+
+    form .my-page-submit-btn {
+        padding: 12px 30px;
+        font-size: 16px;
+        margin-top: 25px;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideInTop {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .my-page-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .profile-section {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+        padding: 25px;
+    }
+
+    .profile-photo {
+        width: 100px;
+        height: 100px;
+    }
+
+    .photo-upload {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+
+    .profile-name {
+        font-size: 22px;
+    }
+
+    .profile-item .label {
+        width: 70px;
+        margin-right: 10px;
+        font-size: 15px;
+    }
+
+    .profile-item .value {
+        font-size: 15px;
+    }
+
+    .my-page-submit-btn {
+        padding: 10px 25px;
+        font-size: 15px;
+    }
+
+    .home-info-section {
+        padding: 25px;
+    }
+
+    .section-title {
+        font-size: 22px;
+    }
+
+    .home-address {
+        padding: 18px;
+        gap: 10px;
+    }
+
+    .home-address i {
+        font-size: 20px;
+    }
+
+    .home-address span {
+        font-size: 16px;
+    }
+
+    .home-features {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .feature-item {
+        padding: 20px;
+        gap: 8px;
+    }
+
+    .feature-item i {
+        font-size: 30px;
+    }
+
+    .feature-item span {
+        font-size: 16px;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 5% auto; 
+        max-width: 90%; 
+    }
+
+    .close {
+        top: 15px;
+        right: 20px;
+        font-size: 28px;
+    }
+
+    .modal-header {
+        padding: 20px 25px;
+    }
+
+    .modal-header h4 {
+        font-size: 20px;
+        gap: 8px;
+    }
+
+    .modal-body {
+        padding: 25px;
+    }
+
+    .amount-display {
+        margin-bottom: 10px;
+    }
+
+    .amount {
+        font-size: 32px;
+    }
+
+    .usage-period {
+        font-size: 13px;
+        margin-bottom: 20px;
+    }
+
+    .detail-section h5 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+
+    .detail-list {
+        padding: 15px;
+        max-height: 250px;
+    }
+
+    .detail-item {
+        padding: 6px 0;
+    }
+
+    .detail-item span:last-child {
+        font-size: 15px;
+    }
+
+    .energy-breakdown {
+        margin-top: 20px;
+    }
+
+    .energy-item {
+        margin-bottom: 15px;
+        padding: 15px;
+    }
+
+    .energy-header {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .energy-icon {
+        width: 28px;
+        font-size: 20px;
+        margin-right: 10px;
+    }
+
+    .energy-label {
+        font-size: 16px;
+    }
+
+    .energy-amount {
+        font-size: 16px;
+    }
+
+    .refund-info h4 {
+        font-size: 24px;
+    }
+
+    .refund-info p {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .refund-check-btn {
+        padding: 12px 30px;
+        font-size: 16px;
+    }
+
+    .refund-calculator h4 {
+        font-size: 20px;
+        margin-bottom: 25px;
+    }
+
+    .date-selection {
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .date-input input {
+        padding: 10px 15px;
+        font-size: 15px;
+    }
+
+    .date-separator {
+        margin-top: 0;
+        font-size: 20px;
+    }
+
+    .refund-notice {
+        padding: 18px;
+        margin-bottom: 20px;
+    }
+
+    .refund-notice h5 {
+        font-size: 15px;
+    }
+
+    .refund-notice p {
+        font-size: 13px;
+    }
+
+    .refund-calculate-btn {
+        padding: 12px 30px;
+        font-size: 16px;
+    }
+
+    .result-header i {
+        font-size: 48px;
+        margin-bottom: 15px;
+    }
+
+    .result-header h4 {
+        font-size: 20px;
+    }
+
+    .result-amount {
+        font-size: 36px;
+    }
+
+    .detail-header {
+        padding: 15px 20px;
+    }
+
+    .detail-header span {
+        font-size: 16px;
+    }
+
+    .detail-table {
+        padding: 15px;
+    }
+
+    .detail-table th {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .detail-table td {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+
+    .detail-table::-webkit-scrollbar,
+    .modal-content::-webkit-scrollbar {
+        width: 6px;
+    }
+}
+
+.detail-item .price-group .change-indicator { 
+    font-size: 10px;
+    font-weight: bold; 
+    color: #888;
+    transition: color 0.3s ease;
+}
+
+/* 올라간 경우 - 빨간색 */
+.detail-item .price-group .change-indicator.increase {
+    color: #ff4d4d !important; 
+}
+
+/* 내려간 경우 - 파란색 */
+.detail-item .price-group .change-indicator.decrease {
+    color: #5390ed !important; 
+}
+
+/* 변동 없음 - 회색 */
+.detail-item .price-group .change-indicator.no-change {
+    color: #888 !important; 
+}
+
+/* 화살표 아이콘 스타일 */
+.change-indicator i {
+    margin-right: 2px;
+    font-size: 8px;
+}
+
+/* 증가 화살표 */
+.change-indicator.increase i {
+    color: #ff4d4d;
+}
+
+/* 감소 화살표 */
+.change-indicator.decrease i {
+    color: #5390ed;
+}

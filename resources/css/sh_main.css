@@ -1,0 +1,909 @@
+@charset "utf-8";
+
+body.no-scroll {
+    overflow: hidden;
+	overflow-x: hidden;
+}
+/* =========================== MAIN */
+/* 메인 배너의 기본 틀과 배경 이미지 */
+#sh_main_banner {
+	position: relative;
+    width: 100%;
+    height: auto; /* 고정 높이 해제 */
+    min-height: 1100px; /* 또는 적절한 최소 높이 */
+    overflow: hidden;
+    z-index: 10;
+}
+
+.sh_main_video_slider {
+    width: 100%;
+    height: 100%;
+    position: absolute; 
+    top: 0;
+    left: 0;
+}
+
+/* 비디오 래퍼 및 비디오 스타일 */
+.sh_main_video_wrapper {
+    width: 100%;
+    height: 150vh;
+    overflow: hidden;
+    position: relative; 
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+
+/* 비디오 위에 검은색 투명 오버레이 */
+.sh_main_video_wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    transition: background 0.5s ease;
+}
+
+/* 마우스 오버 시 오버레이 투명도 조절 */
+.sh_main_video_wrapper:hover::after {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+/* 비디오를 래퍼에 맞추는 스타일 */
+.sh_main_video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    z-index: 1; /* 오버레이보다 아래에 위치 */
+}
+
+/* 글과 아이콘을 담는 새로운 컨테이너 */
+.sh_main_content {
+    position: absolute; 
+    top: 35%;
+    left: 52%;
+    transform: translate(-50%, -50%); 
+    width: 100%;
+    max-width: 1200px; 
+    padding: 20px;
+    box-sizing: border-box;
+    text-align: center;
+    color: #fff; 
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 글 전체를 감싸는 새로운 래퍼 스타일 */
+.sh_main_title_wrapper {
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* 왼쪽 대괄호 */
+.sh_main_title_wrapper::before {
+    content: '[';
+    position: absolute;
+    top: 75%;
+    left: -150px; 
+    transform: translateY(-50%); 
+    font-size: 150px; 
+    font-weight: 200;
+    line-height: 1;
+    color: #fff;
+}
+
+/* 오른쪽 대괄호 */
+.sh_main_title_wrapper::after {
+    content: ']';
+    position: absolute;
+    top: 75%;
+    right: -150px; /* 텍스트 블록의 오른쪽 바깥으로 이동 */
+    transform: translateY(-50%); /* 세로 중앙 정렬 */
+    font-size: 150px; /* 대괄호 크기 조절 */
+    font-weight: 200;
+    line-height: 1;
+    color: #fff;
+}
+
+.main_title {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+	animation: fadeInUp 1.2s ease-out forwards;
+	opacity: 0;
+}
+
+.company_name {
+    font-size: 60px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 1.0);
+	animation: fadeInUp 1.2s ease-out 0.3s forwards;
+	opacity: 0;
+}
+
+.description {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto 50px;
+	animation: fadeInUp 1.2s ease-out 0.3s forwards;
+	opacity: 0;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px); 
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); 
+    }
+}
+
+/* 아이콘 영역 스타일 */
+.icon_area {
+    display: flex;
+    justify-content: center; 
+    gap: 160px;
+    margin-top: 40px;
+	animation: fadeInUp 1.2s ease-out 0.9s forwards;
+	opacity: 0;
+}
+
+.icon_item {
+    text-align: center;
+}
+
+/* 아이콘 이미지 스타일 수정 */
+.icon_item img {
+    width: 120px;
+    height: auto;
+    margin-bottom: 15px;
+    filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.4)); 
+	filter: drop-shadow(2px 2px 5px rgba(0, 0, 0, 0.4)); 
+	transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 마우스 오버 시 입체적인 효과 추가 */
+.icon_item a:hover img {
+    transform: translateY(-15px) scale(1.1); 
+    filter: drop-shadow(5px 10px 15px rgba(0, 0, 0, 0.6));
+}
+
+.icon_item p {
+    font-size: 14px;
+    font-weight: 500;
+	color: #fff;
+	transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 마우스 오버 시 아이콘 텍스트도 함께 이동 */
+.icon_item a:hover p {
+    transform: translateY(-15px);
+    color: rgb(208, 255, 255);
+}
+
+.sh_main_background_video {
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    object-fit: cover; 
+    z-index: 1; 
+}
+
+/* 로그인 icon */
+.sh_login_icon_wrapper {
+    position: absolute;
+    right: 10px;
+    top: 8%;
+    transform: translateY(-50%);
+    z-index: 1001;
+}
+
+.sh_login_icon {
+    width: 60px;
+    height: 60px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+.sh_login_icon:hover {
+    transform: scale(1.1);
+}
+
+.sh_login_icon .user-icon {
+    width: 30px;
+    height: 30px;
+    color: #333;
+}
+
+/* --- 슬라이딩 컨테이너 스타일 --- */
+.sh_sliding_login_container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 700px; 
+    height: 100vh;
+    background: rgb(0, 38, 38); 
+    box-shadow: 10px 10px 30px rgba(100, 150, 100, 0.2); 
+    border-radius: 20px 0 0 20px;
+    padding: 30px; /* 내부 패딩 */
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); 
+    transform: translateX(100%); 
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+/* 폼을 표시하기 위한 클래스 */
+.sh_sliding_login_container.active {
+    transform: translateX(0); /* 활성화 시 원래 위치로 이동 */
+}
+
+/* --- 로그인 섹션 내부 스타일 --- */
+.sh_login_section {
+    z-index: 10;
+    position: relative;
+    margin: 120px 0; 
+    width: 480px;
+	top: 50px;
+    height: 600px;
+	right: -85px; 
+    background-color: rgb(241, 241, 241);
+    padding: 30px 25px;
+    box-sizing: border-box;
+    border-radius: 25px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+	display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+}
+
+/* 제목 스타일 */
+.sh_login_section .login_title {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #333;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+/* 로그인 버튼 스타일 (그린 계열) */
+.login_button {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+    background: linear-gradient(45deg, #4CAF50, #8BC34A); 
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.login_button:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6);
+}
+
+.login_button:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 링크 스타일 (그린 계열) */
+.login_links {
+    margin-top: 20px;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.login_links a {
+    color: #666;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    position: relative;
+}
+
+.login_links a:hover {
+    color: #4CAF50;
+    text-decoration: none; /* 밑줄 대신 가상요소 효과 사용 */
+}
+
+.login_links a::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    transform: scaleX(0);
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: #4CAF50;
+    transform-origin: bottom right;
+    transition: transform 0.3s ease-out;
+}
+
+.login_links a:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left;
+}
+
+.divider {
+    color: #ccc;
+}
+
+/* 닫기 버튼 스타일 (그린 계열) */
+.close_button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1.5rem;
+    line-height: 1;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #999;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.close_button:hover {
+    color: rgb(0, 38, 38);
+    transform: rotate(90deg);
+}
+
+/* --- 스크롤 애니메이션 클래스 --- */
+/* 아래에서 위로 나타나는 효과 */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fade-in-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 왼쪽에서 나타나는 효과 */
+.fade-in-left {
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fade-in-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* 오른쪽에서 나타나는 효과 */
+.fade-in-right {
+    opacity: 0;
+    transform: translateX(50px);
+    transition: opacity 1s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.fade-in-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* =========================== atc01 */
+#atc01 {
+    position: relative;
+    height: 528px;
+    margin: 70px auto 0;
+    letter-spacing: -.3px;
+}
+/* atc01 섹션 전체가 나타날 때 효과 */
+#atc01.visible .inner1, #atc01.visible .inner2 {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+#atc01:after {
+    display: block;
+    content: "";
+    clear: both
+}
+
+#atc01 .inner1 {
+    position: absolute;
+    left: 0;
+    width: 951px;
+    height: 528px;
+    background: url(../img/inc01_img1.png);
+    /* 애니메이션 초기 상태 */
+    opacity: 0;
+    transform: translateX(-100px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+#atc01 .inner2 {
+    position: absolute;
+    top: 99px;
+    right: 0;
+    width: 1070px;
+    height: 430px;
+    padding: 77px 0 0 72px;
+    border-top-left-radius: 50px;
+    background: #f7f7f7;
+    /* 애니메이션 초기 상태 */
+    opacity: 0;
+    transform: translateX(100px);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+#atc01 .inner2 .tit {
+    padding-bottom: 42px;
+    color: #222;
+    font-size: 48px;
+    line-height: 58px;
+    font-weight: 200;
+    font-family: 'Noto Sans KR', 'Poppins', sans-serif; /* 폰트 설정 업데이트 */
+}
+
+#atc01 .inner2 .tit b {
+    font-weight: 700;
+}
+
+#atc01 .inner2 .txt {
+    font-size: 18px;
+    line-height: 24px;
+    color: #777;
+}
+
+#atc01 .inner2 .more {
+    width: 86px;
+    padding-top: 37px;
+    margin-left: -10px;
+}
+
+#atc01 .inner2 .more a {
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: #222;
+    font-family: 'Noto Sans KR', 'Poppins', sans-serif; 
+}
+
+#atc01 .inner2 .more:after {
+    display: block;
+    content: "";
+    width: 86px;
+    height: 4px;
+    margin: 8px auto 0;
+    background: #ddd;
+    transition: all .4s;
+}
+
+#atc01 .inner2 .more:hover:after {
+    background: rgba(74, 158, 109, 0.7);
+}
+
+#atc01 .inner2 .btn {
+    display: block;
+    position: absolute;
+	font-size: 15px;
+    top: -40px;
+    left: 650px;
+    width: 157px;
+    height: 157px;
+    text-align: center;
+    line-height: 157px;
+    font-weight: 700;
+    background: rgb(76, 103, 162);
+    background: linear-gradient(360deg, rgb(73, 167, 115) 40%, rgba(102, 126, 234, 1) 100%);
+    color: #fff;
+    background-size: 200% 200%;
+    transition: all .4s;
+}
+
+#atc01 .inner2 .btn:hover {
+    background-position: 0% 100%;
+}
+
+/* 이미지 카드 리스트 컨테이너 */
+.sh_media_content_wrapper {
+    max-width: 1200px;
+    margin: -20px auto 0 auto;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+/* 스크롤 시 나타나게 할 때 사용 */
+.sh_media_content_wrapper.visible .sh_media_item {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.sh_media_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+/* 각 뉴스 항목 (카드) - 수정 */
+.sh_media_list li {
+    width: calc(25% - 22.5px);
+    min-width: 220px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.sh_media_item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+    background-color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.6s ease-out, transform 0.6s ease-out; /* transition 통합 */
+    opacity: 0; /* 초기 상태 */
+    transform: translateY(30px); /* 초기 상태 */
+}
+
+/* 호버 효과 개선 */
+.sh_media_item:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.sh_media_thumbnail {
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e0e0e0;
+}
+
+.sh_media_thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease; /* 호버 시 확대 효과를 위한 transition 추가 */
+}
+.sh_media_item:hover .sh_media_thumbnail img {
+    transform: scale(1.1); /* 마우스 호버 시 이미지 확대 */
+}
+
+
+.sh_media_text {
+    flex-grow: 1;
+    padding: 18px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    font-weight: 500;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+/* =========================== atc03 */
+#atc03 {
+    position: relative;
+    z-index: 2;
+    width: 1200px;
+    height: 420px;
+    margin: 0 auto;
+    box-shadow: 6px 11px 31px -9px rgba(0, 0, 0, .3), -39px 109px 124px -141px rgba(0, 0, 0, .3);
+    background: #fff;
+    /* 스크롤 애니메이션 초기 상태 */
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+/* 스크롤 시 나타날 때 */
+#atc03.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+#atc03 .tit {
+    display: block;
+    position: relative;
+    padding-bottom: 18px;
+    font-size: 23px;
+    font-weight: 700;
+    color: #222;
+    font-family: 'Noto Sans KR', 'Poppins', sans-serif; /* 폰트 설정 업데이트 */
+}
+
+#atc03 .tit span {
+    display: block;
+    float: right;
+    width: 35px;
+    height: 35px;
+    border: 1px solid #888;
+    background: url(../img/plus.png)center center no-repeat;
+    background-size: 15px;
+    transition: transform 0.3s ease; /* 호버 효과 추가 */
+}
+#atc03 .tit:hover span {
+    transform: rotate(90deg);
+}
+
+#atc03 .tit:before {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 101px;
+    width: 2px;
+    height: 12px;
+    background: #ccc;
+}
+
+#atc03>div {
+    float: left;
+    width: 50%;
+    height: 100%;
+    padding: 56px 52px 21px 45px;
+}
+
+#atc03>div ul li {
+    height: 137px;
+    padding: 17px 26px 0 0px;
+    transition: transform 0.3s ease; /* 호버 효과 추가 */
+}
+/* 리스트 아이템 호버 효과 */
+#atc03 > div ul li:hover {
+    transform: translateX(10px);
+}
+
+#atc03>div ul li:nth-child(2) {
+    padding-top: 36px;
+}
+
+#atc03>div ul li a {
+    display: block;
+    overflow: hidden;
+}
+
+/* 날짜 배경 호버 효과 */
+#atc03>div ul .sh_date {
+    float: left;
+    width: 76px;
+    height: 76px;
+    padding-top: 16px;
+    border: 1px solid #ddd;
+    text-align: center;
+    background: #2c2d2d;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+#atc03 > div ul li:hover .sh_date {
+    background-color: rgb(54, 0, 108); /* 호버 시 배경색 변경 */
+    transform: scale(1.05); /* 살짝 커지는 효과 */
+}
+
+#atc03>div ul .sh_date .day {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+#atc03>div ul .sh_date .day_02 {
+    font-size: 13px;
+    line-height: 24px;
+    opacity: 0.77;
+}
+
+#atc03>div ul .txt_wrap {
+	font-size: 13px;
+    float: left;
+    width: 357px;
+    padding: 5px 0 0 43px;
+}
+
+#atc03>div ul .sh_notice {
+    display: inline-block;
+    margin-bottom: 7px;
+    font-size: 16px;
+    color: #666;
+    font-weight: 500;
+}
+
+#atc03>div ul .sh_contents {
+    line-height: 24px;
+    font-size: 14px;
+    color: #666;
+    opacity: 0.8;
+}
+
+#atc03 .index01 ul li:nth-child(1) {
+    border-bottom: 1px solid #ddd;
+}
+
+#atc03 .index01 ul .sh_notice {
+    display: inline-block;
+    margin-bottom: 7px;
+    font-size: 17px;
+    color: #666;
+    font-weight: 500;
+}
+
+#atc03 .index01 ul .sh_contents {
+    line-height: 24px;
+    font-size: 15px;
+    color: #666;
+    opacity: 0.8;
+}
+
+#atc03 .index02 {
+    background: #2c2d2d;
+}
+
+#atc03 .index02 .tit {
+    color: #fff;
+}
+
+#atc03 .index02 .tit span {
+    border: 1px solid #ddd;
+    background: url(../img/plus_w.png)center center no-repeat;
+}
+
+#atc03 .index02 .tit:before {
+    left: 83px;
+}
+
+#atc03 .index02 ul li:nth-child(1) {
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+#atc03 .index02 ul .sh_date {
+    border: 4px solid rgba(242, 242, 242, .3);
+}
+
+#atc03 .index02 ul .sh_date .day_02 {
+    color: #dbdbdb;
+    opacity: 0.77;
+}
+
+#atc03 .index02 ul .sh_notice {
+    color: #fff;
+}
+
+#atc03 .index02 ul .sh_contents {
+    color: #fff;
+    opacity: 0.5;
+}
+
+/* =========================== atc04 */
+#atc04 {
+    position: relative;
+    width: 100%;
+    height: 392px;
+    margin: -93px auto 0;
+    text-align: center;
+    background: url(../img/inc04_bg.jpg);
+    background-size: cover;
+    background-position: center;
+    transition: background-position 0.2s ease-out;
+    overflow: hidden;
+}
+/* 배경 위에 오버레이 추가 */
+#atc04::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4); /* 어두운 오버레이 */
+    z-index: 1;
+}
+
+/* 스크롤 시 나타날 때 */
+#atc04.visible .tit,
+#atc04.visible .txt,
+#atc04.visible .more {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#atc04 .tit,
+#atc04 .txt,
+#atc04 .more {
+    z-index: 3;
+    position: relative;
+    /* 애니메이션 초기 상태 */
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+#atc04 .tit {
+    padding-top: 175px;
+    font-size: 48px;
+    line-height: 45px;
+    font-weight: 200;
+    font-family: 'Noto Sans KR', 'Poppins', sans-serif; 
+    color: #fff;
+}
+
+#atc04 .txt {
+    padding-top: 23px;
+    font-size: 14px;
+    color: rgba(255, 255, 255, .7);
+}
+
+#atc04 .more {
+    width: 86px;
+    margin: 0 auto;
+    padding-top: 33px;
+}
+
+#atc04 .more a {
+    display: block;
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    font-family: 'Noto Sans KR', 'Poppins', sans-serif;
+}
+
+#atc04 .more:after {
+    display: block;
+    content: "";
+    width: 84px;
+    height: 4px;
+    margin: 8px auto 0;
+    background: rgba(255, 255, 255, .3);
+    -webkit-transition: all .4s;
+    transition: all .4s;
+}
+
+#atc04 .more:hover:after {
+    background: rgba(255, 255, 255, .8);
+}

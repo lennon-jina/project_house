@@ -1,0 +1,951 @@
+/* 전체 레이아웃 - 더 나은 시각적 흐름을 위한 미세 조정 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans KR', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color: rgb(255, 255, 255);
+    color: #2c3e50;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale; 
+}
+
+#sh_snb {
+    bottom: 10px; 
+    right: 5px;
+}
+
+/* 화살표기 */
+.swiper-button-prev,
+.swiper-button-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px; 
+    height: 40px;
+    border-radius: 0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.swiper-button-prev {
+    left: 10px;
+}
+
+.swiper-button-next {
+    right: 10px; 
+}
+
+/* 화살표 호버 효과 */
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* 화살표 아이콘 자체 스타일 */
+.swiper-button-prev::after,
+.swiper-button-next::after {
+    font-size: 32px !important;
+    color: rgb(128, 128, 255) !important;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+/* 호버 시 화살표 색상 변경 */
+.swiper-button-prev:hover::after,
+.swiper-button-next:hover::after {
+    color: rgb(128, 0, 255) !important;
+}
+
+/* 페이지 헤더 - 더 인상적인 히어로 섹션 */
+.page-header {
+    text-align: center;
+    margin-bottom: 50px; 
+    padding: 50px 0; 
+    background: linear-gradient(135deg, #4a69bd 0%, #6a4caf 100%); 
+    color: white;
+    border-radius: 18px; 
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); 
+    position: relative; 
+    overflow: hidden; 
+}
+
+.page-header h1 {
+    font-size: 2.8rem; 
+    font-weight: 800; 
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); 
+}
+
+.subtitle {
+    font-size: 1.2rem; 
+    opacity: 0.95; 
+    font-weight: 400; 
+}
+
+/* 메인 콘텐츠 - 향상된 간격 및 레이아웃 */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 40px; 
+}
+
+/* 분석 섹션 - 더 부드럽고 매력적인 카드 */
+.analysis-section {
+    background: rgb(247, 255, 255, 0.5); 
+    border-radius: 20px; 
+    padding: 35px;
+	transform: translateY(-5px); 
+    box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.1);
+	width: 1200px; 
+	margin: auto;
+}
+
+
+.section-header {
+    margin-bottom: 35px;
+    text-align: left;
+}
+
+.section-header h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.section-description {
+    color: #7f8c8d;
+    font-size: 1.05rem; 
+    line-height: 1.5;
+}
+
+/* 애니메이션 키프레임 정의 */
+@keyframes fadeInSlideIn {
+    0% {
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    100% {
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* 애니메이션 적용 클래스 */
+.animated-title {
+    animation: fadeInSlideIn 1s ease-out forwards; 
+    opacity: 0; 
+}
+
+/* 섹션 제목 스타일 */
+.detailed-analysis-section .section-title-left,
+#comparison .section-title-left {
+    font-size: 2.4rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    position: relative;
+    display: inline-block;
+    line-height: 2.2;
+    background: linear-gradient(90deg, #4a69bd, #6a4caf);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+	display: block; 
+    margin-left: auto; 
+    margin-right: auto;
+    width: fit-content;
+}
+
+.detailed-analysis-section .section-title-left::after,
+#comparison .section-title-left::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+	transform: translateX(-50%);
+    bottom: 0;
+    width: 40%;
+    height: 7px;
+    background: linear-gradient(90deg, #4a69bd, #6a4caf);
+    border-radius: 1.5px;
+}
+
+/* 탭 컨테이너 - 더 눈에 띄고 클릭 가능한 탭 */
+.tab-container {
+    margin-bottom: 40px;
+}
+
+.tab-buttons {
+    display: flex;
+    gap: 8px; 
+    background: #eef2f6; 
+    border-radius: 14px;
+    padding: 6px;
+    max-width: 450px; 
+    margin: 0 auto;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.tab-button {
+    flex: 1;
+    padding: 14px 28px; 
+    border: none;
+    background: transparent;
+    color: #55606e; 
+    font-size: 1.05rem; 
+    font-weight: 500;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); 
+    text-align: center;
+    position: relative; 
+    overflow: hidden;
+}
+
+.tab-button:hover {
+    color: #34495e; 
+    background: rgba(255, 255, 255, 0.7); 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08); 
+    transform: translateY(-2px); 
+}
+
+.tab-button.active {
+    background: white;
+    color: #2c3e50;
+    font-weight: 700; 
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); 
+    transform: translateY(0); 
+    border: 1px solid #dce0e6; 
+}
+
+/* 모든 chart-wrapper의 기본 스타일 */
+.chart-wrapper {
+    position: relative;
+    height: 500px; 
+    width: 100%;
+    margin-bottom: 20px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding-bottom: 20px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease-in-out; 
+    overflow: hidden; 
+}
+
+/* chart-wrapper 호버 효과 */
+.chart-wrapper:hover {
+    transform: translateY(-5px); 
+    box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.1); 
+}
+
+.chart-wrapper canvas {
+    max-width: 100%;
+    max-height: 100%;
+    height: 100% !important;
+    width: 100% !important; 
+}
+
+/* 나머지 3개 그래프의 chart-wrapper 스타일 */
+.chart-wrapper:not(.is-preferred-chart) {
+    position: relative;
+    height: 400px; 
+    width: 100%;
+    margin-bottom: 20px;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 25px;
+    padding-bottom: 20px;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden; 
+	margin-top: 30px;
+}
+
+/* chart-wrapper 호버 효과 */
+.chart-wrapper:not(.is-preferred-chart):hover {
+    transform: translateY(-5px);
+    box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+/* 특정 차트 래퍼의 높이를 개별적으로 설정 */
+.chart-wrapper.chart-wrapper-specific {
+    height: 600px; 
+}
+
+/* "주요 항목별 비중" 차트 래퍼의 높이를 개별적으로 설정 */
+.chart-wrapper.composition-chart-wrapper {
+    height: 650px;
+}
+
+/* "연식별 주요 관리비 항목 지출 비교" 차트 래퍼의 높이를 개별적으로 설정 */
+.chart-wrapper.cost-comparison-chart-wrapper {
+    height: 550px; 
+}
+
+/* "장기수선충당금 현황 분석" 차트 래퍼의 높이를 개별적으로 설정 */
+.chart-wrapper.reserve-fund-chart-wrapper {
+    height: 550px;
+}
+
+/* 차트 범례 */
+.chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding: 15px 20px;
+    background: #f8fafd;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer; 
+    transition: transform 0.2s ease-in-out; 
+}
+
+/* legend-item 호버 효과 */
+.legend-item:hover {
+    transform: scale(1.05); 
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    display: inline-block;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.legend-text {
+    color: #374151;
+}
+
+/* 차트 컨테이너 */
+.chart-container {
+	width: 100% !important;
+    position: relative;
+    height: 500px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* 특정 차트 컨테이너의 높이를 개별적으로 설정 */
+.chart-container.chart-container-specific {
+    height: 700px; 
+}
+
+/* "주요 항목별 비중" 차트 컨테이너의 높이를 개별적으로 설정 */
+.chart-container.composition-chart-container {
+    height: 600px;
+}
+
+/* "연식별 주요 관리비 항목 지출 비교" 차트 컨테이너의 높이를 개별적으로 설정 */
+.chart-container.cost-comparison-chart-container {
+    height: 570px; 
+}
+
+/* "장기수선충당금 현황 분석" 차트 컨테이너의 높이를 개별적으로 설정 */
+.chart-container.reserve-fund-chart-container {
+    height: 490px;
+}
+
+
+/* 로딩 상태 */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 450px; 
+    background: #fbfcfe;
+    border-radius: 16px;
+    transition: opacity 0.3s ease;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.03);
+}
+
+.loading-spinner {
+    width: 60px; 
+    height: 60px;
+    border: 5px solid #e0e7ee;
+    border-top: 5px solid #5a8dee; 
+    border-radius: 50%;
+    animation: spin 1.2s linear infinite; 
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-state p {
+    color: #7b8a99; 
+    font-size: 1.1rem; 
+}
+
+/* 오류 상태 */
+.error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 450px;
+    background: #fefafa; 
+    border-radius: 16px;
+    border: 1px solid #fbdad7;
+    box-shadow: inset 0 0 10px rgba(255, 0, 0, 0.02);
+}
+
+.error-icon {
+    font-size: 3.5rem; 
+    margin-bottom: 20px;
+    color: #ef4444; 
+}
+
+.error-state p {
+    color: #cc3333; 
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    text-align: center;
+    max-width: 80%;
+}
+
+.retry-btn {
+    background: #4a69bd;
+    color: white;
+    border: none;
+    padding: 12px 25px; 
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.retry-btn:hover {
+    background: #3a5aa0;
+    transform: translateY(-2px); 
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 정보 섹션 */
+.info-section {
+    margin-top: 50px;
+}
+
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+    gap: 30px;
+}
+
+.info-card {
+    background: white;
+    border-radius: 18px; 
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); 
+    border: 1px solid #eef2f6;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-8px); 
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15); 
+}
+
+.info-card h3 {
+    color: #2c3e50;
+    font-size: 1.3rem; 
+    font-weight: 700;
+    margin-bottom: 15px; 
+    display: flex;
+    align-items: center;
+}
+
+/* 아이콘과 같은 요소에 사용자 지정 이모티콘 사용 */
+.info-card h3::before {
+    margin-right: 12px; 
+    font-size: 1.6em; 
+    line-height: 1; 
+    transform: translateY(2px); 
+}
+
+.info-card:nth-child(1) h3::before { content: "💰"; } /* 일반적인 돈/비용 */
+.info-card:nth-child(2) h3::before { content: "⚡"; } /* 유틸리티/에너지 */
+.info-card:nth-child(3) h3::before { content: "🛠️"; } /* 유지보수/수리 */
+.info-card:nth-child(4) h3::before { content: "💡"; } /* 통찰력/규칙 */
+
+
+.info-card p, .info-card ul {
+    color: #64748b;
+    line-height: 1.7; 
+    font-size: 1.05rem; 
+}
+
+.info-card ul {
+    padding-left: 25px; 
+}
+
+.info-card li {
+    margin-bottom: 6px; 
+}
+
+
+/* 반응형 디자인 */
+@media (max-width: 992px) { 
+    .page-header h1 {
+        font-size: 2.5rem;
+    }
+    .main-content {
+        gap: 30px;
+    }
+    .analysis-section {
+        padding: 30px;
+    }
+    .section-header h2 {
+        font-size: 2rem;
+    }
+    
+    .chart-wrapper.is-preferred-chart { 
+        height: auto; 
+        max-height: 500px; 
+    }
+    .chart-wrapper:not(.is-preferred-chart) { 
+		height: auto; 
+        max-height: 500px; 
+    }
+    
+    .info-cards {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 25px;
+    }
+}
+
+
+@media (max-width: 768px) { 
+    .container {
+        padding: 15px;
+    }
+    
+    .page-header {
+        padding: 40px 20px;
+        margin-bottom: 40px;
+        border-radius: 12px;
+    }
+    
+    .page-header h1 {
+        font-size: 2.2rem;
+    }
+    
+    .subtitle {
+        font-size: 1.05rem;
+    }
+    
+    .main-content {
+        gap: 25px;
+    }
+    
+    .analysis-section {
+        padding: 25px;
+        border-radius: 16px;
+    }
+    
+    .section-header h2 {
+        font-size: 1.8rem;
+    }
+
+    .tab-buttons {
+        max-width: 100%; 
+        border-radius: 10px;
+        flex-wrap: wrap; 
+    }
+    .tab-button {
+        font-size: 0.95rem;
+        padding: 12px 18px;
+    }
+    
+    .chart-wrapper.is-preferred-chart { 
+        height: auto;
+        max-height: 450px; 
+        padding: 20px; 
+        border-radius: 12px;
+    }
+    .chart-wrapper:not(.is-preferred-chart) { 
+	   height: auto;
+       max-height: 450px; 
+       padding: 20px; 
+       border-radius: 12px;
+    }
+    
+    .chart-legend {
+        gap: 20px;
+        flex-direction: row; 
+        justify-content: center;
+        padding: 12px 15px;
+        border-radius: 10px;
+    }
+    
+    .legend-item {
+        font-size: 0.9rem;
+    }
+    
+    .loading-state, .error-state {
+        height: 400px;
+        border-radius: 12px;
+    }
+    
+    .info-cards {
+        grid-template-columns: 1fr; 
+        gap: 20px;
+    }
+    
+    .info-card {
+        padding: 25px;
+        border-radius: 16px;
+    }
+
+    .info-card h3 {
+        font-size: 1.2rem;
+    }
+    .info-card p, .info-card ul {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) { 
+    .page-header {
+        padding: 30px 15px;
+        margin-bottom: 30px;
+    }
+    .page-header h1 {
+        font-size: 1.8rem;
+    }
+    .subtitle {
+        font-size: 0.95rem;
+    }
+    .analysis-section {
+        padding: 15px;
+    }
+    .section-header h2 {
+        font-size: 1.4rem;
+    }
+    .section-description {
+        font-size: 0.95rem;
+    }
+
+    .tab-buttons {
+        flex-direction: column; 
+        gap: 6px;
+        padding: 5px;
+    }
+    .tab-button {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+    }
+
+    .chart-wrapper.is-preferred-chart { 
+        height: auto; 
+        max-height: 350px;
+        padding: 15px;
+    }
+    .chart-wrapper:not(.is-preferred-chart) {
+		height: auto; 
+        max-height: 350px;
+        padding: 15px;
+    }
+    
+    .chart-legend {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 10px;
+    }
+    .legend-item {
+        font-size: 0.85rem;
+    }
+
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+    }
+    .loading-state p, .error-state p {
+        font-size: 0.95rem;
+    }
+    .retry-btn {
+        padding: 10px 18px;
+        font-size: 0.9rem;
+    }
+
+    .info-card {
+        padding: 20px;
+    }
+    .info-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+    .info-card p, .info-card ul {
+        font-size: 0.95rem;
+    }
+}
+
+/* Swiper 특정 재정의로 부드러운 차트 구현 */
+.swiper-container {
+    width: 100%;
+    height: auto;
+	padding-bottom: 60px; 
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0; 
+    height: auto;
+}
+
+/* 관리비 정보 섹션 스타일 */
+.management-info-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid rgba(78, 141, 252, 0.2);
+}
+
+.management-info-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #4e8dfc;
+    text-align: center;
+    margin-bottom: 1.2rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.management-info-title::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(135deg, #4e8dfc, #356ee6);
+    border-radius: 1px;
+}
+
+.management-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(78, 141, 252, 0.1);
+    transition: all 0.3s ease;
+}
+
+.management-info-item:last-child {
+    border-bottom: none;
+}
+
+.management-info-item:hover {
+    background: rgba(78, 141, 252, 0.05);
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    border-radius: 12px;
+    margin: 0 -0.8rem;
+}
+
+.management-info-item .label {
+    font-size: 0.9rem;
+    color: #4e8dfc;
+    font-weight: 600;
+    flex-shrink: 0;
+    min-width: 120px;
+    text-align: left;
+}
+
+.management-info-item .value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #2563eb;
+    text-align: right;
+    flex: 1;
+    margin-left: 12px;
+}
+
+/* 강조 효과 */
+.management-info-item.highlight {
+    background: rgba(78, 141, 252, 0.08);
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    margin: 0.2rem 0;
+    border: 1px solid rgba(78, 141, 252, 0.2);
+}
+
+.management-info-item.highlight .value {
+    color: #1d4ed8;
+    font-size: 1.1rem;
+}
+
+/* 관리비 정보 섹션 - 노후도별 글씨 색상 */
+
+/* 신축 카드의 관리비 정보 글씨 색상 (하늘색 계열) */
+.similar-apartment-card[data-age-category="new"] .management-info-title {
+    color: #1d4ed8; /* 진한 파란색 */
+}
+
+.similar-apartment-card[data-age-category="new"] .management-info-item .label {
+    color: #2563eb; /* 파란색 */
+}
+
+.similar-apartment-card[data-age-category="new"] .management-info-item .value {
+    color: #1e40af; /* 진한 파란색 */
+}
+
+.similar-apartment-card[data-age-category="new"] .management-info-item.highlight .value {
+    color: #1d4ed8; /* 더 진한 파란색 */
+}
+
+/* 중견 카드의 관리비 정보 글씨 색상 (녹색 계열) */
+.similar-apartment-card[data-age-category="medium"] .management-info-title {
+    color: #15803d; /* 진한 녹색 */
+}
+
+.similar-apartment-card[data-age-category="medium"] .management-info-item .label {
+    color: #16a34a; /* 녹색 */
+}
+
+.similar-apartment-card[data-age-category="medium"] .management-info-item .value {
+    color: #15803d; /* 진한 녹색 */
+}
+
+.similar-apartment-card[data-age-category="medium"] .management-info-item.highlight .value {
+    color: #14532d; /* 더 진한 녹색 */
+}
+
+/* 노후 카드의 관리비 정보 글씨 색상 (주황색 계열) */
+.similar-apartment-card[data-age-category="old"] .management-info-title {
+    color: #c2410c; /* 진한 주황색 */
+}
+
+.similar-apartment-card[data-age-category="old"] .management-info-item .label {
+    color: #ea580c; /* 주황색 */
+}
+
+.similar-apartment-card[data-age-category="old"] .management-info-item .value {
+    color: #c2410c; /* 진한 주황색 */
+}
+
+.similar-apartment-card[data-age-category="old"] .management-info-item.highlight .value {
+    color: #9a3412; /* 더 진한 주황색 */
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .management-info-item .label {
+        font-size: 0.85rem;
+        min-width: 100px;
+    }
+	
+	.chart-wrapper {
+	        max-height: 400px; 
+	        padding: 20px;
+	    }
+    
+    .management-info-item .value {
+        font-size: 0.9rem;
+    }
+    
+    .management-info-title {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .management-info-item .label {
+        font-size: 0.8rem;
+        min-width: 90px;
+    }
+	
+	.chart-wrapper {
+	        max-height: 300px; 
+	        padding: 15px;
+	    }
+    
+    .management-info-item .value {
+        font-size: 0.85rem;
+    }
+}
+
+/* 섹션 제목 디자인 */
+@media (max-width: 992px) {
+    .detailed-analysis-section .section-title-left { font-size: 2.2rem; margin-bottom: 25px; padding-bottom: 8px; }
+    .detailed-analysis-section .section-title-left::after { width: 50%; height: 2.5px; }
+}
+
+@media (max-width: 768px) {
+    .detailed-analysis-section .section-title-left { font-size: 2rem; margin-bottom: 20px; padding-bottom: 7px; }
+    .detailed-analysis-section .section-title-left::after { width: 40%; height: 2px; }
+}
+
+@media (max-width: 480px) {
+    .detailed-analysis-section .section-title-left { font-size: 1.6rem; margin-bottom: 15px; padding-bottom: 5px; }
+    .detailed-analysis-section .section-title-left::after { width: 30%; height: 1.5px; }
+}
+
+/* 미디어 쿼리: 작은 화면에서 화살표 크기 및 위치 조정 */
+@media (max-width: 768px) {
+    .swiper-button-prev,
+    .swiper-button-next {
+        width: 35px;
+        height: 35px;
+        left: 5px;
+        right: 5px;
+    }
+
+    .swiper-button-prev::after,
+    .swiper-button-next::after {
+        font-size: 28px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .swiper-button-prev,
+    .swiper-button-next {
+        width: 30px;
+        height: 30px;
+        left: 2px;
+        right: 2px;
+    }
+
+    .swiper-button-prev::after,
+    .swiper-button-next::after {
+        font-size: 24px !important;
+    }
+}

@@ -1,0 +1,359 @@
+/* 폰트 및 색상 팔레트 */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700');
+
+
+/* 색상 변수 정의 */
+:root {
+  --bg: #F0F4F3;
+  --theme: #4CAF50; 
+  --theme-two: #FFFFFF; 
+  --text: #727272;
+}
+
+/* 모든 요소의 기본 박스 모델 및 여백 초기화 */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: #e6f2e6;
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text);
+  display: flex;
+  flex-direction: column; 
+  align-items: center;   
+  min-height: 100vh;    
+  padding: 1rem 0;
+
+  /* 배경 애니메이션 추가 (유지) */
+  background: linear-gradient(135deg, #e6f2e6 0%, #d4ebd4 50%, #e6f2e6 100%);
+  background-size: 200% 200%;
+  animation: gradientBackground 15s ease infinite;
+}
+
+/* 배경 그라데이션 애니메이션 키프레임 */
+@keyframes gradientBackground {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 메인 패널 (로그인/회원가입 컨테이너) */
+.App {
+  max-width: 800px;
+  width: 90vw;
+  min-height: 600px;
+  top: 85px;
+  background: var(--theme-two);
+  border-radius: 20px;
+  box-shadow: 10px 10px 30px rgba(100, 150, 100, 0.2),
+              -10px -10px 30px rgba(255, 255, 255, 0.8);
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  margin: auto;
+
+  /* 초기 로드 애니메이션 (유지) */
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInSlideUp 1s ease-out forwards;
+  animation-delay: 0.5s; /* body 애니메이션 이후 시작 */
+}
+
+/* App 컨테이너 등장 애니메이션 키프레임 */
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 양쪽 패널에 대해
+콘텐츠를 단일 열 레이아웃으로 표시
+*/
+.Panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 2;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* 두 절반의 요소에 공유되는 스타일 */
+.Panel h2 {
+  font-size: 1.9rem;
+  text-transform: capitalize;
+  margin-bottom: 1rem;
+}
+
+.Panel p {
+  margin: 1rem 0;
+  max-width: 25ch;
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 300;
+  text-align: center;
+}
+
+.Panel a, .Panel button {
+  color: inherit;
+  font-family: inherit;
+}
+
+.Panel a {
+  text-decoration: none;
+  margin: 1rem 1rem;
+}
+
+/* 소셜 플랫폼을 원형으로 중첩하는 앵커 링크 스타일 */
+.Panel .Social a {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  border: none;
+}
+
+/* 부모의 직접적인 자식인 앵커 링크 요소의 하단에 반투명 테두리 포함
+이것은 소셜 아이콘을 제외함 */
+.Panel > a:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  border-bottom: 1px dashed currentColor;
+  opacity: 0.4;
+}
+
+/* 입력 요소를 서로 위에 표시 */
+.Panel form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 입력 요소의 너비를 패널의 상당 부분을 덮도록 확장 */
+.Panel form input {
+  margin: 0.5rem 0;
+  width: 250px;
+  padding: 1rem 0.75rem;
+  background: var(--bg);
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  border-radius: 5px; /* 입력 필드에 둥근 모서리 추가 */
+}
+
+.Panel form input::placeholder {
+  opacity: 0.8;
+}
+
+/* 로그인/회원가입 버튼의 텍스트 주위에 상당한 여백을 두도록 스타일 지정 */
+.Panel button {
+  background: none;
+  border: 1px solid currentColor;
+  border-radius: 50px;
+  padding: 0.85rem 2.75rem;
+  margin: 2rem 0;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  letter-spacing: 0.1rem;
+  background: linear-gradient(45deg, #4CAF50, #8BC34A);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease; /* color 전환 추가 */
+  color: var(--theme-two); 
+}
+.Panel button:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.6);
+    background: linear-gradient(45deg, #8BC34A, #4CAF50); 
+}
+
+.Panel button:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+
+/*
+더 작은 뷰포트에서는 패널을 서로 위에 배치
+메인 패널을 뷰포트 전체를 덮도록 확장
+*/
+@media (max-width: 650px) {
+  body {
+    padding: 0;
+  }
+  .App {
+    flex-direction: column;
+    border-radius: 0;
+    width: 100vw;
+    height: 100%;
+    margin: 0;
+    box-shadow: none;
+  }
+}
+
+
+/* 첫 번째 절반을 두 번째 절반의 두 배 공간을 덮도록 확장 */
+.FormPanel {
+  flex-grow: 2;
+  border-radius: inherit;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  left: 0;
+  z-index: 1;
+}
+.FormPanel button {
+  background: var(--theme);
+  color: var(--theme-two);
+}
+
+/*
+더 작은 뷰포트에서는 테두리 반경 제거
+*/
+@media (max-width: 650px) {
+  .FormPanel {
+    border-radius: 0;
+  }
+}
+
+
+.ActionPanel {
+  /* 테마를 사용한 배경 및 색상 */
+  background: var(--theme);
+  color: var(--theme-two);
+  padding: 2rem;
+  flex-grow: 1;
+  border-radius: inherit;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  z-index: 2;
+}
+.ActionPanel button {
+    background: var(--theme-two);
+    color: var(--theme); /* 기본 텍스트 색상 (녹색) */
+    border: 1px solid currentColor;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease; /* color 전환 추가 */
+}
+.ActionPanel button:hover {
+    background: linear-gradient(45deg, #8BC34A, #4CAF50); /* 호버 시 그라데이션 변경 */
+    color: var(--theme-two); /* 호버 시 텍스트 색상을 흰색으로 변경 */
+}
+
+
+/*
+더 작은 뷰포트에서는 테두리 반경 제거
+*/
+@media (max-width: 650px) {
+  .ActionPanel {
+    border-radius: 0;
+  }
+}
+
+/* --- UserTypePanel 스타일 --- */
+.UserTypePanel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  padding: 2rem;
+  /* 배경색을 #e6f2e6으로 변경 */
+  background: #e6f2e6; /* 이 부분을 수정했습니다. */
+  border-radius: 20px;
+  box-shadow: 10px 10px 30px rgba(100, 150, 100, 0.2),
+              -10px -10px 30px rgba(255, 255, 255, 0.8);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  /* UserTypePanel 등장 애니메이션 */
+  opacity: 0;
+  transform: scale(0.9);
+  animation: userTypePanelAppear 0.6s ease-out forwards;
+  animation-delay: 1.5s; /* App 등장 애니메이션 이후 시작 */
+}
+
+/* UserTypePanel 등장 애니메이션 키프레임 */
+@keyframes userTypePanelAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.UserTypePanel h3 {
+  font-size: 2.2rem;
+  color: var(--theme);
+  margin-bottom: 1.5rem;
+  /* 텍스트에 그림자 추가 */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.UserTypePanel p {
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-bottom: 2rem;
+  max-width: 40ch;
+  line-height: 1.6; 
+}
+
+.UserTypePanel button {
+  background: var(--theme);
+  color: var(--theme-two);
+  border: none;
+  padding: 1rem 3rem;
+  margin: 0.8rem 0;
+  font-size: 1.2rem;
+  letter-spacing: 0.05rem;
+  cursor: pointer;
+  width: 280px;
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; 
+}
+
+.UserTypePanel button:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 10px 25px rgba(76, 175, 80, 0.6);
+  background: linear-gradient(45deg, #8BC34A, #4CAF50);
+}
+
+.UserTypePanel button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 모바일 반응형 조정 */
+@media (max-width: 650px) {
+  .UserTypePanel {
+    border-radius: 0;
+    padding: 1.5rem;
+  }
+  .UserTypePanel h3 {
+    font-size: 1.8rem;
+  }
+  .UserTypePanel p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .UserTypePanel button {
+    width: 100%;
+    padding: 0.9rem 2rem;
+    font-size: 1.1rem;
+  }
+}

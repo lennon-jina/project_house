@@ -1,0 +1,551 @@
+@charset "utf-8";
+
+ul, li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 페이지 제목 */
+.page-title {
+    font-size: 30px;
+    font-weight: bold;
+    padding-bottom: 20px;
+    text-align: center;
+    color: #2c2c2c;
+    margin-bottom: 30px;
+    margin-top: 0;
+}
+
+.page-title-underline {
+    width: 100%;
+    height: 3px;
+    background-color: #333;
+    margin: -30px auto 30px;
+}
+
+/* 상단 컨트롤 영역 (게시물 수, 검색) */
+.board-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding-bottom: 20px;
+}
+
+.board-controls-underline {
+    width: 100%;
+    height: 1px;
+    background-color: #eee;
+    margin: 10px auto 0;
+}
+
+.total-count {
+    font-size: 14px;
+    color: #555;
+}
+
+.total-count strong {
+    color: #e60000;
+}
+
+.search-and-sort {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-left: auto;
+}
+
+.search-form-elements {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.search-form-elements select {
+    height: 35px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    border-right: 1px solid #ccc;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>') no-repeat right 10px center;
+    background-size: 10px;
+    padding-right: 25px;
+    cursor: pointer;
+}
+
+.search-form-elements input[type="text"] {
+    width: 200px;
+    height: 35px;
+    padding: 0 10px;
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+}
+
+.search-form-elements button {
+    width: 35px;
+    height: 35px;
+    border: none;
+    background: transparent url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>') no-repeat center center;
+    background-size: 16px;
+    cursor: pointer;
+    text-indent: -9999px;
+}
+
+.sort-order-select {
+    height: 35px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/></svg>') no-repeat right 10px center;
+    background-size: 10px;
+    padding-right: 25px;
+    cursor: pointer;
+}
+
+/* --- 메인 콘텐츠 레이아웃 --- */
+#sh_content {
+    display: flex;
+    justify-content: center; /* 전체 sh_content를 수평 중앙에 배치 */
+    padding: 50px 0; /* 양옆 패딩을 0으로 설정 */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.news-main-content {
+    display: flex;
+    justify-content: center; /* 자식 요소(뉴스룸과 정책 박스)를 중앙에 정렬 */
+    align-items: flex-start;
+    max-width: 1100px; /* 전체 콘텐츠 블록의 최대 너비를 설정 (뉴스룸+정책박스+gap 합한 값 + 여유) */
+    width: 100%; /* max-width 내에서 유동적으로 너비 조절 */
+    margin: 0 auto; /* news-main-content 자체를 중앙에 배치 */
+    gap: 40px; /* 두 섹션 사이의 간격 */
+    padding: 0; /* 불필요한 내부 패딩 제거 */
+    box-sizing: border-box;
+}
+
+/* 왼쪽 뉴스 목록 섹션 */
+.news-list-section {
+    width: 700px; /* 뉴스룸 섹션의 고정 너비 설정 */
+    flex-grow: 0;
+    flex-shrink: 0;
+    min-width: 1000px;
+    margin-left: 340px; /* 수동 이동을 위한 기본값 (원하는 픽셀 값으로 조절) */
+    margin-right: 0;
+    margin-top: -15px;
+    padding-top: 0;
+}
+
+
+/* 메인 뉴스 그리드 스타일 */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px 40px;
+    border-top: 2px solid #555;
+    padding-top: 30px;
+}
+
+.news-grid-item {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.news-grid-item:nth-last-child(-n + 2) {
+    border-bottom: none;
+}
+@media (max-width: 1200px) {
+    .news-grid-item:last-child {
+        border-bottom: none;
+    }
+}
+
+
+.news-grid-item .news-thumbnail {
+    margin-bottom: 15px;
+}
+
+.news-grid-item .news-thumbnail img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.news-grid-item .news-content {
+    flex-grow: 1;
+    padding-right: 0;
+}
+
+.news-grid-item .news-content .category {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.news-grid-item .news-content .title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: #333;
+    line-height: 1.4;
+    max-height: 2.8em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.news-grid-item .news-content .title a:hover {
+    color: #007bff;
+}
+
+.news-grid-item .news-content .date {
+    font-size: 13px;
+    color: #888;
+}
+
+/* 내 뉴스 섹션 스타일 */
+.my-news-section {
+    width: 300px; /* 정책 박스 섹션의 고정 너비 설정 */
+    flex-shrink: 0;
+    flex-grow: 0;
+    min-width: 280px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin-top: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+
+.my-news-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c2c2c;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.my-news-title .more-link {
+    font-size: 13px;
+    color: #666;
+    font-weight: normal;
+}
+
+.my-news-title .more-link i {
+    font-size: 11px;
+    margin-left: 3px;
+}
+
+.my-news-list li {
+    padding: 12px 0;
+    border-bottom: 1px dashed #e0e0e0;
+}
+
+.my-news-list li:last-child {
+    border-bottom: none;
+}
+
+.my-news-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.my-news-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.my-news-item .my-news-text {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.4;
+    word-break: keep-all;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.my-news-item .my-news-text a:hover {
+    color: #007bff;
+}
+
+
+/* 페이지네이션 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 40px;
+    gap: 10px;
+    font-size: 14px;
+}
+
+.pagination a, .pagination strong {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    color: #666;
+    border-radius: 3px;
+    transition: all 0.2s ease-in-out; 
+}
+
+.pagination strong,
+.pagination a:hover {
+    border-color: #333;
+    background-color: #f0f0f0;
+    font-weight: bold;
+    color: #333;
+}
+
+.pagination .arrow {
+    width: 30px; 
+    height: 30px; 
+    display: flex; 
+    justify-content: center;
+    align-items: center; 
+    font-size: 16px;
+    font-weight: bold; 
+    padding: 0; 
+    border: 1px solid #e0e0e0;
+    color: #666;
+    border-radius: 3px;
+}
+
+.pagination .arrow:hover {
+    background-color: #f0f0f0;
+    border-color: #333;
+    color: #333;
+}
+
+/* 정렬 옵션 컨테이너 */
+.sort-options {
+    display: flex;
+    align-items: center;
+}
+
+/* 드롭다운 버튼 컨테이너 */
+.sort-dropdown-container {
+    position: relative;
+    display: inline-block;
+    font-size: 14px;
+}
+
+/* 드롭다운 버튼 스타일 */
+.sort-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80px; /* 필요에 따라 너비 조정 */
+    height: 35px;
+    padding: 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+    outline: none; /* 클릭 시 외곽선 제거 */
+    white-space: nowrap;
+    position: relative;
+    z-index: 2; /* 활성화 시 메뉴 위에 오도록 보장 */
+}
+
+/* 드롭다운 버튼의 화살표 아이콘 */
+.sort-dropdown-toggle .dropdown-icon {
+    margin-left: 10px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #666;
+    transition: transform 0.2s ease;
+}
+
+/* 메뉴가 활성화될 때 화살표 회전 */
+.sort-dropdown-toggle.active .dropdown-icon {
+    transform: rotate(180deg);
+}
+
+/* 드롭다운 메뉴 리스트 스타일 */
+.sort-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 5px); /* 버튼 아래로 5px 위치 */
+    left: 0;
+    width: 100%;
+    padding: 5px 0;
+    margin: 0;
+    list-style: none;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 100;
+    display: none; /* 기본적으로 숨김, JavaScript로 제어 */
+    text-align: left;
+}
+
+/* 드롭다운 메뉴 항목 스타일 */
+.sort-dropdown-menu li {
+    padding: 0;
+    margin: 0;
+}
+
+.sort-dropdown-menu li a {
+    display: block;
+    padding: 8px 15px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+/* 호버 및 활성화된 항목 스타일 */
+.sort-dropdown-menu li a:hover,
+.sort-dropdown-menu li a.active {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.sort-order-select {
+    display: none; /* 원래 select 드롭다운 숨기기 */
+}
+
+/* 작은 화면을 위한 반응형 조정 */
+@media (max-width: 480px) {
+    .sort-dropdown-container {
+        width: 100%; /* 작은 화면에서 드롭다운을 전체 너비로 만듭니다. */
+    }
+    .sort-dropdown-toggle {
+        width: 100%; /* 작은 화면에서 버튼을 전체 너비로 만듭니다. */
+    }
+    .sort-dropdown-menu {
+        width: 100%; /* 작은 화면에서 메뉴를 전체 너비로 만듭니다. */
+    }
+}
+
+/* --- 반응형 조정  --- */
+@media (max-width: 1200px) {
+    .news-main-content {
+        flex-direction: column; 
+        align-items: center; 
+        gap: 30px; 
+        margin-top: 0;
+        max-width: 100%; 
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
+
+    .news-list-section,
+    .my-news-section {
+        max-width: 100%;
+        width: 100%; 
+        flex-basis: auto; 
+        flex-shrink: 1;
+        flex-grow: 1;
+        margin-top: 0;
+        padding-top: 0;
+        margin-left: auto; /* 세로 스택 시 중앙 정렬을 위해 auto로 변경 */
+        margin-right: auto; /* 세로 스택 시 중앙 정렬을 위해 auto로 변경 */
+        box-sizing: border-box;
+    }
+
+    .news-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    #sh_content {
+        padding: 20px;
+    }
+    .page-title {
+        font-size: 24px;
+    }
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+    .news-grid-item:nth-last-child(-n + 2) {
+        border-bottom: 1px solid #eee;
+    }
+    .news-grid-item:last-child {
+        border-bottom: none;
+    }
+    .my-news-section {
+        padding: 15px;
+        max-height: none;
+        overflow-y: visible;
+    }
+    .my-news-item .my-news-text {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-and-sort {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .search-form-elements,
+    .sort-order-select {
+        width: 100%;
+    }
+    .search-form-elements {
+        flex-wrap: wrap;
+        justify-content: center;
+        border: none;
+        overflow: visible;
+    }
+    .search-form-elements select,
+    .search-form-elements input[type="text"],
+    .search-form-elements button {
+        width: 100%;
+        margin-bottom: 5px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+    .search-form-elements input[type="text"] {
+        width: 100%;
+    }
+    .sort-order-select {
+        height: 40px;
+    }
+}

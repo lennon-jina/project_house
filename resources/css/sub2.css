@@ -1,0 +1,390 @@
+/* =========================== SNB */
+/* 사이드 내비게이션 바 */
+#sh_snb {
+    display: inline-block;
+    position: relative;
+    z-index: 10;
+    padding: 0 40px;
+    text-align: center;
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, .1);
+    background-color: #fff;
+}
+
+#sh_snb li {
+    display: inline-block;
+    position: relative;
+    height: 55px;
+    padding: 0 35px;
+    font-size: 17px;
+    line-height: 55px;
+}
+
+#sh_snb li:first-child:before {
+    display: none;
+}
+
+#sh_snb li a {
+    position: relative;
+    font-weight: 500;
+}
+
+/* 기존 SNB 활성 링크 색상 */
+#sh_snb li a.on {
+    color: #6e62c3;
+}
+
+/* 비전 페이지 특정 스타일 */
+#sh_container_wrapper {
+    overflow: hidden;
+    padding-bottom: 50px;
+}
+
+/* --- CSS 변수 --- */
+:root {
+    --main-green: #90b9e0;
+    --smart-blue: #8bb993;
+    --futuristic-silver: #E5E5E5;
+    --warm-beige: #F4F2EE;
+}
+
+/* --- 전역 Box-Sizing (매우 중요) --- */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+
+/* --- 메인 콘텐츠 영역 --- */
+#sh_content {
+    padding: 40px;
+    line-height: 1.8;
+    font-size: 16px;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* --- 애니메이션 키프레임 --- */
+@keyframes fadeInSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes expandLine {
+    from { width: 0; }
+    to { width: 100px; /* 80px에서 일관성을 위해 조정됨 */ }
+}
+
+@keyframes pulseIcon {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes floatCircle {
+    0% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+    25% { transform: translate(10px, -10px) scale(1.05); opacity: 0.9; }
+    50% { transform: translate(0, 20px) scale(1); opacity: 0.8; }
+    75% { transform: translate(-10px, -5px) scale(1.05); opacity: 0.9; }
+    100% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+}
+
+/* --- 히어로 섹션 및 타이틀 영역 --- */
+#sh_sub_banner {
+    background: linear-gradient(135deg, #e0f2f7, #e8f5e9);
+    color: #2c3e50;
+    padding: 60px 0;
+    box-shadow: inset 0 -5px 10px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+    text-align: center; /* 배너 안의 콘텐츠를 중앙 정렬 */
+}
+
+#sh_sub_banner::before {
+    content: ''; position: absolute; top: -50px; left: -50px;
+    width: 200px; height: 200px;
+    background: rgba(76, 175, 80, 0.1); border-radius: 50%;
+    animation: floatCircle 15s infinite ease-in-out alternate; z-index: 0;
+}
+
+#sh_sub_banner::after {
+    content: ''; position: absolute; bottom: -50px; right: -50px;
+    width: 150px; height: 150px;
+    background: rgba(63, 81, 181, 0.1); border-radius: 50%;
+    animation: floatCircle 12s infinite ease-in-out reverse; z-index: 0;
+}
+
+#sh_content_tit {
+    position: relative; z-index: 1;
+    max-width: 1200px; /* 콘텐츠 너비 제한 */
+    margin: 0 auto; /* 콘텐츠 중앙 정렬 */
+    padding: 150px;
+	font-size: 16px;
+}
+
+#sh_content_tit h3 {
+    font-size: 2.8em; font-weight: 800; color: #2c3e50;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px;
+    opacity: 0; animation: fadeInSlideUp 0.8s ease-out forwards;
+}
+
+#sh_content_tit p {
+    font-size: 1.1em; color: #555; opacity: 0;
+    animation: fadeInSlideUp 0.8s ease-out 0.2s forwards;
+}
+
+#sh_content_tit p .fa-home {
+	color: #555; animation: pulseIcon 2s infinite ease-in-out;
+}
+
+/* --- 일반 섹션 타이틀 스타일 (greeting ID 내부 h2에 적용) --- */
+#greeting section h2 {
+    font-size: 3em; 
+	font-weight: 800;
+    background: linear-gradient(to right, #44504a, #64cf72);
+    -webkit-background-clip: text; 
+	-webkit-text-fill-color: transparent;
+    margin: 60px auto 25px auto; /* 제목 중앙 정렬 */
+    text-align: center; 
+	position: relative;
+    opacity: 0; 
+	transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    max-width: 1000px; /* 선택 사항: 가독성을 위해 h2 너비 제한 */
+}
+#greeting section h2.is-visible {
+    opacity: 1; 
+	transform: translateY(0);
+}
+
+#greeting section h2::after {
+    content: ''; display: block; width: 0; height: 2px;
+    background: linear-gradient(to right, #44504a, #64cf72);
+    margin: 10px auto 0; transition: width 0.6s ease-out;
+}
+#greeting section h2.is-visible::after {
+    width: 100px; /* 밑줄 최대 너비 */
+}
+
+#greeting section h2 .fas {
+    font-size: 1.2em; color: #4CAF50; margin-right: 10px;
+    vertical-align: middle; animation: pulseIcon 2s infinite ease-in-out;
+}
+
+/* --- 히어로 섹션 콘텐츠 (p 및 cta-buttons) --- */
+#hero-section {
+    background-color: var(--smart-blue);
+    color: white;
+    padding: 100px 0;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 1200px;
+    margin: 40px auto; 
+}
+
+#hero-section p,
+#hero-section .cta-buttons {
+	font-size: 1.25em;
+    margin-bottom: 50px; 
+	line-height: 1.7; 
+	text-align: center;
+    max-width: 800px; 
+	margin-left: auto; 
+	margin-right: auto;
+    padding: 0 20px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s;
+}
+
+#hero-section p.is-visible,
+#hero-section .cta-buttons.is-visible {
+    opacity: 1; transform: translateY(0);
+}
+
+/* --- CTA 버튼 --- */
+.cta-buttons {
+    text-align: center; margin-top: 40px; opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s;
+}
+
+.cta-buttons a {
+    display: inline-block; background-color: #4CAF50; color: #fff;
+    padding: 12px 25px; border-radius: 5px; text-decoration: none;
+    margin: 0 10px; transition: background-color 0.3s ease, transform 0.2s ease;
+    font-weight: 500;
+}
+
+.cta-buttons a:hover {
+    background-color: #45a049; transform: translateY(-2px);
+}
+
+/* =========================== 서비스/포인트 섹션 =========================== */
+
+/* --- 섹션 컨테이너 --- */
+#services-section, #why-ecoscense-section {
+    padding: 80px 0;
+    margin-bottom: 60px;
+    text-align: center; /* 제목 중앙 정렬 */
+    max-width: 1200px; /* 전체 섹션 콘텐츠의 최대 너비 */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#services-section { background-color: var(--warm-beige); }
+#why-ecoscense-section { background-color: white; }
+
+/* --- 아이템 컨테이너 (새로운 HTML DIV) --- */
+.service-items-container,
+.point-items-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px; 
+    width: 100%; 
+    max-width: 1160px; 
+    margin: 40px auto 0 auto; 
+    padding: 0 20px; 
+}
+
+/* --- 서비스/포인트 아이템 --- */
+.service-item, .point-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+    opacity: 0;
+    transform: translateY(30px);
+
+    /* 더 큰 화면(데스크톱 우선)에서 3열을 위한 초기 크기 설정 */
+    flex: 0 0 calc(33.333% - 26.666px); 
+    max-width: 373px;
+}
+
+.service-item.is-visible, .point-item.is-visible {
+    opacity: 1; transform: translateY(0);
+}
+
+.service-item:hover, .point-item:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+/* --- 아이콘 원 스타일 --- */
+.service-item .icon, .point-item .icon {
+    width: 130px; height: 130px;
+    border: 3px dashed #4CAF50; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 25px;
+    background: radial-gradient(circle, #e8f5e9 0%, #d4edda 100%);
+    position: relative; overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.service-item:hover .icon, .point-item:hover .icon {
+    border-color: #3f51b5; transform: rotate(5deg);
+}
+
+.service-item:hover .icon .fas, .point-item:hover .icon .fas {
+    color: #3f51b5; transform: scale(1.1);
+}
+
+/* --- 아이콘 자체 --- */
+.service-item .icon .fas, .point-item .icon .fas {
+    color: #4CAF50; font-size: 2.8em; font-weight: 700; line-height: 1;
+    transition: all 0.3s ease-in-out;
+}
+
+/* --- 아이템 제목 --- */
+.service-item h3, .point-item h3 {
+    font-size: 1.3em; color: #2c3e50; margin-bottom: 15px;
+}
+
+/* --- 아이템 설명 --- */
+.service-item p, .point-item p {
+    font-size: 1.05em; color: #555; line-height: 1.7;
+    min-height: 90px; /* 설명의 일관된 높이 */
+    display: flex; flex-direction: column; justify-content: flex-start;
+    align-items: center; font-weight: 300;
+}
+
+/* =========================== 클로징 섹션 =========================== */
+#closing-section {
+    background-color: var(--smart-blue);
+    color: white;
+    border-radius: 20px;
+    padding: 50px 0;
+    text-align: center;
+    max-width: 1200px;
+    margin: 40px auto 60px auto;
+}
+
+#closing-section h3 {
+    font-size: 2em; margin: 0;
+}
+
+/* =========================== 반응형 조정 =========================== */
+
+/* --- 태블릿 (최대 너비: 1024px, 2열) --- */
+@media (max-width: 1024px) {
+    .service-items-container, .point-items-container {
+        gap: 30px;
+        max-width: 760px; 
+    }
+
+    .service-item, .point-item {
+        flex: 0 0 calc(50% - 15px); 
+        max-width: 365px; 
+    }
+}
+
+/* --- 모바일 (최대 너비: 767px, 1열) --- */
+@media (max-width: 767px) {
+    #sh_content {
+        padding: 20px;
+    }
+    #sh_content_tit h3 {
+        font-size: 2.2em;
+    }
+    #greeting section h2 {
+        font-size: 1.8em;
+    }
+    #greeting section h2 .fas {
+        font-size: 1em;
+    }
+    #hero-section p,
+    #hero-section .cta-buttons {
+        padding: 0 10px;
+    }
+
+    #services-section, #why-ecoscense-section, #closing-section, #hero-section {
+        margin-left: 20px; 
+        margin-right: 20px;
+        max-width: calc(100% - 40px); 
+        padding: 40px 0; 
+    }
+
+    .service-items-container, .point-items-container {
+        flex-direction: column; 
+        gap: 30px; 
+        padding: 0;
+        max-width: 100%; 
+    }
+
+    .service-item, .point-item {
+        flex: 0 0 100%; 
+        max-width: 100%;
+        padding: 25px;
+    }
+
+    .cta-buttons a {
+        display: block; 
+        margin: 0 auto 15px auto;
+    }
+}
